@@ -18,7 +18,12 @@ const roughlyEqual = (a: string, b: string) => {
   return JSON.stringify(parse(a)) === JSON.stringify(parse(b));
 };
 
+const load = (data: string) => {
+  return parseCustomTags(data).contents
+}
+
 const YAML = {
+  load,
   tokenToSchema,
   issuancePayload,
   parseCustomTags,

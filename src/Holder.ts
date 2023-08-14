@@ -39,6 +39,7 @@ export default class Holder {
     } as SdHolderState
 
     const parsedDisclosure = JSON.parse(JSON.stringify(disclosure, null, 2))
+
     // todo convert to a walk operation
     _select_disclosures(sd_jwt_payload, parsedDisclosure, state)
     // state now contains stuff.

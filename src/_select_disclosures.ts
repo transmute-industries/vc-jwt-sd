@@ -75,15 +75,10 @@ const _select_disclosures_dict = (
   if (claims_to_disclose === true) {
     claims_to_disclose = {};
   }
-  if (typeof claims_to_disclose !== "object") {
-    throw new Error(
-      "To disclose object elements, an object must be provided as disclosure information."
-    );
-  }
 
   for (const [key, value] of Object.entries(sd_jwt_claims) as any) {
     if (key === SD_DIGESTS_KEY) {
-      // console.log(key, value, claims_to_disclose)
+
       for (const digest_to_check of value) {
         if (state._hash_to_decoded_disclosure[digest_to_check] === undefined) {
           // # fake digest
@@ -117,6 +112,12 @@ export default function _select_disclosures(
   claims_to_disclose: any,
   state: SdHolderState
 ): any {
+  // TODO: clean up validation logic
+  // if (typeof claims_to_disclose !== "object") {
+  //   throw new Error(
+  //     "To disclose object elements, an object must be provided as disclosure information."
+  //   );
+  // }
   if (Array.isArray(sd_jwt_claims)) {
     _select_disclosures_list(sd_jwt_claims, claims_to_disclose, state);
   } else if (sd_jwt_claims !== null && typeof sd_jwt_claims === "object") {
