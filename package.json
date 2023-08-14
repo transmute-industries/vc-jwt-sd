@@ -1,6 +1,6 @@
 {
   "name": "@transmute/vc-jwt-sd",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Experimental",
   "main": "./dist/index.js",
   "typings": "dist/index.d.ts",
