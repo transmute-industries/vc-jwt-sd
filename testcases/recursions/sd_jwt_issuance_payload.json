@@ -1,0 +1,39 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "foo": [
+    {
+      "...": "YM6MsorVmsaQY11k8yMPdXvDN_EZ_icKF_vDGV2heWw"
+    },
+    {
+      "...": "q5nvo3KwRE93rEX097J-OSqOQ6zup5-VeAJbJ2RvPLo"
+    }
+  ],
+  "bar": {
+    "_sd": [
+      "gw-LxSM_qmLWp_zhc2jTUORn6QRL_I6vvmRQgKoS3PE",
+      "vosbY6505UZsuj8zu472deT25MAGBhQ7rl_VSBMP9-Q"
+    ]
+  },
+  "qux": [
+    {
+      "...": "A133-uhqJ46YrgmT9FzLPP7OfGBlODp4xpXG6BiV7Fg"
+    }
+  ],
+  "baz": [
+    {
+      "...": "Hx8K2kTwfpLu7Fz3DVhbmXKMzFyftGOZB2mwdDojRMk"
+    },
+    {
+      "...": "IoM8imMRVqmoVv6J7NFtuQuh1HpejRHnk6GXVd7sF0o"
+    }
+  ],
+  "animals": {
+    "_sd": [
+      "PbgEig5xH2R2Y7NwnYr4aEy9Zs4_2Ucxpfxq4gNbwhk",
+      "aWyAwcSHHKU65ZFq5yxw72D9Uhw375uwrYpOq9GAjdo"
+    ]
+  },
+  "_sd_alg": "sha-256"
+}

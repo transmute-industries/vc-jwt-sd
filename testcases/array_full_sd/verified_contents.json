@@ -1,0 +1,8 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "is_over": {
+    "18": false
+  }
+}

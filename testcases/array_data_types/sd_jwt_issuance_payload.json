@@ -1,0 +1,29 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "data_types": [
+    {
+      "...": "fgOUo68ph7AqD4cfJavBSYdaRnUpBrFA_y4lYATQJh4"
+    },
+    {
+      "...": "abOBmlVU6ZgdY1ysrfcRrK7XN991LvqJF0aHw-7LylU"
+    },
+    {
+      "...": "_UH8hqENUchmi3Bkd25-MQ1Ic0geqhhHKQkIbLfJfR8"
+    },
+    {
+      "...": "G3vWsLv2qk0m1I50K7FWZA7bY-6yFJsCY8CWbd5T2Bg"
+    },
+    {
+      "...": "Aqpu6h900QGL3cnJqlATZGR-Df1aRmh06Gz5vEFjsmw"
+    },
+    {
+      "...": "IIZLfzRKY48uxV5otu_Cpr78lzF07SAUBq1GsoBz4gc"
+    },
+    {
+      "...": "q5aauDHhfDIOje9z8W3xKkWJybM3ghO8V2r-NNxh-E0"
+    }
+  ],
+  "_sd_alg": "sha-256"
+}

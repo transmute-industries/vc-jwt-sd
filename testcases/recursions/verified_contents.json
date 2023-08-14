@@ -1,0 +1,33 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "foo": [
+    "two"
+  ],
+  "bar": {
+    "green": 2
+  },
+  "qux": [
+    [
+      "yellow"
+    ]
+  ],
+  "baz": [
+    [
+      "purple"
+    ],
+    [
+      "black",
+      "white"
+    ]
+  ],
+  "animals": {
+    "bird": {
+      "age": 20
+    },
+    "snake": {
+      "age": 10
+    }
+  }
+}

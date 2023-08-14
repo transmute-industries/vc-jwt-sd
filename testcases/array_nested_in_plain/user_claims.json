@@ -1,0 +1,12 @@
+{
+  "nested_array": [
+    [
+      "foo",
+      "bar"
+    ],
+    [
+      "baz",
+      "qux"
+    ]
+  ]
+}

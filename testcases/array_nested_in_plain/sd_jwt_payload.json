@@ -1,0 +1,24 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "nested_array": [
+    [
+      {
+        "...": "mqNDlUqaXeGytZ9YZYGswWt8xRTPh1VgsAe3Gu7Pbrg"
+      },
+      {
+        "...": "JI_v3xSjjPc5DifxX0QFR-ggED_WP4BWacCYsUwM5mk"
+      }
+    ],
+    [
+      {
+        "...": "Zq9cw_TAmUwpkxboXIrj0cERkIyqroerrPjN0aDtWsM"
+      },
+      {
+        "...": "vLOyBOF_Zzum3LUAKf2cBptu_ldk4dMXz_HAJb3a1MA"
+      }
+    ]
+  ],
+  "_sd_alg": "sha-256"
+}

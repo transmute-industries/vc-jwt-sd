@@ -1,0 +1,23 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "recursive": [
+    "boring",
+    {
+      "foo": "bar",
+      "baz": {
+        "qux": "quux"
+      }
+    },
+    [
+      "foo",
+      "bar"
+    ]
+  ],
+  "test2": [
+    "foo",
+    "bar"
+  ],
+  "_sd_alg": "sha-256"
+}

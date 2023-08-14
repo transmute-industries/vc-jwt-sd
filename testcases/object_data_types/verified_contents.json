@@ -1,0 +1,27 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "value_data_types": {
+    "test_str": "foo",
+    "test_object": {
+      "foo": "bar"
+    },
+    "test_int": 42,
+    "test_arr": [
+      "Test"
+    ],
+    "test_null": null,
+    "test_bool": true,
+    "test_float": 3.14
+  },
+  "key_data_types": {
+    "3.14": "key_float",
+    "{\"foo\": \"bar\"}": "key_object",
+    "null": "key_null",
+    "True": "key_bool",
+    "foo": "key_str",
+    "42": "key_int",
+    "[\"Test\"]": "key_arr"
+  }
+}

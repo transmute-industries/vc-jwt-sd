@@ -1,0 +1,28 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "array_with_recursive_sd": [
+    "boring",
+    {
+      "...": "JZvSesAZw0Ngs4RUyukL18dsLlqKWnu05HMa1yA-NKI"
+    },
+    [
+      {
+        "...": "nIfcWQ998mHk0zT6dqjqIFll9vWOOKU20DsJOgObaFo"
+      },
+      {
+        "...": "1xD8iJk249y6qcEhDbsIhz_CtSTvJeUNfx4fpomqxsk"
+      }
+    ]
+  ],
+  "test2": [
+    {
+      "...": "6YBn9BKcOwPfmIAf9O2R7i0aaCcoXzGJr9stMBba0vQ"
+    },
+    {
+      "...": "80Y6N_U6oslJjyn1y7uY6-vFgg75Az0mutem-Z_pBQc"
+    }
+  ],
+  "_sd_alg": "sha-256"
+}

@@ -1,0 +1,16 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "null_values": [
+    null,
+    {
+      "...": "fgOUo68ph7AqD4cfJavBSYdaRnUpBrFA_y4lYATQJh4"
+    },
+    {
+      "...": "OgGrwYNbIl-IXiBIM6FmIBGRijN27IATvn0pPyxt9UQ"
+    },
+    null
+  ],
+  "_sd_alg": "sha-256"
+}

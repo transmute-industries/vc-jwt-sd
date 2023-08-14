@@ -1,0 +1,15 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "nationalities": [
+    {
+      "...": "i7eKdHc_ZMOnhiyu3TJj5GVDQ7ZwJOMXFD3XgUbo8GQ"
+    },
+    {
+      "...": "usWXFPKaqKMreTrj72QD24wB8xc7lQ4zCnrnn8ZRVeo"
+    },
+    "DE"
+  ],
+  "_sd_alg": "sha-256"
+}

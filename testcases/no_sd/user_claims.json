@@ -1,0 +1,19 @@
+{
+  "recursive": [
+    "boring",
+    {
+      "foo": "bar",
+      "baz": {
+        "qux": "quux"
+      }
+    },
+    [
+      "foo",
+      "bar"
+    ]
+  ],
+  "test2": [
+    "foo",
+    "bar"
+  ]
+}

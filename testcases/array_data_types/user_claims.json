@@ -1,0 +1,15 @@
+{
+  "data_types": [
+    null,
+    42,
+    3.14,
+    "foo",
+    true,
+    [
+      "Test"
+    ],
+    {
+      "foo": "bar"
+    }
+  ]
+}

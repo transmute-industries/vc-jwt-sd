@@ -1,0 +1,19 @@
+{
+  "array_with_recursive_sd": [
+    "boring",
+    {
+      "foo": "bar",
+      "baz": {
+        "qux": "quux"
+      }
+    },
+    [
+      "foo",
+      "bar"
+    ]
+  ],
+  "test2": [
+    "foo",
+    "bar"
+  ]
+}

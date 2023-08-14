@@ -1,0 +1,36 @@
+{
+  "foo": [
+    "one",
+    "two"
+  ],
+  "bar": {
+    "red": 1,
+    "green": 2
+  },
+  "qux": [
+    [
+      "blue",
+      "yellow"
+    ]
+  ],
+  "baz": [
+    [
+      "orange",
+      "purple"
+    ],
+    [
+      "black",
+      "white"
+    ]
+  ],
+  "animals": {
+    "snake": {
+      "name": "python",
+      "age": 10
+    },
+    "bird": {
+      "name": "eagle",
+      "age": 20
+    }
+  }
+}

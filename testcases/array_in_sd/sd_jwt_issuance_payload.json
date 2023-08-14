@@ -1,0 +1,9 @@
+{
+  "_sd": [
+    "0L4NSi1iP7pNwrkqqc63NcfnPJkSzSV6Rg2h3TlPoQw"
+  ],
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "_sd_alg": "sha-256"
+}

@@ -1,0 +1,9 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "null_values": [
+    null,
+    null
+  ]
+}

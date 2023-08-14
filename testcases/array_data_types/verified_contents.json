@@ -1,0 +1,18 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "data_types": [
+    null,
+    42,
+    3.14,
+    "foo",
+    true,
+    [
+      "Test"
+    ],
+    {
+      "foo": "bar"
+    }
+  ]
+}

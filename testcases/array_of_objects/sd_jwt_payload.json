@@ -1,0 +1,25 @@
+{
+  "iss": "https://example.com/issuer",
+  "iat": 1683000000,
+  "exp": 1883000000,
+  "addresses": [
+    {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "state": "NY",
+      "zip": "12345",
+      "type": "main_address"
+    },
+    {
+      "...": "k63-wMoGu03I9dCyrrNnB0ncOXLZhYaA_Q4lCKFIWcU"
+    }
+  ],
+  "array_with_one_sd_object": [
+    {
+      "_sd": [
+        "1R6ziZ1b4uvXf4-DuKx0JSDRoeVTGrzJldw7Jgqac3Q"
+      ]
+    }
+  ],
+  "_sd_alg": "sha-256"
+}
