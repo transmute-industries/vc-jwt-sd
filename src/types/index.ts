@@ -31,6 +31,9 @@ export type IssuerCtx = {
   iss?: string,
   _sd_alg ?: string
   alg: string,
+  kid?: string,
+  typ?: string,
+  cty?: string,
   digester: Digest,
   signer: CompactSign
   salter: Salter

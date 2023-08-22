@@ -13,12 +13,18 @@ import { issuancePayload } from "./YAML-SD/issuancePayload";
 export default class Issuer {
   public iss?: string;
   public alg: string;
+  public kid?: string;
+  public typ?: string;
+  public cty?: string;
   public digester: Digest;
   public signer: CompactSign;
   public salter: Salter;
   constructor(ctx: IssuerCtx) {
     this.iss = ctx.iss;
     this.alg = ctx.alg;
+    this.kid = ctx.kid;
+    this.typ = ctx.typ;
+    this.cty = ctx.cty;
     this.digester = ctx.digester;
     this.signer = ctx.signer;
     this.salter = ctx.salter
@@ -46,10 +52,22 @@ export default class Issuer {
         jwk: JWK.getPublicKey(holder),
       };
     }
+    const protectedHeader = {} as any;
+
+    if (this.alg) {
+      protectedHeader.alg = this.alg;
+    }
+    if (this.kid) {
+      protectedHeader.kid = this.kid;
+    }
+    if (this.typ) {
+      protectedHeader.typ = this.typ;
+    }
+    if (this.cty) {
+      protectedHeader.cty = this.cty;
+    }
     const jws = await this.signer.sign({
-      protectedHeader: {
-        alg: this.alg,
-      },
+      protectedHeader,
       claimset,
     });
     return jws + COMBINED_serialization_FORMAT_SEPARATOR + Object.keys(config.disclosures)
