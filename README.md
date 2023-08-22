@@ -112,7 +112,7 @@ Example verification:
 
 ```json
 {
-  "protectedHEader": {
+  "protectedHeader": {
     "alg": "ES384"
   },
   "claimset": {

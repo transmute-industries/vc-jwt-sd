@@ -59,6 +59,6 @@ export default class Verifier {
     const {disclosureMap, hashToEncodedDisclosureMap} = await Parse.expload(presentation, config)
     const state = { _hash_to_disclosure: hashToEncodedDisclosureMap, _hash_to_decoded_disclosure: disclosureMap }
     const output = _unpack_disclosed_claims(verifiedIssuanceToken.claimset, state)
-    return JSON.parse(JSON.stringify({protectedHEader: verifiedIssuanceToken.protectedHeader, claimset: output}))
+    return JSON.parse(JSON.stringify({protectedHeader: verifiedIssuanceToken.protectedHeader, claimset: output}))
   }
 }
