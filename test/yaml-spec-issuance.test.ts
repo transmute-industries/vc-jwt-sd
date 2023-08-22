@@ -12,7 +12,7 @@ describe("array_recursive_sd", () => {
   it(test.name, async () => {
     const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`)
     const salter = testcase.getSalter(`testcases/${test.name}/sd_jwt_issuance.txt`)
-    const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
+    const issuedPayload = await SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: (item: any)=>{
         const testValue = JSON.stringify(item)
@@ -36,7 +36,7 @@ describe("recursions", () => {
   it(test.name, async () => {
     const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`)
     // console.log(testcase.decodeExpectedIssuance(`testcases/${test.name}/sd_jwt_issuance.txt`))
-    const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
+    const issuedPayload = await SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: (item: any)=>{
         if (item instanceof Scalar){
@@ -127,7 +127,7 @@ describe("yaml specification", () => {
     }
     it(test.name, async () => {
       const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`)
-    const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
+    const issuedPayload = await SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: testcase.getSalter(`testcases/${test.name}/sd_jwt_issuance.txt`),
       digester,

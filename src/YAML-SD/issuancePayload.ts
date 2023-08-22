@@ -33,11 +33,11 @@ const updateTarget = (source: any, sourceItem: any, index: any, targetItem: any)
 }
 
 
-const getDisclosureItem = (salt: string, source: any, config: any)=>{
+const getDisclosureItem = async (salt: string, source: any, config: any)=>{
   const json = serializeDisclosure(salt, source)
   const encoded =  base64url.encode(json)
   // spy here...
-  const disclosureHash = config.digester.digest(encoded)
+  const disclosureHash = await config.digester.digest(encoded)
   config.disclosures[encoded] = disclosureHash
   const disclosureHashScalar = new Scalar(disclosureHash)
   if (source instanceof Pair){
@@ -50,47 +50,47 @@ const getDisclosureItem = (salt: string, source: any, config: any)=>{
   }
 }
 
-const addDisclosure = (source: any, index: string, sourceItem:any, config: any) => {
+const addDisclosure = async (source: any, index: string, sourceItem:any, config: any) => {
   const salt = config.salter(sourceItem)
 
   if (!salt){
     console.warn(JSON.stringify(sourceItem, null, 2))
     throw new Error('Unhandled salt disclosure...')
   }
-  const item = getDisclosureItem(salt, sourceItem, config)
+  const item = await getDisclosureItem(salt, sourceItem, config)
   updateTarget(source, sourceItem, index, item)
 }
 
-const issuanceWalkMap = (source: YAMLMap, config: any) => {
+const issuanceWalkMap = async(source: YAMLMap, config: any) => {
   const indexList = [] as number[];
   for (const index in source.items) {
     const sourcePair = source.items[index] as any;
     if (sourcePair.value instanceof YAMLSeq) {
-      issuanceWalkList(sourcePair.value as YAMLSeq, config);
+      await issuanceWalkList(sourcePair.value as YAMLSeq, config);
     }
     if (sourcePair.value instanceof YAMLMap) {
-      issuanceWalkMap(sourcePair.value, config);
+      await issuanceWalkMap(sourcePair.value, config);
     }
     if (sourcePair.key.tag === discloseTag) {
-      addDisclosure(source, index, sourcePair, config)
+      await addDisclosure(source, index, sourcePair, config)
       indexList.push(parseInt(index, 10));
     }
   }
   redactSource(source, indexList);
 };
 
-const issuanceWalkList = (source: YAMLSeq, config: any) => {
+const issuanceWalkList = async (source: YAMLSeq, config: any) => {
   const indexList = [] as number[];
   for (const index in source.items) {
     const sourceElement = source.items[index] as any;
     if (sourceElement instanceof YAMLSeq) {
-      issuanceWalkList(sourceElement, config);
+      await issuanceWalkList(sourceElement, config);
     }
     if (sourceElement instanceof YAMLMap) {
-      issuanceWalkMap(sourceElement, config);
+      await issuanceWalkMap(sourceElement, config);
     }
     if (sourceElement.tag === discloseTag) {
-      addDisclosure(source, index, sourceElement, config)
+      await addDisclosure(source, index, sourceElement, config)
       // indexList.push(parseInt(index, 10));
     }
   }
@@ -116,9 +116,9 @@ const preconditionChecker = (pair: any)=>{
   }
 }
 
-export const issuancePayload = (doc: any, config: any)=>{
+export const issuancePayload = async (doc: any, config: any)=>{
   walkMap(doc, preconditionChecker)
-  issuanceWalkMap(doc, config);
+  await issuanceWalkMap(doc, config);
   walkMap(doc, disclosureSorter)
   return JSON.parse(JSON.stringify(doc)) 
 }

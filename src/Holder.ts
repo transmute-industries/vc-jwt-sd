@@ -29,7 +29,7 @@ export default class Holder {
 
     const config = { digester: this.digester }
 
-    const {disclosureMap, hashToEncodedDisclosureMap} = Parse.expload(credential, config)
+    const {disclosureMap, hashToEncodedDisclosureMap} = await Parse.expload(credential, config)
 
     const state = {
       hs_disclosures: [],

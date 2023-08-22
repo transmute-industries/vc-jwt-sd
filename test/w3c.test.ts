@@ -1,31 +1,31 @@
-import crypto from 'crypto'
+
 import moment from 'moment';
-import { base64url, exportJWK, generateKeyPair } from 'jose';
+
 import SD from "../src";
 
 import testcase from './testcase'
+
+const salter = testcase.salter
 
 it('W3C Example', async () => {
   const alg = 'ES384'
   const iss = 'did:web:issuer.example'
   const nonce = '9876543210'
   const aud = 'did:web:verifier.example'
-  const issuerKeyPair  = await generateKeyPair(alg)
-  const holderKeyPair  = await generateKeyPair(alg)
+  const issuerKeyPair  = await SD.JWK.generate(alg)
+  const holderKeyPair  = await SD.JWK.generate(alg)
   const digester = testcase.digester('sha-256')
   const issuer = new SD.Issuer({
     alg,
     iss,
     digester,
-    signer: await SD.JWS.signer(await exportJWK(issuerKeyPair.privateKey)),
-    salter: () => {
-      return base64url.encode(crypto.randomBytes(16));
-    }
+    signer: await SD.JWS.signer(issuerKeyPair.secretKeyJwk),
+    salter
   })
   const vc = await issuer.issue({
     iat: moment().unix(),
     exp: moment().add(1, 'month').unix(),
-    holder: await exportJWK(holderKeyPair.publicKey),
+    holder: holderKeyPair.publicKeyJwk,
     claims: SD.YAML.load(`
 "@context":
   - https://www.w3.org/ns/credentials/v2
@@ -61,7 +61,7 @@ credentialSubject:
   const holder = new SD.Holder({
     alg,
     digester,
-    signer: await SD.JWS.signer(await exportJWK(holderKeyPair.privateKey))
+    signer: await SD.JWS.signer(holderKeyPair.secretKeyJwk)
   })
   const vp = await holder.present({
     credential: vc,
@@ -80,7 +80,7 @@ credentialSubject:
     verifier: {
       verify: async (token :string) => {
         const parsed = SD.Parse.compact(token)
-        const verifier = await SD.JWS.verifier(await exportJWK(issuerKeyPair.publicKey))
+        const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
         return verifier.verify(parsed.jwt)
       }
     }

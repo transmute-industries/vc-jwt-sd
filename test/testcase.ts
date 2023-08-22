@@ -12,11 +12,15 @@ const digester = (name: 'sha-256' = 'sha-256') => {
   }
   return {
     name,
-    digest: (json: string) => {
+    digest: async (json: string) => {
       return base64url.encode(crypto.createHash("sha256").update(json).digest());
     }
   };
 };
+
+const salter = () => {
+  return base64url.encode(crypto.randomBytes(16));
+}
 
 const getSpec = (path: string) => {
   const spec = fs.readFileSync(path, "utf8");
@@ -109,6 +113,7 @@ const api = {
   getExpectedPayload,
   getSpec,
   getSalter,
+  salter,
   decodeIssuanceForm,
   decodeExpectedIssuance,
   getUserClaims,

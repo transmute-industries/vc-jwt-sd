@@ -56,7 +56,7 @@ describe('token to schema', () => {
     const vc = await issuer.issue({
       claims: schema.get('user_claims'),
     })
-    const result = SD.YAML.tokenToSchema(vc, { digester })
+    const result = await SD.YAML.tokenToSchema(vc, { digester })
     // console.log(result.yaml)
     // console.log(result.json)
     // console.log(JSON.stringify(result.pretty, null ,2))

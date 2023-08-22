@@ -67,7 +67,7 @@ expect_verified_user_claims:
   })
 
   // pointers
-  const result = SD.YAML.tokenToSchema(vc, { digester })
+  const result = await SD.YAML.tokenToSchema(vc, { digester })
   // console.log(result)
 
   const holder = new SD.Holder({

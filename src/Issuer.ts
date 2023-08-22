@@ -29,7 +29,7 @@ export default class Issuer {
       salter: this.salter,
       digester: this.digester,
     }
-    const issuedPayload = issuancePayload(claims, config);
+    const issuedPayload = await issuancePayload(claims, config);
     const claimset = issuedPayload as Record<string, unknown>;
     claimset[DIGEST_ALG_KEY] = this.digester.name;
     if (this.iss) {

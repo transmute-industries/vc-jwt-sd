@@ -7,9 +7,6 @@ import SD from "../src";
 
 
 const testcases = fs.readdirSync('testcases/', { withFileTypes: true });
-
-
-
 const test = { name: 'array_full_sd'}
 it(test.name, async () => {
   const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`) as any

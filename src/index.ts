@@ -9,6 +9,8 @@ import Parse from './Parse'
 
 import YAML from './YAML-SD'
 
-const SD = { YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
+import web from './web'
+
+const SD = { web, YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
 
 export default SD

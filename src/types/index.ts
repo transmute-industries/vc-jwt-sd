@@ -23,7 +23,7 @@ export type SignParams = {
 export type CompactSign = { sign: ({protectedHeader, claimset}: SignParams) => Promise<string> }
 export type CompactVerify = { verify: (jws: string) => Promise<SignParams> }
 
-export type Digest = { name: 'sha-256',  digest: (json: string) => string }
+export type Digest = { name: 'sha-256',  digest: (json: string) => Promise<string> }
 
 export type Salter = () => string 
 
