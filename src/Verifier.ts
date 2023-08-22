@@ -6,7 +6,6 @@ import { VerifierCtx, RequestPresentationVerify, PublicKeyJwk } from './types'
 import JWS from './JWS';
 import Parse from './Parse';
 
-import digester from "./digester";
 
 import _unpack_disclosed_claims from './_unpack_disclosed_claims'
 
@@ -57,7 +56,7 @@ export default class Verifier {
       }
     }
 
-    const config = { digester }
+    const config = { digester: this.digester }
 
     const {disclosureMap, hashToEncodedDisclosureMap} = Parse.expload(presentation, config)
 

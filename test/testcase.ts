@@ -6,8 +6,16 @@ import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 import YAML from "../src/YAML-SD";
 import Parse from "../src/Parse";
 
-const digester = (json: string) => {
-  return base64url.encode(crypto.createHash("sha256").update(json).digest());
+const digester = (name: 'sha-256' = 'sha-256') => {
+  if (name !== 'sha-256'){
+    throw new Error('hash function not supported')
+  }
+  return {
+    name,
+    digest: (json: string) => {
+      return base64url.encode(crypto.createHash("sha256").update(json).digest());
+    }
+  };
 };
 
 const getSpec = (path: string) => {

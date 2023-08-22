@@ -27,7 +27,7 @@ export default class Issuer {
     const config = {
       disclosures: {},
       salter: this.salter,
-      digester: this.digester.digest,
+      digester: this.digester,
     }
     const issuedPayload = issuancePayload(claims, config);
     const claimset = issuedPayload as Record<string, unknown>;

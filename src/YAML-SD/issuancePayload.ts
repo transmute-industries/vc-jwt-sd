@@ -37,7 +37,7 @@ const getDisclosureItem = (salt: string, source: any, config: any)=>{
   const json = serializeDisclosure(salt, source)
   const encoded =  base64url.encode(json)
   // spy here...
-  const disclosureHash = config.digester(encoded)
+  const disclosureHash = config.digester.digest(encoded)
   config.disclosures[encoded] = disclosureHash
   const disclosureHashScalar = new Scalar(disclosureHash)
   if (source instanceof Pair){

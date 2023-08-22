@@ -8,7 +8,6 @@ import _select_disclosures from './_select_disclosures'
 
 import Parse from "./Parse";
 
-import digester from "./digester";
 
 // SDJWTHolder
 export default class Holder {
@@ -28,7 +27,7 @@ export default class Holder {
     // todo: verify
     const sd_jwt_payload = jose.decodeJwt(parsed.jwt);
 
-    const config = { digester }
+    const config = { digester: this.digester }
 
     const {disclosureMap, hashToEncodedDisclosureMap} = Parse.expload(credential, config)
 

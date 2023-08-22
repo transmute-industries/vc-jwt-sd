@@ -5,6 +5,8 @@ import { Scalar, YAMLSeq, Pair } from "yaml";
 
 const testcases = fs.readdirSync("testcases/", { withFileTypes: true });
 
+const digester = testcase.digester('sha-256')
+
 describe("array_recursive_sd", () => {
   const test = { name: "array_recursive_sd" };
   it(test.name, async () => {
@@ -20,7 +22,7 @@ describe("array_recursive_sd", () => {
         const salt = salter(item)
         return salt
       },
-      digester: testcase.digester,
+      digester,
     });
     const expectedPayload = testcase.getExpectedPayload(
       `testcases/${test.name}/sd_jwt_issuance_payload.json`
@@ -105,7 +107,7 @@ describe("recursions", () => {
         } 
         throw new Error('unhandled hard coded salt')
       },
-      digester: testcase.digester,
+      digester,
     });
     const expectedPayload = testcase.getExpectedPayload(
       `testcases/${test.name}/sd_jwt_issuance_payload.json`
@@ -128,7 +130,7 @@ describe("yaml specification", () => {
     const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: testcase.getSalter(`testcases/${test.name}/sd_jwt_issuance.txt`),
-      digester: testcase.digester,
+      digester,
     });
     const expectedPayload = testcase.getExpectedPayload(
       `testcases/${test.name}/sd_jwt_issuance_payload.json`

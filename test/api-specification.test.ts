@@ -17,7 +17,7 @@ it(test.name, async () => {
   const issuer = new SD.Issuer({
     alg: 'ES256',
     iss: settings.identifiers.issuer,
-    digester: SD.digester('sha-256'),
+    digester: testcase.digester('sha-256'),
     signer: await SD.JWS.signer(settings.key_settings.issuer_key),
     salter
   })
@@ -33,7 +33,7 @@ it(test.name, async () => {
   expect(computed.parsed.disclosures).toEqual(expected.parsed.disclosures)
   const holder = new SD.Holder({
     alg: 'ES256',
-    digester: SD.digester('sha-256'),
+    digester: testcase.digester('sha-256'),
     signer: spec.key_binding ? await SD.JWS.signer(settings.key_settings.holder_key) : undefined
   })
   const vp = await holder.present({
@@ -55,7 +55,7 @@ it(test.name, async () => {
   }
   const verifier = new SD.Verifier({
     alg: 'ES256',
-    digester: SD.digester('sha-256'),
+    digester: testcase.digester('sha-256'),
     verifier: issuerVerifier
   })
   const verified = await verifier.verify({
@@ -84,7 +84,7 @@ describe("testcases", () => {
       const issuer = new SD.Issuer({
         alg: 'ES256',
         iss: settings.identifiers.issuer,
-        digester: SD.digester('sha-256'),
+        digester: testcase.digester('sha-256'),
         signer: await SD.JWS.signer(settings.key_settings.issuer_key),
         salter
       })
@@ -100,7 +100,7 @@ describe("testcases", () => {
       expect(computed.parsed.disclosures).toEqual(expected.parsed.disclosures)
       const holder = new SD.Holder({
         alg: 'ES256',
-        digester: SD.digester('sha-256'),
+        digester: testcase.digester('sha-256'),
         signer: spec.key_binding ? await SD.JWS.signer(settings.key_settings.holder_key) : undefined
       })
       const vp = await holder.present({
@@ -122,7 +122,7 @@ describe("testcases", () => {
       }
       const verifier = new SD.Verifier({
         alg: 'ES256',
-        digester: SD.digester('sha-256'),
+        digester: testcase.digester('sha-256'),
         verifier: issuerVerifier
       })
       const verified = await verifier.verify({

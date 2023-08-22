@@ -28,7 +28,8 @@ const expload = (jws: string, config: any)=>{
   const parsed = compact(jws) as any
   const decodedIssuance = decodeJwt(parsed.jwt)
   parsed.issued = decodedIssuance
-  const hash = config.digester(parsed.issued._sd_alg)
+
+  const hash = config.digester
   const hashToDisclosureMap = {} as any
   const hashToEncodedDisclosureMap = {} as any
   parsed.disclosures.map((encoded: string)=>{

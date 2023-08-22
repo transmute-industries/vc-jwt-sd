@@ -3,6 +3,8 @@ import moment from 'moment';
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 import SD from "../src";
 
+import testcase from './testcase'
+
 it('W3C Example', async () => {
   const alg = 'ES384'
   const iss = 'did:web:issuer.example'
@@ -10,7 +12,7 @@ it('W3C Example', async () => {
   const aud = 'did:web:verifier.example'
   const issuerKeyPair  = await generateKeyPair(alg)
   const holderKeyPair  = await generateKeyPair(alg)
-  const digester = SD.digester('sha-256')
+  const digester = testcase.digester('sha-256')
   const issuer = new SD.Issuer({
     alg,
     iss,
@@ -91,4 +93,5 @@ credentialSubject:
   expect(verified.claimset.issuer.location).toBeUndefined()
   expect(verified.claimset.credentialSubject.entryNumber).toBe('12345123456')
   // console.log(JSON.stringify(verified, null, 2))
+  // console.log(vc)
 });

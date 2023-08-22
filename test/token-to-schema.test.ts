@@ -1,15 +1,17 @@
 import crypto from 'crypto'
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
-
+import testcase from './testcase'
 import SD from "../src";
+
+const digester = testcase.digester('sha-256')
 
 describe('token to schema', () => {
   it.todo('rescursions and other advanced testcases for sanity')
   it('array_with_recursive_sd', async () => {
     const alg = 'ES384'
     const issuerKeyPair  = await generateKeyPair(alg)
-    const digester = SD.digester('sha-256')
+   
     const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
     const issuerSigner = await SD.JWS.signer(issuerPrivateKey)
     const salter = () => {
@@ -54,9 +56,10 @@ describe('token to schema', () => {
     const vc = await issuer.issue({
       claims: schema.get('user_claims'),
     })
-    const result = SD.YAML.tokenToSchema(vc, { digester: SD.digester })
+    const result = SD.YAML.tokenToSchema(vc, { digester })
     // console.log(result.yaml)
     // console.log(result.json)
     // console.log(JSON.stringify(result.pretty, null ,2))
+    // console.log(JSON.stringify(result.pointers, null ,2))
   });
 })
