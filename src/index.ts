@@ -11,6 +11,8 @@ import YAML from './YAML-SD'
 
 import web from './web'
 
-const SD = { web, YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
+import * as v2 from './SD-CWT'
+
+const SD = { v2, web, YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
 
 export default SD
