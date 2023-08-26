@@ -12,6 +12,8 @@ export type CWTIssuer = {
   verifier: any
   salter: any
   digester: any
+
+  disclosures?: Map<string, Buffer>
 }
 
 export type RequestIssuance = {
@@ -65,16 +67,30 @@ export class Issuer {
   }
   public issue = async (issuance: RequestIssuance)=>{
     const protectedHeader = { alg: algNumberToString[`${this.config.alg}`] }
-    const unprotectedHeader = new Map();
+
     const payload = await yamlToCbor(issuance.claims, this.config)
+    const disclosureMap = this.config.disclosures as Map<string, Buffer>
+    const unprotectedHeader = new Map();
+    const disclosures = Array.from(disclosureMap, ([_, value]) => value);
+    unprotectedHeader.set(333, disclosures)
+
     const signArguments = { protectedHeader, unprotectedHeader, payload: Uint8Array.from(payload) }
     const signature = await this.config.signer.sign(signArguments)
-    // attach dislocures to unprotected header.
-    return signature
+    const signatureWithDisclosuresInUnprotectedHeader = cose.unprotectedHeader.set(signature, unprotectedHeader)
+    return signatureWithDisclosuresInUnprotectedHeader
   }
 
   public verify = async ({vc}: RequestVerify)=>{
+    const unprotectedHeader = cose.unprotectedHeader.get(vc)
     const verified = await this.config.verifier.verify(vc)
+    const disclosures = unprotectedHeader.get(333) as Buffer[]
+    const hashedAndDecoded = await Promise.all(disclosures.map(async (d) => {
+      return {
+        digest: (await this.config.digester.digest(d)).toString('hex'),
+        decoded: await cbor.decodeFirst(d)
+      }
+    }))
+    console.log(hashedAndDecoded)
     return cbor.decodeFirst(verified)
   }
 }

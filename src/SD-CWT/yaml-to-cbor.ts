@@ -6,15 +6,16 @@ import {
   YAMLMap,
   YAMLSeq,
 } from "yaml";
+import { base64url } from 'jose';
 
 import YAML from '../YAML-SD';
-import { discloseTag } from "../YAML-SD/constants";
 import { walkMap } from "../YAML-SD/walkMap";
 
-const sdJwtMapProp = `_sd`
+const discloseTag = `!sd`;
+// const sdJwtMapProp = `_sd`
 const sdCwtMapProp = 111
 
-const sdJwtArrayProp = `...`
+// const sdJwtArrayProp = `...`
 const sdCwtArrayProp = 222
 
 
@@ -48,8 +49,19 @@ const redactSource = (source: any, indexList: number[]) => {
 };
 
 
-const serializeDisclosure = (salt: Uint8Array, source: any) => {
-  return cose.cbor.encode(JSON.parse(JSON.stringify(source)))
+const serializeDisclosure = (salt: Uint8Array, item: any): Uint8Array => {
+  const list:any = [salt]
+  if (item instanceof Pair){
+    list.push(item.key.value);
+    list.push(JSON.parse(JSON.stringify(item.value)));
+  } else if (item instanceof YAMLSeq){
+    list.push(JSON.parse(JSON.stringify(item)));
+  } else if (item instanceof YAMLMap){
+    list.push(JSON.parse(JSON.stringify(item)));
+  } else {
+    list.push(JSON.parse(JSON.stringify(item)));
+  }
+  return Buffer.from(cose.cbor.encode(list))
 }
 
 const updateTarget = (source: any, sourceItem: any, index: any, targetItem: any) => {
@@ -73,7 +85,7 @@ const updateTarget = (source: any, sourceItem: any, index: any, targetItem: any)
 const getDisclosureItem = async (salt: Uint8Array, source: any, config: any) => {
   const cbor = serializeDisclosure(salt, source)
   const disclosureHash = await config.digester.digest(cbor)
-  config.disclosures.set(disclosureHash, cbor)
+  config.disclosures.set(disclosureHash.toString('hex'), cbor)
   const disclosureHashScalar = new Scalar(disclosureHash)
   if (source instanceof Pair) {
     return disclosureHashScalar
@@ -86,8 +98,7 @@ const getDisclosureItem = async (salt: Uint8Array, source: any, config: any) => 
 }
 
 const addDisclosure = async (source: any, index: string, sourceItem: any, config: any) => {
-  const salt = config.salter(sourceItem)
-
+  const salt = await config.salter(sourceItem)
   if (!salt) {
     console.warn(JSON.stringify(sourceItem, null, 2))
     throw new Error('Unhandled salt disclosure...')
@@ -126,7 +137,6 @@ const issuanceWalkList = async (source: YAMLSeq, config: any) => {
     }
     if (sourceElement.tag === discloseTag) {
       await addDisclosure(source, index, sourceElement, config)
-      // indexList.push(parseInt(index, 10));
     }
   }
   redactSource(source, indexList);
