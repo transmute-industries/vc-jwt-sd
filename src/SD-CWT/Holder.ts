@@ -2,13 +2,14 @@
 import cose from '@transmute/cose'
 import * as cbor from 'cbor-web'
 import { exportJWK, generateKeyPair } from 'jose';
-import yamlToCbor from './yaml-to-cbor';
-
+import {issuancePayload} from './yaml-to-cbor';
+import YAML from '../YAML-SD';
+import filterCredential from './filter-credential';
 import postVerifyProcessing from './post-verify-processing';
 
 import { RequestVerify } from './types'
 
-export type CWTIssuer = {
+export type CWTHolder = {
   alg: number
   
   signer: any
@@ -19,11 +20,12 @@ export type CWTIssuer = {
   disclosures?: Map<string, Buffer>
 }
 
-export type RequestIssuance = {
-  claims: string; // really yaml.
+export type RequestPresentation = {
+  vc: Uint8Array; // cose sign 1 / cwt.
+  disclose: string // really yaml disclose structure
 }
 
-export type IssuerBuilder = {
+export type HolderBuilder = {
   alg: number
   salter: () => Promise<Buffer>
   digester: {
@@ -31,7 +33,6 @@ export type IssuerBuilder = {
     digest: (cbor: Buffer) => Promise<Buffer>
   }
 }
-
 
 const algStringToNumber = {
   'ES384': -35
@@ -41,9 +42,8 @@ const algNumberToString:any = {
   '-35': 'ES384'
 }
 
-
-export class Issuer {
-  static build = async (arg: IssuerBuilder) => {
+export class Holder {
+  static build = async (arg: HolderBuilder) => {
     const alg = algNumberToString[`${arg.alg}`]
     const keyPair  = await generateKeyPair(alg)
     const secretKeyJwk = await exportJWK(keyPair.privateKey)
@@ -56,28 +56,42 @@ export class Issuer {
     const verifier = await cose.verifier({
       publicKeyJwk: publicKeyJwk as any,
     })
-    return new Issuer({
+    return new Holder({
       ...arg,
       signer,
       verifier,
     })
   }
-  constructor(public config: CWTIssuer){
+  constructor(public config: CWTHolder){
     // console.log({ config })
   }
-  public issue = async (issuance: RequestIssuance)=>{
-    const protectedHeader = { alg: algNumberToString[`${this.config.alg}`] }
+  public present = async (req: RequestPresentation)=>{
+    const decodedToken = await cbor.decodeFirst(req.vc)
+    const parsed = YAML.load(req.disclose)
+    const revealMap = await issuancePayload(parsed, this.config)
+    const decodedPayload = await cbor.decodeFirst(decodedToken.value[2]) 
+    const disclosures = decodedToken.value[1].get(333) as Buffer[]
+    const disclosureMap = new Map()
+    // consider refactoring this mess
+    const disclosureArray = await Promise.all(disclosures.map(async (d) => {
+      const item = {
+        encoded: d,
+        decoded: await cbor.decodeFirst(d),
+        digest: (await this.config.digester.digest(d)).toString('hex'),
+      }
+      disclosureMap.set(item.digest, item.decoded)
+      return item
+    }))
+    await filterCredential(decodedPayload, revealMap, disclosureMap )
+    const redactedDisclosures = []
+    for (const [key, value] of disclosureMap) {
+      redactedDisclosures.push(await cbor.encodeAsync(value))
+    }
 
-    const payload = await yamlToCbor(issuance.claims, this.config)
-    const disclosureMap = this.config.disclosures as Map<string, Buffer>
     const unprotectedHeader = new Map();
-    const disclosures = Array.from(disclosureMap, ([_, value]) => value);
-    unprotectedHeader.set(333, disclosures)
-
-    const signArguments = { protectedHeader, unprotectedHeader, payload: Uint8Array.from(payload) }
-    const signature = await this.config.signer.sign(signArguments)
-    const signatureWithDisclosuresInUnprotectedHeader = cose.unprotectedHeader.set(signature, unprotectedHeader)
-    return signatureWithDisclosuresInUnprotectedHeader
+    unprotectedHeader.set(333, redactedDisclosures)
+    const presentation = cose.unprotectedHeader.set(req.vc, unprotectedHeader)
+    return presentation
   }
 
   public verify = async ({vc}: RequestVerify)=>{

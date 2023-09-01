@@ -6,17 +6,17 @@ import {
   YAMLMap,
   YAMLSeq,
 } from "yaml";
-import { base64url } from 'jose';
+// import { base64url } from 'jose';
 
 import YAML from '../YAML-SD';
 import { walkMap } from "../YAML-SD/walkMap";
 
-const discloseTag = `!sd`;
+export const discloseTag = `!sd`;
 // const sdJwtMapProp = `_sd`
-const sdCwtMapProp = 111
+export const sdCwtMapProp = 111
 
 // const sdJwtArrayProp = `...`
-const sdCwtArrayProp = 222
+export const sdCwtArrayProp = 222
 
 
 const discloseReplace = (source: Scalar | YAMLSeq | YAMLMap | Pair) => {
@@ -198,11 +198,12 @@ const cborWalkList = async (source: YAMLSeq, target: Array<any>, config: any) =>
       await cborWalkMap(sourceElement, targetValue, config);
     } else if (sourceElement.value instanceof Scalar || sourceElement.value instanceof Buffer || typeof sourceElement.value === 'string' || typeof sourceElement.value === 'number') {
       target.push(sourceElement.value)
+    } else if (sourceElement instanceof Scalar) {
+      target.push(sourceElement.value)
     } else {
       throw new Error('Unhandled case... ' + JSON.stringify(sourceElement, null, 2))
     }
   }
-
 };
 
 const yamlMapToJsMap = async (doc: YAMLMap, config: any): Promise<Map<any,any>> => {
