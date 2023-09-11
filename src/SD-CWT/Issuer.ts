@@ -93,7 +93,7 @@ export class Issuer {
       disclosureMap.set(item.digest, item.decoded)
     }))
     const claims = await cbor.decodeFirst(verified)
-    
-    return postVerifyProcessing(claims, disclosureMap)
+    const claimsMap = claims instanceof Map ?  claims : new Map(Object.entries(claims));
+    return postVerifyProcessing(claimsMap, disclosureMap)
   }
 }

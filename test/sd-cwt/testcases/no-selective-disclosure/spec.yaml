@@ -1,0 +1,24 @@
+payload:
+  # https://www.iana.org/assignments/cwt/cwt.xhtml
+  1: 'did:web:issuer.example'
+  string: a string
+  number: 10
+  10: 100
+  arr1:
+    - "bar"
+    - "baz"
+  arr2:
+    - 10
+    - 20
+disclosure: null
+verified:
+  1: did:web:issuer.example
+  string: a string
+  number: 10
+  10: 100
+  arr1:
+    - bar
+    - baz
+  arr2:
+    - 10
+    - 20

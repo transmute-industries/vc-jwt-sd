@@ -5,6 +5,9 @@ import {
 import {walkList} from './walkList'
 
 export const walkMap = (obj: YAMLMap, replacer: any) => {
+  if (obj === null){
+    return
+  }
   for (const pair of obj.items) {
     if (pair.value instanceof YAMLSeq) {
       walkList(pair.value, replacer);

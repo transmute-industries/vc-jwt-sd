@@ -1,0 +1,15 @@
+array_1:
+  - True
+  - True
+array_2:
+  - True
+  - - True
+array_3:
+  - True
+  - False
+array_4:
+  - True
+  - - False
+array_5:
+  - True
+  - False

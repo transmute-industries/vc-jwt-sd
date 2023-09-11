@@ -108,6 +108,9 @@ const addDisclosure = async (source: any, index: string, sourceItem: any, config
 }
 
 const issuanceWalkMap = async (source: YAMLMap, config: any) => {
+  if (source === null){
+    return
+  }
   const indexList = [] as number[];
   for (const index in source.items) {
     const sourcePair = source.items[index] as any;
@@ -164,6 +167,9 @@ const preconditionChecker = (pair: any) => {
 
 
 const cborWalkMap = async (source: YAMLMap, target: Map<any, any>, config: any) => {
+  if (source === null){
+    return
+  }
   for (const index in source.items) {
     const sourcePair = source.items[index] as any;
     if (sourcePair.value instanceof YAMLSeq) {

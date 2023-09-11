@@ -1,0 +1,21 @@
+
+array_1:
+  - "bar"
+  - !sd "redactable_1"
+
+array_2:
+  - 10
+  - - !sd "redactable_2"
+
+array_3:
+  - "bar"
+  - !sd "redactable_3"
+
+array_4:
+- 10
+- - !sd "redactable_4"
+
+array_5:
+- 10
+- !sd 
+  - "redactable_4"

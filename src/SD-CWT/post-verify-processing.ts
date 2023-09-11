@@ -11,7 +11,13 @@ const walkList = async (list: any[], config: WalkMapConfig)=>{
     if (value instanceof Map){
       const item = value.get(sdCwtArrayProp)
       if (item){
-        const disclosed = config.disclosures.get(item.toString('hex'))
+        list.splice(parseInt(key, 10), 1)
+        const disclosedDigest = item.toString('hex')
+        const disclosed = config.disclosures.get(disclosedDigest)
+        if (!disclosed){
+          // console.log('skipping undisclosed', value)
+          continue
+        }
         const [salt, dataValue] = disclosed as any[]
         list[key] = dataValue
       } else {
@@ -27,17 +33,17 @@ const walkList = async (list: any[], config: WalkMapConfig)=>{
 
 const walkMap = async (map: Map<any, any>, config: WalkMapConfig)=>{
   for (const [key, value] of map) {
-    // console.log(key, value, value instanceof Map)
     if (key === sdCwtMapProp){
+      map.delete(key)
       const [digest] = value 
       const disclosedDigest = digest.toString('hex')
       const disclosed = config.disclosures.get(disclosedDigest)
       if (!disclosed){
+        // console.log('skipping undisclosed', value)
         continue
       }
       const [salt, dataKey, dataValue] = disclosed as any[]
       map.set(dataKey, dataValue)
-      map.delete(key)
     } else if (value instanceof Map){
       await walkMap(value, config)
     } else if (value instanceof Array){

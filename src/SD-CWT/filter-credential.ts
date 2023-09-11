@@ -28,6 +28,7 @@ const walkList = async (claimsList: any[], revealList: any[], config: WalkMapCon
 }
 
 const walkMap = async (claimsMap: Map<any, any>, revealMap: Map<any, any>,  config: WalkMapConfig)=>{
+
   for (const [key, value] of claimsMap) {
     let revealValue = revealMap.get(key)
     if (key === sdCwtMapProp){

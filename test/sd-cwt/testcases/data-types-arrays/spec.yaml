@@ -1,0 +1,51 @@
+payload:
+  array_1:
+    - "bar"
+    - !sd "redactable_1"
+
+  array_2:
+    - 10
+    - - !sd "redactable_2"
+
+  array_3:
+    - "bar"
+    - !sd "redactable_3"
+
+  array_4:
+    - 10
+    - - !sd "redactable_4"
+
+  array_5:
+    - 10
+    - !sd
+      - "redactable_4"
+disclosure:
+  array_1:
+    - True
+    - True
+  array_2:
+    - True
+    - - True
+  array_3:
+    - True
+    - False
+  array_4:
+    - True
+    - - False
+  array_5:
+    - True
+    - False
+verified:
+  array_1:
+    - bar
+    - redactable_1
+  array_2:
+    - 10
+    - - redactable_2
+  array_3:
+    - bar
+  array_4:
+    - 10
+    - []
+  array_5:
+    - 10

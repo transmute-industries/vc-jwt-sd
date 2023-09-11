@@ -69,8 +69,12 @@ export class Holder {
     const decodedToken = await cbor.decodeFirst(req.vc)
     const parsed = YAML.load(req.disclose)
     const revealMap = await issuancePayload(parsed, this.config)
-    const decodedPayload = await cbor.decodeFirst(decodedToken.value[2]) 
+    const decodedPayload = await cbor.decodeFirst(decodedToken.value[2], {})
+
     const disclosures = decodedToken.value[1].get(333) as Buffer[]
+
+    const decodedPayloadMap = decodedPayload instanceof Map ?  decodedPayload : new Map(Object.entries(decodedPayload));
+
     const disclosureMap = new Map()
     // consider refactoring this mess
     const disclosureArray = await Promise.all(disclosures.map(async (d) => {
@@ -82,7 +86,7 @@ export class Holder {
       disclosureMap.set(item.digest, item.decoded)
       return item
     }))
-    await filterCredential(decodedPayload, revealMap, disclosureMap )
+    await filterCredential(decodedPayloadMap, revealMap, disclosureMap )
     const redactedDisclosures = []
     for (const [key, value] of disclosureMap) {
       redactedDisclosures.push(await cbor.encodeAsync(value))
