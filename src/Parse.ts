@@ -24,18 +24,20 @@ const compact = (jws: string, options = { decodeDisclosure: false })=>{
   return result
 }
 
-const expload = (jws: string, config: any)=>{
+const expload = async (jws: string, config: any)=>{
   const parsed = compact(jws) as any
   const decodedIssuance = decodeJwt(parsed.jwt)
   parsed.issued = decodedIssuance
-  const hash = config.digester(parsed.issued._sd_alg)
+
+  const hash = config.digester
   const hashToDisclosureMap = {} as any
   const hashToEncodedDisclosureMap = {} as any
-  parsed.disclosures.map((encoded: string)=>{
-    const hashed = hash.digest(encoded)
+  for (const encoded of parsed.disclosures){
+    const hashed = await hash.digest(encoded)
     hashToEncodedDisclosureMap[hashed] = encoded
     hashToDisclosureMap[hashed] =  JSON.parse(new TextDecoder().decode(base64url.decode(encoded)))
-  })
+  }
+ 
   parsed.disclosureMap = hashToDisclosureMap
   parsed.hashToEncodedDisclosureMap = hashToEncodedDisclosureMap
   return parsed

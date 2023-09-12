@@ -114,8 +114,8 @@ const walkMap = (obj:any, map: YAMLMap, config: any)=>{
   }
 }
 
-export const tokenToSchema = (token: string, config: any) => {
-  const parsed = Parse.expload(token, config)
+export const tokenToSchema = async (token: string, config: any) => {
+  const parsed = await Parse.expload(token, config)
   const schema = new YAMLMap()
   config.disclosureMap = parsed.disclosureMap
   delete parsed.issued._sd_alg

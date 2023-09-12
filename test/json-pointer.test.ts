@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import moment from 'moment';
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
-
+import testcase from './testcase'
 import SD from "../src";
 
 it('JSON Pointer', async () => {
@@ -12,7 +12,7 @@ it('JSON Pointer', async () => {
   const aud = 'did:web:verifier.example'
   const issuerKeyPair  = await generateKeyPair(alg)
   const holderKeyPair  = await generateKeyPair(alg)
-  const digester = SD.digester('sha-256')
+  const digester = testcase.digester('sha-256')
   const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
   const issuerSigner = await SD.JWS.signer(issuerPrivateKey)
   const holderPublicKey = await exportJWK(holderKeyPair.publicKey)
@@ -67,7 +67,7 @@ expect_verified_user_claims:
   })
 
   // pointers
-  const result = SD.YAML.tokenToSchema(vc, { digester: SD.digester })
+  const result = await SD.YAML.tokenToSchema(vc, { digester })
   // console.log(result)
 
   const holder = new SD.Holder({

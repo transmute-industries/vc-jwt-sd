@@ -12,11 +12,14 @@ it('W3C Example', async () => {
   const iss = 'did:web:issuer.example'
   const nonce = '9876543210'
   const aud = 'did:web:verifier.example'
-  const issuerKeyPair  = await SD.JWK.generate(alg)
-  const holderKeyPair  = await SD.JWK.generate(alg)
+  const issuerKeyPair = await SD.JWK.generate(alg)
+  const holderKeyPair = await SD.JWK.generate(alg)
   const digester = testcase.digester('sha-256')
   const issuer = new SD.Issuer({
     alg,
+    kid: `${iss}#key-42`,
+    typ: `application/vc+ld+json+sd-jwt`,
+    cty: `application/vc+ld+json`,
     iss,
     digester,
     signer: await SD.JWS.signer(issuerKeyPair.secretKeyJwk),
@@ -78,7 +81,7 @@ credentialSubject:
     alg,
     digester,
     verifier: {
-      verify: async (token :string) => {
+      verify: async (token: string) => {
         const parsed = SD.Parse.compact(token)
         const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
         return verifier.verify(parsed.jwt)
@@ -92,6 +95,11 @@ credentialSubject:
   })
   expect(verified.claimset.issuer.location).toBeUndefined()
   expect(verified.claimset.credentialSubject.entryNumber).toBe('12345123456')
-  // console.log(JSON.stringify(verified, null, 2))
-  // console.log(vc)
+  expect(JSON.stringify(verified.protectedHeader)).toBe(JSON.stringify({ 
+    "alg": "ES384", 
+    "kid": "did:web:issuer.example#key-42", 
+    "typ": "application/vc+ld+json+sd-jwt", 
+    "cty": "application/vc+ld+json" 
+  }))
+
 });

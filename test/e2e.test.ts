@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import moment from 'moment';
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 import SD from "../src";
-
+import testcase from './testcase'
 it('End to End Test', async () => {
   const alg = 'ES384'
   const iss = 'did:web:issuer.example'
@@ -10,7 +10,7 @@ it('End to End Test', async () => {
   const aud = 'did:web:verifier.example'
   const issuerKeyPair  = await generateKeyPair(alg)
   const holderKeyPair  = await generateKeyPair(alg)
-  const digester = SD.digester('sha-256')
+  const digester = testcase.digester('sha-256')
   const issuerPublicKey = await exportJWK(issuerKeyPair.publicKey)
   const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
   const issuerSigner = await SD.JWS.signer(issuerPrivateKey)

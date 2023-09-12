@@ -5,12 +5,14 @@ import { Scalar, YAMLSeq, Pair } from "yaml";
 
 const testcases = fs.readdirSync("testcases/", { withFileTypes: true });
 
+const digester = testcase.digester('sha-256')
+
 describe("array_recursive_sd", () => {
   const test = { name: "array_recursive_sd" };
   it(test.name, async () => {
     const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`)
     const salter = testcase.getSalter(`testcases/${test.name}/sd_jwt_issuance.txt`)
-    const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
+    const issuedPayload = await SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: (item: any)=>{
         const testValue = JSON.stringify(item)
@@ -20,7 +22,7 @@ describe("array_recursive_sd", () => {
         const salt = salter(item)
         return salt
       },
-      digester: testcase.digester,
+      digester,
     });
     const expectedPayload = testcase.getExpectedPayload(
       `testcases/${test.name}/sd_jwt_issuance_payload.json`
@@ -34,7 +36,7 @@ describe("recursions", () => {
   it(test.name, async () => {
     const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`)
     // console.log(testcase.decodeExpectedIssuance(`testcases/${test.name}/sd_jwt_issuance.txt`))
-    const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
+    const issuedPayload = await SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: (item: any)=>{
         if (item instanceof Scalar){
@@ -105,7 +107,7 @@ describe("recursions", () => {
         } 
         throw new Error('unhandled hard coded salt')
       },
-      digester: testcase.digester,
+      digester,
     });
     const expectedPayload = testcase.getExpectedPayload(
       `testcases/${test.name}/sd_jwt_issuance_payload.json`
@@ -125,10 +127,10 @@ describe("yaml specification", () => {
     }
     it(test.name, async () => {
       const spec = testcase.getSpec(`testcases/${test.name}/specification.yml`)
-    const issuedPayload = SD.YAML.issuancePayload(spec.get("user_claims"), {
+    const issuedPayload = await SD.YAML.issuancePayload(spec.get("user_claims"), {
       disclosures: {},
       salter: testcase.getSalter(`testcases/${test.name}/sd_jwt_issuance.txt`),
-      digester: testcase.digester,
+      digester,
     });
     const expectedPayload = testcase.getExpectedPayload(
       `testcases/${test.name}/sd_jwt_issuance_payload.json`
