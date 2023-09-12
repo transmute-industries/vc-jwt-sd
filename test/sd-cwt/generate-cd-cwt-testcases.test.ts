@@ -3,7 +3,8 @@ import yaml from 'yaml'
 import crypto from 'crypto'
 
 import SD from "../../src";
-
+import { base64url } from 'jose';
+import * as cbor from 'cbor-web'
 const salter = async () => {
   return crypto.randomBytes(16);
 }
@@ -18,7 +19,7 @@ const digester = {
 const testcases = fs.readdirSync('test/sd-cwt/testcases', { withFileTypes: true });
 
 const focusTestNames:string[] = [
-  'data-types-arrays'
+  // 'data-types-arrays'
 ]
 
 let issuer: any;
@@ -59,11 +60,15 @@ describe("testcases", () => {
         vc: vp
       })
       const spec = new yaml.YAMLMap()
+      const decodedVc = await cbor.decodeFirst(vc)
+      const protectedHeader = await cbor.decodeFirst(decodedVc.value[0])
+      spec.add(new yaml.Pair('protected_header', protectedHeader))
       spec.add(new yaml.Pair('payload', SD.YAML.load(payload)))
       spec.add(new yaml.Pair('disclosure', SD.YAML.load(disclosure)))
-      // TODO: add protected header to spec
-      // TODO: add issuer and holder keys to spec
-      // TODO: add encoded CWT to spec
+      spec.add(new yaml.Pair('issuer_key', issuer.config.publicKeyJwk))
+      spec.add(new yaml.Pair('holder_key', holder.config.publicKeyJwk))
+      spec.add(new yaml.Pair('issuance', base64url.encode(vc)))
+      spec.add(new yaml.Pair('presentation', base64url.encode(vp)))
       spec.add(new yaml.Pair('verified', verified))
       // console.log(verified)
       fs.writeFileSync(`test/sd-cwt/testcases/${test.name}/spec.yaml`, SD.YAML.dumps(spec))

@@ -16,6 +16,8 @@ export type CWTIssuer = {
   salter: any
   digester: any
 
+  publicKeyJwk: any
+
   disclosures?: Map<string, Buffer>
 }
 
@@ -58,6 +60,7 @@ export class Issuer {
     })
     return new Issuer({
       ...arg,
+      publicKeyJwk,
       signer,
       verifier,
     })

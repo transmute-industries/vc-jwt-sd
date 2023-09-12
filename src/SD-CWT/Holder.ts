@@ -17,6 +17,8 @@ export type CWTHolder = {
   salter: any
   digester: any
 
+  publicKeyJwk: any
+
   disclosures?: Map<string, Buffer>
 }
 
@@ -58,6 +60,7 @@ export class Holder {
     })
     return new Holder({
       ...arg,
+      publicKeyJwk,
       signer,
       verifier,
     })
