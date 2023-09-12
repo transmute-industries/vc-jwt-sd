@@ -11,6 +11,8 @@
 
 🚧 Experimental implementation of sd-jwt for use with W3C Verifiable Credentials. 🔥
 
+🚧 Extra experimental implementation of sd-cwt for SPICE 🔥
+
 <img src="./transmute-banner.png" />
 
 #### [Questions? Contact Transmute](https://transmute.typeform.com/to/RshfIw?typeform-source=vc-jwt-sd)
