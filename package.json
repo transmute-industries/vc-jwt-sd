@@ -42,7 +42,6 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@transmute/cose": "^0.0.13",
     "jose": "^4.13.1",
     "json-pointer": "^0.6.2",
     "moment": "^2.29.4",
