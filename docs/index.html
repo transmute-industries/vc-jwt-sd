@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Respec Service Worker Plugin Test</title>
+  <title>Selective Disclosure Benchmark</title>
   <meta http-equiv='Content-Type' content='text/html;charset=utf-8' />
   <script src='https://www.w3.org/Tools/respec/respec-w3c' class='remove'></script>
   <script src="https://cdn.jsdelivr.net/npm/uplot@1.6.25/dist/uPlot.iife.min.js"></script>
@@ -10,13 +10,14 @@
   <script src='./plotter.js'></script>
   <script type="text/javascript" class="remove">
     var respecConfig = {
-      group: "vc",
+      // group: "vc",
+      shortName: "sd-benchmark",
       specStatus: "unofficial",
-      subtitle: "Test of ReSpec VC",
-      edDraftURI: "https://transmute-industries.github.io/respec-vc-jwt/",
-      latestVersion: "https://transmute-industries.github.io/respec-vc-jwt/",
+      // subtitle: "Test of ReSpec VC",
+      // edDraftURI: "https://transmute-industries.github.io/vc-jwt-sd/",
+      latestVersion: "https://github.com/transmute-industries/vc-jwt-sd",
       doJsonLd: false,
-      github: "https://github.com/transmute-industries/respec-vc-jwt",
+      // github: "https://github.com/transmute-industries/vc-jwt-sd",
       includePermalinks: false,
       editors: [
         {
@@ -36,13 +37,26 @@
     };
   </script>
 </head>
-
 <body>
   <section id="abstract">
-    <p>Hello respec-plugin!</p>
+    <p>
+      Selective Disclosure and Unlinkability, 
+      or Disassociability are privacy and consent 
+      oriented features of digital credential formats.
+    </p>
+    <p>
+      In order to support these features, claims need to be structured or transformed so that cryptographic envelopes can be applied.
+      Digital credential formats make tradeoffs between size and compute, and also issuance vs presentation.
+    </p>
+    <p>
+      This document is meant to give a general sense of these trade offs.
+      The implementations under test here have not been optimized for performance and are implemented in javascript.
+    </p>
   </section>
-  <div id="bench"></div>
- 
+  <section>
+    <h2>Issuance</h2>
+    <div id="bench"></div>
+  </section>
 </body>
 
 </html>
