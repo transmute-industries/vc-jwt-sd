@@ -8,7 +8,7 @@ const exLengths = [] as number[]
 const diRuntimes = [] as number[]
 const sdRuntimes = [] as number[]
 
-for (let length = 2; length < 5; length++) {
+for (let length = 2; length < 10; length++) {
   describe(`Test array length ${length}`, () => {
     let issueWithSdJwt: any;
     let issueWithDataIntegrity: any;
@@ -34,8 +34,6 @@ for (let length = 2; length < 5; length++) {
 }
 
 afterAll(() => {
-  // write report to disk
   const data = [exLengths, diRuntimes, sdRuntimes]
   fs.writeFileSync('test/benchmarking/data.json', JSON.stringify(data))
-  console.log(data)
 })
