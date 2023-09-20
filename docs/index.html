@@ -37,15 +37,17 @@
     };
   </script>
 </head>
+
 <body>
   <section id="abstract">
     <p>
-      Selective Disclosure and Unlinkability, 
-      or Disassociability are privacy and consent 
+      Selective Disclosure and Unlinkability,
+      or Disassociability are privacy and consent
       oriented features of digital credential formats.
     </p>
     <p>
-      In order to support these features, claims need to be structured or transformed so that cryptographic envelopes can be applied.
+      In order to support these features, claims need to be structured or transformed so that cryptographic envelopes
+      can be applied.
       Digital credential formats make tradeoffs between size and compute, and also issuance vs presentation.
     </p>
     <p>
@@ -54,9 +56,64 @@
     </p>
   </section>
   <section>
+    <h2>Methodology</h2>
+    <p>
+      In order to compare approaches, we need to generate examples
+      that can be tested via both Data Integrity Proofs and
+      Selective Disclosure JSON Web Tokens.
+    </p>
+    <p>
+      We accomplish this by building on the internationalization examples
+      in the W3C Verifiable Credentials Specification.
+    </p>
+    <p>
+      We start with a simplified version of a verifiable credential with support for multiple langauges:
+    </p>
+    <pre class="example">
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "id": "http://university.example/credentials/3732",
+  "type": ["VerifiableCredential", "ExampleDegreeCredential"],
+  "issuer": {
+    "id": "https://university.example/issuers/565049",
+    "name": [{
+      "value": "Example University",
+      "lang": "en"
+    }, {
+      "value": "Université de Exemple",
+      "lang": "fr"
+    }, {
+      "value": "جامعة المثال",
+      "lang": "ar",
+      "dir": "rtl"
+    }],
+  },
+  "validFrom": "2015-05-10T12:30:00Z",
+  "credentialSubject": {
+    "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "degree": {
+      "type": "ExampleBachelorDegree",
+      "subtype": "Bachelor of Science and Arts"
+    }
+  }
+}
+    </pre>
+    <p>
+      From this template we generate examples where the only difference is the number of alternative names. 
+      We also compute the input requirements from the example, and mark all names as "disclosable".
+    </p>
+    <p>
+      We then average the execution time of issuance, and compare growth of issuance time for the credential formats to the number of names.
+    </p>
+  </section>
+  <section>
     <h2>Issuance</h2>
     <p>
-      <a href="https://github.com/transmute-industries/vc-jwt-sd/blob/main/test/benchmarking/vs.issuance.test.ts">View Source</a>
+      <a href="https://github.com/transmute-industries/vc-jwt-sd/blob/main/test/benchmarking/vs.issuance.test.ts">View
+        Source</a>
     </p>
     <div id="issuance-benchmark"></div>
   </section>
