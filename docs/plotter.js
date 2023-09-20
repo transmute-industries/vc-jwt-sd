@@ -70,7 +70,7 @@ function makeChart(data) {
   let start1 = 0;
   let step =  5
   let data1 = sliceData(start1, start1 + len1);
-  let uplot1 = new uPlot(opts, data1, document.body);
+  let uplot1 = new uPlot(opts, data1, document.getElementById('issuance-benchmark'));
   let handle = setInterval(function() {
     start1 += step;
     let data1 = sliceData(start1, start1 + len1);
