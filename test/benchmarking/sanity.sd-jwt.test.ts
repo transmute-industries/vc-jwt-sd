@@ -1,14 +1,24 @@
+import fs from 'fs'
+
 import { getExample } from '../../src/benchmarking/help.sd'
 
-import { createSdIssuanceHelper } from '../../src/benchmarking/help.sd-jwt'
+import { createSdIssuanceHelper, createSdPresentationHelper } from '../../src/benchmarking/help.sd-jwt'
 
- let measurableAsyncFunction: any;
+let ex: any;
 
 beforeAll(async () => {
-  const ex = getExample(2)
-  measurableAsyncFunction = await createSdIssuanceHelper(ex)
+  ex = getExample(5)
+  fs.writeFileSync('docs/datasets/example.json', JSON.stringify(ex.example, null, 2))
+  fs.writeFileSync('docs/datasets/disclosable.yaml', ex.disclosable)
+  fs.writeFileSync('docs/datasets/disclosure.yaml', ex.disclosure)
 })
 
-it('Time sd-jwt integrity', async () => {
-  await measurableAsyncFunction()
+it('issuance', async () => {
+  const measurable = await createSdIssuanceHelper(ex)
+  await measurable()
+});
+
+it('presentation', async () => {
+  const measurable = await createSdPresentationHelper(ex)
+  await measurable()
 });

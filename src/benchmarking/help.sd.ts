@@ -1,5 +1,5 @@
 import pointer from 'json-pointer'
-import yaml, { YAMLMap, YAMLSeq } from 'yaml'
+import yaml, { Scalar, YAMLMap, YAMLSeq } from 'yaml'
 
 // Example modified from https://w3c.github.io/vc-data-model/#example-usage-of-the-name-and-description-property-0
 const i18nTestCase = {
@@ -38,19 +38,30 @@ const createTestValues = (length: number) => {
     .fill(0).map((v, i) => {
       return {
         "value": `test value ${i}`,
-        "lang": `test lang ${i}`,
-        "dir": i % 2 === 0 ? "rtl" : "ltr"
+        // see https://github.com/digitalbazaar/ecdsa-sd-2023-cryptosuite/issues/11
+        "lang": `en`,
+        // "dir": i % 2 === 0 ? "rtl" : "ltr"
       }
     })
 }
 
-const createPointers = (length: number) => {
+const createMandatoryPointers = (length: number) => {
   const mandatoryPointers = new Array(length)
   .fill(0).map((v, i) => {
     return `/issuer/name/${i}`
   })
   return mandatoryPointers.filter((v, i)=>{
-    return i % 2 !== 0;
+    return i % 2 !== 0 && i % 3 !== 0;
+  })
+}
+
+const createSelectivePointers = (length: number) => {
+  const selectivePointers = new Array(length)
+  .fill(0).map((v, i) => {
+    return `/issuer/name/${i}`
+  })
+  return selectivePointers.filter((v, i)=>{
+    return i % 3 === 0;
   })
 }
 
@@ -60,8 +71,27 @@ const createDisclosableExample = (example: any, length: number) => {
   const issuer = parsed.contents.get('issuer') as YAMLMap
   const names = issuer.get('name') as YAMLSeq<YAMLMap>
   for (const index in names.items){
-    if (parseInt(index) % 2 !== 0){
+    const indexInt = parseInt(index)
+    if (indexInt % 2 !== 0){
       names.items[index].tag = '!sd'
+    }
+  }
+  return yaml.stringify(parsed)
+}
+
+const createDisclosureExample = (disclosable: string) => {
+  const parsed = yaml.parseDocument(disclosable) as { contents: YAMLMap}
+  const issuer = parsed.contents.get('issuer') as YAMLMap
+  const names = issuer.get('name') as YAMLSeq<YAMLMap>
+  for (const index in names.items){
+    const indexInt = parseInt(index)
+    if (names.items[index].tag === '!sd'){
+      if (indexInt % 3 === 0){
+        names.items[index] = new Scalar(false) as any
+      } else {
+        names.items[index] = new Scalar(true) as any
+      }
+      delete names.items[index].tag
     }
   }
   return yaml.stringify(parsed)
@@ -71,9 +101,11 @@ export const getExample = (length: number) => {
   const clone = structuredClone(i18nTestCase);
   const issuerNames =  createTestValues(length)
   pointer.set(clone, '/issuer/name', issuerNames);
-  const pointers = createPointers(length)
+  const mandatoryPointers = createMandatoryPointers(length)
+  const selectivePointers = createSelectivePointers(length)
   const disclosable = createDisclosableExample(clone, length)
-  return { example: clone, pointers, disclosable };
+  const disclosure = createDisclosureExample(disclosable)
+  return { example: clone, mandatoryPointers, selectivePointers, disclosable, disclosure };
 }
 
 

@@ -1,16 +1,16 @@
 import fs from 'fs'
 
 import { getExample, averageExecutionTime } from '../../src/benchmarking/help.sd'
-import { createDiIssuanceHelper } from '../../src/benchmarking/help.data-integrity'
-import { createSdIssuanceHelper } from '../../src/benchmarking/help.sd-jwt'
+import { createDiPresentationHelper } from '../../src/benchmarking/help.data-integrity'
+import { createSdPresentationHelper } from '../../src/benchmarking/help.sd-jwt'
 
 const exLengths = [] as number[]
 const diRuntimes = [] as number[]
 const sdRuntimes = [] as number[]
 
-const maxLength = 100
+const maxLength = 1000
 
-describe.skip('issuance', () => {
+describe('presentation', () => {
   for (let length = 2; length < maxLength; length++) {
     const ex = getExample(length)
     describe(`Test array length ${length}`, () => {
@@ -19,13 +19,13 @@ describe.skip('issuance', () => {
       let diAverageExecTimeMs: number;
       let sdAverageExecTimeMs: number;
       beforeAll(async () => {
-        issueWithDataIntegrity = await createDiIssuanceHelper(ex)
-        issueWithSdJwt = await createSdIssuanceHelper(ex)
+        issueWithDataIntegrity = await createDiPresentationHelper(ex)
+        issueWithSdJwt = await createSdPresentationHelper(ex)
       })
-      it('Time di issuance', async () => {
+      it('time di', async () => {
         diAverageExecTimeMs = await averageExecutionTime(issueWithDataIntegrity)
       });
-      it('Time sd-jwt issuance', async () => {
+      it('time sd', async () => {
         sdAverageExecTimeMs = await averageExecutionTime(issueWithSdJwt)
       })
       afterAll(() => {
@@ -38,6 +38,6 @@ describe.skip('issuance', () => {
 
   afterAll(() => {
     const data = [exLengths, diRuntimes, sdRuntimes]
-    fs.writeFileSync('docs/datasets/issuance.json', JSON.stringify(data))
+    fs.writeFileSync('docs/datasets/presentation.json', JSON.stringify(data))
   })
 })

@@ -7,8 +7,7 @@ let makeFmt = suffix => (u, v, sidx, didx) => {
   return v == null ? null : v.toFixed(1) + suffix;
 };
 
-function makeChart(data) {
-  
+function makeChart(data, container) {
   const opts = {
     width: 800,
     height: 600,
@@ -70,7 +69,7 @@ function makeChart(data) {
   let start1 = 0;
   let step =  5
   let data1 = sliceData(start1, start1 + len1);
-  let uplot1 = new uPlot(opts, data1, document.getElementById('issuance-benchmark'));
+  let uplot1 = new uPlot(opts, data1, document.getElementById(container));
   let handle = setInterval(function() {
     start1 += step;
     let data1 = sliceData(start1, start1 + len1);
@@ -83,5 +82,9 @@ function makeChart(data) {
 }
 
 fetch("datasets/issuance.json").then(r => r.json()).then(data => {
-  setTimeout(() => makeChart(data), 0);
+  setTimeout(() => makeChart(data, 'issuance-benchmark'), 0);
+});
+
+fetch("datasets/presentation.json").then(r => r.json()).then(data => {
+  setTimeout(() => makeChart(data, 'presentation-benchmark'), 0);
 });

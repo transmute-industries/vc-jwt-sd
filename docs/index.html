@@ -63,33 +63,56 @@
       Selective Disclosure JSON Web Tokens.
     </p>
     <p>
-      We accomplish this by building on the internationalization examples
+      We accomplish this by iteratively extending the internationalization examples
       in the W3C Verifiable Credentials Specification.
     </p>
     <p>
-      We start with a simplified version of a verifiable credential with support for multiple langauges:
+      Data Integrity Proofs and SD-JWT take different approaches to disclosure, which impact performance and security.
+      These implementation details impact performance, but are not necessarily required by the specifications.
+      Data Integrity Proofs require mandatory to disclose fields to be marked with JSON Pointer.
+      SD-JWTs require optional to disclose fields to be marked with YAML tags.
     </p>
-    <pre class="example">
+    <p>
+      We then average the execution time of issuance, and compare growth of issuance time for the credential formats to the number of names.
+    </p>
+    <p>
+      See these examples generated for the length 5, to understand the approach taken:
+    </p>
+    <pre class="example nohighlight" title="An example with a list of values">
 {
   "@context": [
     "https://www.w3.org/ns/credentials/v2",
     "https://www.w3.org/ns/credentials/examples/v2"
   ],
   "id": "http://university.example/credentials/3732",
-  "type": ["VerifiableCredential", "ExampleDegreeCredential"],
+  "type": [
+    "VerifiableCredential",
+    "ExampleDegreeCredential"
+  ],
   "issuer": {
     "id": "https://university.example/issuers/565049",
-    "name": [{
-      "value": "Example University",
-      "lang": "en"
-    }, {
-      "value": "Université de Exemple",
-      "lang": "fr"
-    }, {
-      "value": "جامعة المثال",
-      "lang": "ar",
-      "dir": "rtl"
-    }],
+    "name": [
+      {
+        "value": "test value 0",
+        "lang": "en"
+      },
+      {
+        "value": "test value 1",
+        "lang": "en"
+      },
+      {
+        "value": "test value 2",
+        "lang": "en"
+      },
+      {
+        "value": "test value 3",
+        "lang": "en"
+      },
+      {
+        "value": "test value 4",
+        "lang": "en"
+      }
+    ]
   },
   "validFrom": "2015-05-10T12:30:00Z",
   "credentialSubject": {
@@ -101,25 +124,74 @@
   }
 }
     </pre>
-    <p>
-      From this template we generate examples where the only difference is the number of localized names. 
-      We also compute the input requirements from the examples.
-    </p>
-    <p>
-      We use the indexes of the array to determine disclosability.
-      Odd indexes are mandatory to disclose.
-      Even indexes are optional to disclose.
-    </p>
-    <p>
-      Data Integrity Proofs and SD-JWT take different approaches to disclosure, which impact performance and security.
-      These implementation details impact performance, but are not necessarily required by the specifications.
-      Data Integrity Proofs require mandatory to disclose fields to be marked with JSON Pointer.
-      SD-JWTs require optional to disclose fields to be marked with YAML tags.
-    </p>
-    <p>
-      We then average the execution time of issuance, and compare growth of issuance time for the credential formats to the number of names.
-    </p>
-    <p></p>
+    <pre class="example nohighlight" title="Mandatory to disclose JSON Pointers">
+[
+  "/issuer/name/1"
+]
+    </pre>
+    <pre class="example nohighlight" title="Selectively disclosed JSON Pointers">
+[
+  "/issuer/name/0",
+  "/issuer/name/3"
+]
+    </pre>
+    <pre class="example nohighlight" title="Disclosable claims">
+"@context":
+  - https://www.w3.org/ns/credentials/v2
+  - https://www.w3.org/ns/credentials/examples/v2
+id: http://university.example/credentials/3732
+type:
+  - VerifiableCredential
+  - ExampleDegreeCredential
+issuer:
+  id: https://university.example/issuers/565049
+  name:
+    - value: test value 0
+      lang: en
+    - !sd
+      value: test value 1
+      lang: en
+    - value: test value 2
+      lang: en
+    - !sd
+      value: test value 3
+      lang: en
+    - value: test value 4
+      lang: en
+validFrom: 2015-05-10T12:30:00Z
+credentialSubject:
+  id: did:example:ebfeb1f712ebc6f1c276e12ec21
+  degree:
+    type: ExampleBachelorDegree
+    subtype: Bachelor of Science and Arts
+    </pre>
+
+    <pre class="example nohighlight" title="Disclosure of claims">
+"@context":
+  - https://www.w3.org/ns/credentials/v2
+  - https://www.w3.org/ns/credentials/examples/v2
+id: http://university.example/credentials/3732
+type:
+  - VerifiableCredential
+  - ExampleDegreeCredential
+issuer:
+  id: https://university.example/issuers/565049
+  name:
+    - value: test value 0
+      lang: en
+    - true
+    - value: test value 2
+      lang: en
+    - false
+    - value: test value 4
+      lang: en
+validFrom: 2015-05-10T12:30:00Z
+credentialSubject:
+  id: did:example:ebfeb1f712ebc6f1c276e12ec21
+  degree:
+    type: ExampleBachelorDegree
+    subtype: Bachelor of Science and Arts
+    </pre>
   </section>
   <section>
     <h2>Issuance</h2>
@@ -128,6 +200,14 @@
         Source</a>
     </p>
     <div id="issuance-benchmark"></div>
+  </section>
+  <section>
+    <h2>Presentation</h2>
+    <p>
+      <a href="https://github.com/transmute-industries/vc-jwt-sd/blob/main/test/benchmarking/vs.presentation.test.ts">View
+        Source</a>
+    </p>
+    <div id="presentation-benchmark"></div>
   </section>
   <section>
     <h2>Analysis</h2>
