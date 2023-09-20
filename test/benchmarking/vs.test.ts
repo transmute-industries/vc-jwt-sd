@@ -8,28 +8,32 @@ const exLengths = [] as number[]
 const diRuntimes = [] as number[]
 const sdRuntimes = [] as number[]
 
-for (let length = 2; length < 5; length++){
+for (let length = 2; length < 5; length++) {
   describe(`Test array length ${length}`, () => {
     let issueWithSdJwt: any;
     let issueWithDataIntegrity: any;
+    let diAverageExecTimeMs: number;
+    let sdAverageExecTimeMs: number;
     beforeAll(async () => {
       const ex = getExample(length)
       issueWithDataIntegrity = await createDiIssuanceHelper(ex)
       issueWithSdJwt = await createSdIssuanceHelper(ex)
-      exLengths.push(length)
     })
     it('Time di issuance', async () => {
-      const averageExecTimeMs = await averageExecutionTime(issueWithDataIntegrity)
-      diRuntimes.push(averageExecTimeMs)
+      diAverageExecTimeMs = await averageExecutionTime(issueWithDataIntegrity)
     });
     it('Time sd-jwt issuance', async () => {
-      const averageExecTimeMs = await averageExecutionTime(issueWithSdJwt)
-      sdRuntimes.push(averageExecTimeMs)
+      sdAverageExecTimeMs = await averageExecutionTime(issueWithSdJwt)
+    })
+    afterAll(() => {
+      exLengths.push(length)
+      diRuntimes.push(diAverageExecTimeMs)
+      sdRuntimes.push(sdAverageExecTimeMs)
     });
   })
 }
 
-afterAll(()=>{
+afterAll(() => {
   // write report to disk
   const data = [exLengths, diRuntimes, sdRuntimes]
   fs.writeFileSync('test/benchmarking/data.json', JSON.stringify(data))
