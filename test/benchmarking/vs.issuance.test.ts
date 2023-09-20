@@ -8,8 +8,10 @@ const exLengths = [] as number[]
 const diRuntimes = [] as number[]
 const sdRuntimes = [] as number[]
 
+const maxLength = 1000
+
 describe.skip('issuance', () => {
-  for (let length = 2; length < 100; length++) {
+  for (let length = 2; length < maxLength; length++) {
     describe(`Test array length ${length}`, () => {
       let issueWithSdJwt: any;
       let issueWithDataIntegrity: any;
