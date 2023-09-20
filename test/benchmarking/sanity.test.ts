@@ -1,7 +1,7 @@
 import { getExample, averageExecutionTime } from '../../src/benchmarking/help.sd'
 
 it('should generate variable length examples, with disclosure annotations for data integrity and sd-jwt', async () => {
-  const example1 = getExample(2)
+  const example1 = getExample(5)
   // console.log(JSON.stringify(example1.example, null, 2))
   // console.log(JSON.stringify(example1.pointers, null, 2))
   // console.log(example1.disclosable)

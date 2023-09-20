@@ -4,8 +4,6 @@ import { createSignCryptosuite }
 import { DataIntegrityProof } from '@digitalbazaar/data-integrity';
 import jsigs from 'jsonld-signatures';
 
-import { getExample } from './help.sd';
-
 const { purposes: { AssertionProofPurpose } } = jsigs;
 
 const contextShim = {
@@ -22,19 +20,6 @@ const documentLoader = (id: string) => {
   }
   console.error(id)
   throw new Error('unsupported id: ' + id)
-}
-
-export const getSuite = async () => {
-  const keyPair = await EcdsaMultikey.generate({ curve: 'P-256' });
-  // create suite
-  return new DataIntegrityProof({
-    signer: keyPair.signer(),
-    cryptosuite: createSignCryptosuite({
-      mandatoryPointers: [
-        '/credentialSubject/0'
-      ]
-    })
-  });
 }
 
 export const createDiIssuanceHelper = async (ex: {example: any, pointers: string[], disclosable: string}) => {

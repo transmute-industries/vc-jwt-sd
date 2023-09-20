@@ -5,7 +5,8 @@ import crypto from 'crypto'
 
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
-import testcase from './testcase'
+import testcase from '../src/interoperability/testcase'
+
 
 const salter = () => {
   return base64url.encode(crypto.randomBytes(16));

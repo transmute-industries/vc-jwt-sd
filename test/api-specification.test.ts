@@ -1,7 +1,7 @@
 import fs from 'fs'
 
-import settings from "./settings";
-import testcase from './testcase'
+import settings from "../src/interoperability/settings";
+import testcase from '../src/interoperability/testcase'
 
 import SD from "../src";
 

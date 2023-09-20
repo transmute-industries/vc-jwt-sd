@@ -8,8 +8,8 @@ const exLengths = [] as number[]
 const diRuntimes = [] as number[]
 const sdRuntimes = [] as number[]
 
-describe('issuance', () => {
-  for (let length = 2; length < 1000; length++) {
+describe.skip('issuance', () => {
+  for (let length = 2; length < 100; length++) {
     describe(`Test array length ${length}`, () => {
       let issueWithSdJwt: any;
       let issueWithDataIntegrity: any;

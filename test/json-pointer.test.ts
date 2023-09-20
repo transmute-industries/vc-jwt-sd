@@ -2,7 +2,8 @@ import crypto from 'crypto'
 import moment from 'moment';
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
-import testcase from './testcase'
+import testcase from '../src/interoperability/testcase'
+
 import SD from "../src";
 
 it('JSON Pointer', async () => {

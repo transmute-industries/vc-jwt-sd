@@ -2,7 +2,9 @@ import crypto from 'crypto'
 import moment from 'moment';
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 import SD from "../src";
-import testcase from './testcase'
+
+import testcase from '../src/interoperability/testcase'
+
 it('End to End Test', async () => {
   const alg = 'ES384'
   const iss = 'did:web:issuer.example'

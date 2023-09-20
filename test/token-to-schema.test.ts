@@ -1,7 +1,9 @@
 import crypto from 'crypto'
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
-import testcase from './testcase'
+
+import testcase from '../src/interoperability/testcase'
+
 import SD from "../src";
 
 const digester = testcase.digester('sha-256')

@@ -3,8 +3,8 @@ import crypto from "crypto";
 import { Pair, Scalar, parse } from "yaml";
 import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 
-import YAML from "../src/YAML-SD";
-import Parse from "../src/Parse";
+import YAML from "../YAML-SD";
+import Parse from "../Parse";
 
 const digester = (name: 'sha-256' = 'sha-256') => {
   if (name !== 'sha-256'){

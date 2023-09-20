@@ -2,7 +2,9 @@ import crypto from 'crypto'
 import moment from 'moment';
 import { base64url, decodeJwt, exportJWK, generateKeyPair, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
 
-import testcase from './testcase'
+
+import testcase from '../src/interoperability/testcase'
+
 import SD from "../src";
 
 it('End to End Test', async () => {

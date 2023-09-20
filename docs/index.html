@@ -102,12 +102,24 @@
 }
     </pre>
     <p>
-      From this template we generate examples where the only difference is the number of alternative names. 
-      We also compute the input requirements from the example, and mark all names as "disclosable".
+      From this template we generate examples where the only difference is the number of localized names. 
+      We also compute the input requirements from the examples.
+    </p>
+    <p>
+      We use the indexes of the array to determine disclosability.
+      Odd indexes are mandatory to disclose.
+      Even indexes are optional to disclose.
+    </p>
+    <p>
+      Data Integrity Proofs and SD-JWT take different approaches to disclosure, which impact performance and security.
+      These implementation details impact performance, but are not necessarily required by the specifications.
+      Data Integrity Proofs require mandatory to disclose fields to be marked with JSON Pointer.
+      SD-JWTs require optional to disclose fields to be marked with YAML tags.
     </p>
     <p>
       We then average the execution time of issuance, and compare growth of issuance time for the credential formats to the number of names.
     </p>
+    <p></p>
   </section>
   <section>
     <h2>Issuance</h2>
@@ -116,6 +128,19 @@
         Source</a>
     </p>
     <div id="issuance-benchmark"></div>
+  </section>
+  <section>
+    <h2>Analysis</h2>
+    <p>As a general rule, both approaches performance degrades as the size of the input grows.</p>
+    <p>
+      Data Integrity Proofs take a strict validation approach at the time of issuance by 
+      performing addition syntax and semantics checks to ensure RDF compatibility.
+    </p>
+    <p>
+      SD-JWT tends to treat the claimset at a JSON object, 
+      and does not apply any semantic or syntax checks 
+      beyond the basics required to ensure valid JSON.
+    </p>
   </section>
 </body>
 

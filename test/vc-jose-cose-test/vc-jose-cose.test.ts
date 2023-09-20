@@ -1,7 +1,8 @@
 import fs from 'fs'
 import SD from "../../src";
 
-import testcase from '../testcase'
+import testcase from '../../src/interoperability/testcase'
+
 
 const salter = testcase.salter
 

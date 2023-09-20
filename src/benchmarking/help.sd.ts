@@ -45,10 +45,13 @@ const createTestValues = (length: number) => {
 }
 
 const createPointers = (length: number) => {
-  return new Array(length)
-    .fill(0).map((v, i) => {
-      return `/issuer/name/${i}`
-    })
+  const mandatoryPointers = new Array(length)
+  .fill(0).map((v, i) => {
+    return `/issuer/name/${i}`
+  })
+  return mandatoryPointers.filter((v, i)=>{
+    return i % 2 !== 0;
+  })
 }
 
 const createDisclosableExample = (example: any, length: number) => {
@@ -56,8 +59,10 @@ const createDisclosableExample = (example: any, length: number) => {
   const parsed = yaml.parseDocument(disclosable) as { contents: YAMLMap}
   const issuer = parsed.contents.get('issuer') as YAMLMap
   const names = issuer.get('name') as YAMLSeq<YAMLMap>
-  for (const name of names.items){
-    name.tag = '!sd'
+  for (const index in names.items){
+    if (parseInt(index) % 2 !== 0){
+      names.items[index].tag = '!sd'
+    }
   }
   return yaml.stringify(parsed)
 }

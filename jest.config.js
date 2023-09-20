@@ -7,7 +7,7 @@ module.exports = {
   coverageReporters: ['json-summary'],
   "extensionsToTreatAsEsm": [".ts"],
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {//the content you'd placed at "global"
+    '^.+\\.ts?$': ['ts-jest', { 
       "useESM": true
     }]
   },

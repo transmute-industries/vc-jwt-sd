@@ -1,6 +1,8 @@
 import fs from "fs";
 import SD from "../src";
-import testcase from "./testcase";
+
+import testcase from '../src/interoperability/testcase'
+
 import { Scalar, YAMLSeq, Pair } from "yaml";
 
 const testcases = fs.readdirSync("testcases/", { withFileTypes: true });
