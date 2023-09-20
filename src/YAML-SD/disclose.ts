@@ -103,11 +103,15 @@ const discloseReplace = (source: Scalar | YAMLSeq | YAMLMap | Pair) => {
     delete mutate.tag;
   } else if (source instanceof Pair) {
     const mutate = source as any;
-    mutate.key.value = `${mutate.key.value}`;
-    delete mutate.key.tag;
-    delete mutate.value.toJSON;
-    delete mutate.value.sd;
-    delete mutate.value.tag;
+    // indicates performance opportunity...
+    if (typeof mutate.key !== 'string'){
+      mutate.key.value = `${mutate.key.value}`;
+      delete mutate.key.tag;
+      delete mutate.value.toJSON;
+      delete mutate.value.sd;
+      delete mutate.value.tag;
+    }
+    
   } else {
     console.log(source)
     throw new Error("discloseReplace, Unhandled disclosure case");
