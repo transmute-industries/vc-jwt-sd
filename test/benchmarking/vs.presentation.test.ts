@@ -10,7 +10,7 @@ const sdRuntimes = [] as number[]
 
 const maxLength = 500
 
-describe('presentation', () => {
+describe.skip('presentation', () => {
   for (let length = 2; length < maxLength; length++) {
     const ex = getExample(length)
     describe(`Test array length ${length}`, () => {

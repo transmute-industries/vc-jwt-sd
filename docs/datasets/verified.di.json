@@ -39,10 +39,10 @@
   },
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2023-09-21T00:15:11Z",
+    "created": "2023-09-21T00:17:59Z",
     "verificationMethod": "https://university.example/issuers/565049#key-2",
     "cryptosuite": "ecdsa-sd-2023",
     "proofPurpose": "assertionMethod",
-    "proofValue": "u2V0BhVhApAFjzuLqZzEjv4t35XZMA4IqPfYWtf8NrZ_itB5lxgeGBigDo5R96dC84tkkgtAK1EeVmrwosfq8ty0-rM4Jn1gjgCQDqJK-TSH0iG-Co8qSNqCwXv7OXMczs3QqTFB37cboNmqBWECsp4SxrJrfMPWifkL3nqVbOVLHyagRikEjWQsYZBZ2PGYxHMlkxgLAZjO648WFoHXEwGc-AmubEwpGKC_1onLSoQBYIG7as8HSodzR_5Gy2MudAHmDOsIDmS9USpFt1-oFU29iiwABAgMEBQYHCQoL"
+    "proofValue": "u2V0BhVhAUHd9Qf1qvPmTXeOugCFlce6ngPn7IBK0MbllZfwp12ExHSmHjVtQ2wtuQiQHTnM1PUQeA4sAZeRlKtjRNwOoAVgjgCQDLE29kKCVPqwlJElyQQjHrtt-Bm3qbVQUsFaIKiXuh26BWECcyF7SycO6XGQnrmHjjUoKK0myz6ynEE4PF57L5ob33lKvMStsBkNncgqxzgpgmNu8hsGU0fC9oMFRNhD06gBqoQBYICGXyewgJQO3M1de1VC3no58R27KGV_ogg6CZ9JnUkJaiwABAgMEBQYHCQoL"
   }
 }
