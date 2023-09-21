@@ -73,124 +73,24 @@
       SD-JWTs require optional to disclose fields to be marked with YAML tags.
     </p>
     <p>
-      We then average the execution time of issuance, and compare growth of issuance time for the credential formats to the number of names.
+      We then average the execution time of issuance, and compare growth of issuance time for the credential formats to
+      the number of names.
     </p>
     <p>
       See these examples generated for the length 5, to understand the approach taken:
     </p>
-    <pre class="example nohighlight" title="An example with a list of values">
-{
-  "@context": [
-    "https://www.w3.org/ns/credentials/v2",
-    "https://www.w3.org/ns/credentials/examples/v2"
-  ],
-  "id": "http://university.example/credentials/3732",
-  "type": [
-    "VerifiableCredential",
-    "ExampleDegreeCredential"
-  ],
-  "issuer": {
-    "id": "https://university.example/issuers/565049",
-    "name": [
-      {
-        "value": "test value 0",
-        "lang": "en"
-      },
-      {
-        "value": "test value 1",
-        "lang": "en"
-      },
-      {
-        "value": "test value 2",
-        "lang": "en"
-      },
-      {
-        "value": "test value 3",
-        "lang": "en"
-      },
-      {
-        "value": "test value 4",
-        "lang": "en"
-      }
-    ]
-  },
-  "validFrom": "2015-05-10T12:30:00Z",
-  "credentialSubject": {
-    "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-    "degree": {
-      "type": "ExampleBachelorDegree",
-      "subtype": "Bachelor of Science and Arts"
-    }
-  }
-}
+    <pre class="example nohighlight" title="An example with a list of values" data-include="datasets/example.json"
+      data-include-format="text">
     </pre>
-    <pre class="example nohighlight" title="Mandatory to disclose JSON Pointers">
-[
-  "/issuer/name/1"
-]
+    <pre class="example nohighlight" title="Mandatory to disclose JSON Pointers"
+      data-include="datasets/mandatoryPointers.json" data-include-format="text"></pre>
+    <pre class="example nohighlight" title="Selectively disclosed JSON Pointers"
+      data-include="datasets/selectivePointers.json" data-include-format="text"></pre>
+    <pre class="example nohighlight" title="Disclosable claims" data-include="datasets/disclosable.yaml"
+      data-include-format="text">
     </pre>
-    <pre class="example nohighlight" title="Selectively disclosed JSON Pointers">
-[
-  "/issuer/name/0",
-  "/issuer/name/3"
-]
-    </pre>
-    <pre class="example nohighlight" title="Disclosable claims">
-"@context":
-  - https://www.w3.org/ns/credentials/v2
-  - https://www.w3.org/ns/credentials/examples/v2
-id: http://university.example/credentials/3732
-type:
-  - VerifiableCredential
-  - ExampleDegreeCredential
-issuer:
-  id: https://university.example/issuers/565049
-  name:
-    - value: test value 0
-      lang: en
-    - !sd
-      value: test value 1
-      lang: en
-    - value: test value 2
-      lang: en
-    - !sd
-      value: test value 3
-      lang: en
-    - value: test value 4
-      lang: en
-validFrom: 2015-05-10T12:30:00Z
-credentialSubject:
-  id: did:example:ebfeb1f712ebc6f1c276e12ec21
-  degree:
-    type: ExampleBachelorDegree
-    subtype: Bachelor of Science and Arts
-    </pre>
-
-    <pre class="example nohighlight" title="Disclosure of claims">
-"@context":
-  - https://www.w3.org/ns/credentials/v2
-  - https://www.w3.org/ns/credentials/examples/v2
-id: http://university.example/credentials/3732
-type:
-  - VerifiableCredential
-  - ExampleDegreeCredential
-issuer:
-  id: https://university.example/issuers/565049
-  name:
-    - value: test value 0
-      lang: en
-    - true
-    - value: test value 2
-      lang: en
-    - false
-    - value: test value 4
-      lang: en
-validFrom: 2015-05-10T12:30:00Z
-credentialSubject:
-  id: did:example:ebfeb1f712ebc6f1c276e12ec21
-  degree:
-    type: ExampleBachelorDegree
-    subtype: Bachelor of Science and Arts
+    <pre class="example nohighlight" title="Disclosure of claims" data-include="datasets/disclosure.yaml"
+      data-include-format="text">
     </pre>
   </section>
   <section>
@@ -210,17 +110,35 @@ credentialSubject:
     <div id="presentation-benchmark"></div>
   </section>
   <section>
+    <h2>Verification</h2>
+    <p>
+      <a href="https://github.com/transmute-industries/vc-jwt-sd/blob/main/test/benchmarking/vs.verification.test.ts">View
+        Source</a>
+    </p>
+    <div id="verification-benchmark"></div>
+  </section>
+  <section>
     <h2>Analysis</h2>
     <p>As a general rule, both approaches performance degrades as the size of the input grows.</p>
     <p>
-      Data Integrity Proofs take a strict validation approach at the time of issuance by 
+      Data Integrity Proofs take a strict validation approach at the time of issuance by
       performing addition syntax and semantics checks to ensure RDF compatibility.
     </p>
     <p>
-      SD-JWT tends to treat the claimset as a JSON object, 
-      and does not apply any semantic or syntax checks 
+      SD-JWT treats the claimset as a JSON object,
+      and does not apply any semantic or syntax checks
       beyond the basics required to ensure valid JSON.
     </p>
+    <p>
+      It's important to note that in the case verification succeeds,
+      the verifier learns the example same information, assuming that JSON-LD contexts are immutable.
+    </p>
+    <pre class="example nohighlight" title="Verified with Data Integrity" data-include="datasets/verified.di.json"
+      data-include-format="text">
+    </pre>
+    <pre class="example nohighlight" title="Verified with SD-JWT" data-include="datasets/verified.sd.json"
+      data-include-format="text">
+    </pre>
   </section>
 </body>
 

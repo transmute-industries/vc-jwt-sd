@@ -2,7 +2,7 @@ import fs from 'fs'
 
 import { getExample } from '../../src/benchmarking/help.sd'
 
-import { createSdIssuanceHelper, createSdPresentationHelper } from '../../src/benchmarking/help.sd-jwt'
+import { createSdIssuanceHelper, createSdPresentationHelper, createSdVerificationHelper } from '../../src/benchmarking/help.sd-jwt'
 
 let ex: any;
 
@@ -21,4 +21,10 @@ it('issuance', async () => {
 it('presentation', async () => {
   const measurable = await createSdPresentationHelper(ex)
   await measurable()
+});
+
+it('verification', async () => {
+  const measurable = await createSdVerificationHelper(ex)
+  const verified = await measurable()
+  fs.writeFileSync('docs/datasets/verified.sd.json', JSON.stringify(verified, null, 2))
 });

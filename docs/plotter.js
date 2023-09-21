@@ -88,3 +88,7 @@ fetch("datasets/issuance.json").then(r => r.json()).then(data => {
 fetch("datasets/presentation.json").then(r => r.json()).then(data => {
   setTimeout(() => makeChart(data, 'presentation-benchmark'), 0);
 });
+
+fetch("datasets/verification.json").then(r => r.json()).then(data => {
+  setTimeout(() => makeChart(data, 'verification-benchmark'), 0);
+});

@@ -2,7 +2,7 @@ import fs from 'fs'
 
 import { getExample } from '../../src/benchmarking/help.sd'
 
-import { createDiIssuanceHelper, createDiPresentationHelper } from '../../src/benchmarking/help.data-integrity'
+import { createDiIssuanceHelper, createDiPresentationHelper, createDiVerificationHelper } from '../../src/benchmarking/help.data-integrity'
 
 let ex: any;
 
@@ -21,4 +21,10 @@ it('issuance', async () => {
 it('presentation', async () => {
   const measurableAsyncFunction = await createDiPresentationHelper(ex)
   await measurableAsyncFunction()
+});
+
+it('verification', async () => {
+  const measurableAsyncFunction = await createDiVerificationHelper(ex)
+  const verified = await measurableAsyncFunction()
+  fs.writeFileSync('docs/datasets/verified.di.json', JSON.stringify(verified, null, 2))
 });

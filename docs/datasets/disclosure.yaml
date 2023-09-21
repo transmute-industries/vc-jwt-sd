@@ -10,10 +10,10 @@ issuer:
   name:
     - value: test value 0
       lang: en
-    - true
+    - false
     - value: test value 2
       lang: en
-    - false
+    - true
     - value: test value 4
       lang: en
 validFrom: 2015-05-10T12:30:00Z

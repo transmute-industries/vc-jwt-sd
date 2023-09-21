@@ -10,7 +10,7 @@ const sdRuntimes = [] as number[]
 
 const maxLength = 100
 
-describe('presentation', () => {
+describe('verification', () => {
   for (let length = 2; length < maxLength; length++) {
     const ex = getExample(length)
     describe(`Test array length ${length}`, () => {
@@ -38,6 +38,6 @@ describe('presentation', () => {
 
   afterAll(() => {
     const data = [exLengths, diRuntimes, sdRuntimes]
-    fs.writeFileSync('docs/datasets/presentation.json', JSON.stringify(data))
+    fs.writeFileSync('docs/datasets/verification.json', JSON.stringify(data))
   })
 })

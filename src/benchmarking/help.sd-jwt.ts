@@ -79,3 +79,48 @@ export const createSdPresentationHelper = async (ex: {example: any, mandatoryPoi
     // console.log(JSON.stringify(verified, null, 2))
   }
 }
+
+
+export const createSdVerificationHelper = async (ex: {example: any, mandatoryPointers: string[], selectivePointers: string[], disclosable: string, disclosure: string}) => {
+  const alg = 'ES256' // can't use ES384 because of DataIntegrityProof bug.
+  const issuerKeyPair = await SD.JWK.generate(alg)
+  const issuerSigner = await SD.JWS.signer(issuerKeyPair.secretKeyJwk)
+  const issuer = new SD.Issuer({
+    alg,
+    digester,
+    signer: issuerSigner,
+    salter
+  })
+  const sdClaims = SD.YAML.load(ex.disclosable)
+  const vc = await issuer.issue({
+    claims: sdClaims
+  })
+  const holder = new SD.Holder({
+    alg,
+    digester,
+  })
+  const issuerVerifier = {
+    verify: async (token :string) => {
+      const parsed = SD.Parse.compact(token)
+      const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
+      return verifier.verify(parsed.jwt)
+    }
+  }
+  const verifier = new SD.Verifier({
+    alg,
+    digester,
+    verifier: issuerVerifier
+  })
+  const sdDisclosure = SD.YAML.load(ex.disclosure)
+  const vp = await holder.present({
+    credential: vc,
+    disclosure: sdDisclosure,
+  })
+  return async ()=> {
+    const verified = await verifier.verify({
+      presentation: vp,
+    })
+    // console.log(JSON.stringify(verified, null, 2))
+    return verified
+  }
+}

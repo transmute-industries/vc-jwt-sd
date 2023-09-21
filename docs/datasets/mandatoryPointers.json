@@ -1,3 +1,18 @@
 [
-  "/issuer/name/1"
+  "/@context/0",
+  "/@context/1",
+  "/id",
+  "/type/0",
+  "/type/1",
+  "/issuer/id",
+  "/issuer/name/0/value",
+  "/issuer/name/0/lang",
+  "/issuer/name/2/value",
+  "/issuer/name/2/lang",
+  "/issuer/name/4/value",
+  "/issuer/name/4/lang",
+  "/validFrom",
+  "/credentialSubject/id",
+  "/credentialSubject/degree/type",
+  "/credentialSubject/degree/subtype"
 ]

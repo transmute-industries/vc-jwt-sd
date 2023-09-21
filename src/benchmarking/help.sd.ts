@@ -45,23 +45,27 @@ const createTestValues = (length: number) => {
     })
 }
 
-const createMandatoryPointers = (length: number) => {
-  const mandatoryPointers = new Array(length)
-  .fill(0).map((v, i) => {
-    return `/issuer/name/${i}`
-  })
-  return mandatoryPointers.filter((v, i)=>{
-    return i % 2 !== 0 && i % 3 !== 0;
+const createMandatoryPointers = (example: any) => {
+  const allPointers = Object.keys(pointer.dict(example))
+  return allPointers.filter((v, i)=>{
+    const isIssuerName = v.startsWith('/issuer/name/')
+    if (isIssuerName){
+      const indexInt = parseInt(v.split('/')[3])
+      return indexInt % 2 === 0
+    }
+    return true
   })
 }
 
-const createSelectivePointers = (length: number) => {
-  const selectivePointers = new Array(length)
-  .fill(0).map((v, i) => {
-    return `/issuer/name/${i}`
-  })
-  return selectivePointers.filter((v, i)=>{
-    return i % 3 === 0;
+const createSelectivePointers = (example: any) => {
+  const allPointers = Object.keys(pointer.dict(example))
+  return allPointers.filter((v, i)=>{
+    const isIssuerName = v.startsWith('/issuer/name/')
+    if (isIssuerName){
+      const indexInt = parseInt(v.split('/')[3])
+      return indexInt % 3 === 0
+    }
+    return true
   })
 }
 
@@ -87,9 +91,9 @@ const createDisclosureExample = (disclosable: string) => {
     const indexInt = parseInt(index)
     if (names.items[index].tag === '!sd'){
       if (indexInt % 3 === 0){
-        names.items[index] = new Scalar(false) as any
-      } else {
         names.items[index] = new Scalar(true) as any
+      } else {
+        names.items[index] = new Scalar(false) as any
       }
       delete names.items[index].tag
     }
@@ -101,8 +105,8 @@ export const getExample = (length: number) => {
   const clone = structuredClone(i18nTestCase);
   const issuerNames =  createTestValues(length)
   pointer.set(clone, '/issuer/name', issuerNames);
-  const mandatoryPointers = createMandatoryPointers(length)
-  const selectivePointers = createSelectivePointers(length)
+  const mandatoryPointers = createMandatoryPointers(clone)
+  const selectivePointers = createSelectivePointers(clone)
   const disclosable = createDisclosableExample(clone, length)
   const disclosure = createDisclosureExample(disclosable)
   return { example: clone, mandatoryPointers, selectivePointers, disclosable, disclosure };
