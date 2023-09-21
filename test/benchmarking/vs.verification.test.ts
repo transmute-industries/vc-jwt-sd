@@ -8,7 +8,7 @@ const exLengths = [] as number[]
 const diRuntimes = [] as number[]
 const sdRuntimes = [] as number[]
 
-const maxLength = 100
+const maxLength = 500
 
 describe('verification', () => {
   for (let length = 2; length < maxLength; length++) {

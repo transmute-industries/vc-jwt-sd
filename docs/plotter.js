@@ -67,7 +67,7 @@ function makeChart(data, container) {
   let interval = 0.5 * 1000;
   let len1 = 100;
   let start1 = 0;
-  let step =  5
+  let step =  10
   let data1 = sliceData(start1, start1 + len1);
   let uplot1 = new uPlot(opts, data1, document.getElementById(container));
   let handle = setInterval(function() {
