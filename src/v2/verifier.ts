@@ -1,30 +1,12 @@
 
 import Verifier from "../Verifier"
-import YAML from "../YAML-SD"
+
 import digester from "./digester"
 import JWS from "../JWS"
 
 import Parse from "../Parse"
 
-export type SdJwtDigester = {
-  name: string
-  digest: (json: string) => Promise<string>
-}
-
-export type RequestV2Verifier = { 
-  alg?: string
-  digester?: SdJwtDigester
-  verifier?: any
-  publicKeyJwk?: any 
-}
-
-export type V1VerifierConstructor = { 
-  alg: string
-  digester: SdJwtDigester
-  verifier: {
-    verify: (token: string)=> Promise<any>
-  }
-}
+import { RequestV2Verifier,  V1VerifierConstructor } from '../types'
 
 const verifier = (options: RequestV2Verifier) => {
   if (options.publicKeyJwk){

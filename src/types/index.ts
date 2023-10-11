@@ -1,7 +1,5 @@
 
-import { Hash } from 'crypto'
 import { CompactJWSHeaderParameters } from "jose"
-
 
 export type PublicKeyJwk = Record<any, unknown> & { alg?: string }
 export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
@@ -115,4 +113,68 @@ export type RequestPresentationVerify = {
   presentation: string
   aud ?: string
   nonce ?: string
+}
+
+export type RequestV2Verifier = { 
+  alg?: string
+  digester?: SdJwtDigester
+  verifier?: any
+  publicKeyJwk?: any 
+}
+
+export type V1VerifierConstructor = { 
+  alg: string
+  digester: SdJwtDigester
+  verifier: {
+    verify: (token: string)=> Promise<any>
+  }
+}
+
+
+
+export type SdJwtSigner = {
+  sign: ({protectedHeader, claimset}: SignParams)=> Promise<string>
+}
+export type SdJwtSalter = () => string
+
+export type SdJwtDigester = {
+  name: string
+  digest: (json: string) => Promise<string>
+}
+
+export type RequestV2Issuer = { 
+  alg?: string 
+  iss?: string  
+  kid?: string 
+  typ?: string 
+  cty?: string 
+  digester?: SdJwtDigester  
+  salter?: SdJwtSalter 
+  signer?: SdJwtSigner
+  secretKeyJwk?: any 
+}
+
+export type V1IssuerConstructor = { 
+  alg: string 
+  iss: string  
+  digester: SdJwtDigester  
+  salter: SdJwtSalter 
+  signer: SdJwtSigner
+}
+
+export type RequestV2Holder = { 
+  alg?: string 
+  iss?: string  
+  digester?: SdJwtDigester  
+  salter?: SdJwtSalter 
+  signer?: SdJwtSigner
+  secretKeyJwk?: any 
+}
+
+export type V1HolderConstructor = { 
+  alg: string 
+  iss: string  
+  digester: SdJwtDigester  
+  salter: SdJwtSalter 
+  signer: SdJwtSigner
 }

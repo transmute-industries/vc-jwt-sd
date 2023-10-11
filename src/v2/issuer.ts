@@ -5,36 +5,8 @@ import digester from "./digester"
 import salter from "./salter"
 import JWS from "../JWS"
 
-import { SignParams } from "../types"
+import { RequestV2Issuer,  SdJwtSalter,  SdJwtDigester, SdJwtSigner } from "../types"
 
-export type SdJwtSigner = {
-  sign: ({protectedHeader, claimset}: SignParams)=> Promise<string>
-}
-export type SdJwtSalter = () => string
-export type SdJwtDigester = {
-  name: string
-  digest: (json: string) => Promise<string>
-}
-
-export type RequestV2Issuer = { 
-  alg?: string 
-  iss?: string  
-  kid?: string 
-  typ?: string 
-  cty?: string 
-  digester?: SdJwtDigester  
-  salter?: SdJwtSalter 
-  signer?: SdJwtSigner
-  secretKeyJwk?: any 
-}
-
-export type V1IssuerConstructor = { 
-  alg: string 
-  iss: string  
-  digester: SdJwtDigester  
-  salter: SdJwtSalter 
-  signer: SdJwtSigner
-}
 
 const issuer = (options: RequestV2Issuer) => {
   if (options.secretKeyJwk){
