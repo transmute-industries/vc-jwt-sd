@@ -80,7 +80,7 @@ expect_verified_user_claims:
 
   const vp = await holder.present({
     credential: vc,
-    disclosure: schema.get('holder_disclosed_claims'),
+    disclosure: schema.get('holder_disclosed_claims') as YAMLMap,
     nonce,
     aud
   })

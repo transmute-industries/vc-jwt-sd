@@ -36,7 +36,7 @@ export default class Holder {
       _hash_to_disclosure: hashToEncodedDisclosureMap, 
       _hash_to_decoded_disclosure: disclosureMap
     } as SdHolderState
-
+    
     const parsedDisclosure = JSON.parse(JSON.stringify(disclosure, null, 2))
 
     // todo convert to a walk operation

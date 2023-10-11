@@ -84,10 +84,16 @@ export type RequestPresentation = {
   nonce?: string | number
 }
 
+export type DisclosureHash = string; // base64url encoded
+export type DisclosureEncoding = string; // base64url encoded
+export type ObjectMapHashToDisclosure = Record<DisclosureHash, DisclosureEncoding>
+export type DisclosureArray = Array<any>;
+export type ObjectMapHashToDecodedDisclosure = Record<DisclosureHash, DisclosureArray>
+
 export type SdHolderState = {
-  hs_disclosures: any[]
-  _hash_to_disclosure: any
-  _hash_to_decoded_disclosure: any
+  hs_disclosures: string[]
+  _hash_to_disclosure: ObjectMapHashToDisclosure
+  _hash_to_decoded_disclosure: ObjectMapHashToDecodedDisclosure
   
 }
 
