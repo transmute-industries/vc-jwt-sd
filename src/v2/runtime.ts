@@ -10,6 +10,6 @@ var isNode = new Function("try {return this===global;}catch(e){return false;}");
 // // tests if global scope is bound to "global"
 // if(isNode()) console.log("running under node.js");
 
-const runtime = { isBrowser, isNode}
+const runtime = { isBrowser, isNode }
 
 export default runtime

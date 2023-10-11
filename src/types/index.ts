@@ -23,7 +23,7 @@ export type CompactVerify = { verify: (jws: string) => Promise<SignParams> }
 
 export type Digest = { name: string,  digest: (json: string) => Promise<string> }
 
-export type Salter = () => string 
+export type Salter = () => Promise<string>
 
 export type IssuerCtx = {
   iss?: string,
@@ -135,7 +135,7 @@ export type V1VerifierConstructor = {
 export type SdJwtSigner = {
   sign: ({protectedHeader, claimset}: SignParams)=> Promise<string>
 }
-export type SdJwtSalter = () => string
+export type SdJwtSalter = () => Promise<string>
 
 export type SdJwtDigester = {
   name: string
