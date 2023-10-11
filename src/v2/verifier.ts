@@ -12,7 +12,7 @@ const verifier = (options: RequestVerifier) => {
   if (options.publicKeyJwk){
     options.alg = options.publicKeyJwk.alg
   }
-  if (!options.alg){
+  if (!options.verifier && !options.alg){
     throw new Error('alg must be passed as an option or restricted via publicKeyJwk')
   }
   if (!options.digester){
@@ -29,7 +29,6 @@ const verifier = (options: RequestVerifier) => {
   }
   return {
     verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }) => {
-      
       const role = new Verifier(options as VerifierCtx)
       return role.verify({
         presentation: token,

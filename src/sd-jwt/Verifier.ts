@@ -48,9 +48,16 @@ export default class Verifier {
       }
       if (nonce || aud){
         try{
-          const {cnf: {jwk}} = verifiedIssuanceToken.claimset as any
-          await verifyKbt(jwk, parsed.kbt as string, aud as string, nonce as string)
+          let jwk;
+          if ((verifiedIssuanceToken.claimset.cnf as any).jwk ){
+            ({cnf: {jwk}} = verifiedIssuanceToken.claimset  as any)
+            await verifyKbt(jwk, parsed.kbt as string, aud as string, nonce as string)
+          } else {
+            console.log('about to call verify', parsed.kbt)
+            await this.verifier.verify(parsed.kbt)
+          }
         } catch(e){
+          console.log(e)
           throw new Error('Failed to verify key binding token.')
         }
       }

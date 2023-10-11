@@ -72,6 +72,8 @@ export type Spec = {
 
 export type HolderCtx = {
   alg: string
+  iss?: string
+  kid?: string
   digester: Digester
   signer?: Signer
 }
@@ -131,6 +133,7 @@ export type RequestIssuer = {
 export type RequestHolder = { 
   alg?: string 
   iss?: string  
+  kid?: string  
   digester?: Digester  
   salter?: Salter 
   signer?: Signer

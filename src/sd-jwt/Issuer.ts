@@ -8,13 +8,7 @@ import {
 import JWK from "./JWK";
 
 import { issuancePayload } from "../YAML-SD/issuancePayload";
-
-const sortProtectedHeader = (protectedHeader: any)=>{
-  const {alg, iss, kid, typ, cty, ...rest} = protectedHeader;
-  return JSON.parse(JSON.stringify({
-    alg, iss, kid, typ, cty, ...rest
-  }))
-}
+import { sortProtectedHeader } from './sortProtectedHeader'
 
 // SDJWTIssuer
 export default class Issuer {
@@ -55,9 +49,17 @@ export default class Issuer {
       claimset.exp = exp
     }
     if (holder) {
-      claimset.cnf = {
-        jwk: JWK.getPublicKey(holder),
-      };
+      if (typeof holder === 'object'){
+        claimset.cnf = {
+          jwk: JWK.getPublicKey(holder),
+        };
+      } else if (typeof holder === 'string'){
+        claimset.cnf = {
+          jkt: holder,
+        };
+      } else {
+        throw new Error('Unsupported holder type.')
+      }
     }
     const protectedHeader = {} as any;
 

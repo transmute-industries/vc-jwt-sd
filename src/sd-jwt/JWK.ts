@@ -1,6 +1,6 @@
 import { PrivateKeyJwk, PublicKeyJwk } from "../types";
 
-import { generateKeyPair, exportJWK } from 'jose'
+import { generateKeyPair, exportJWK, calculateJwkThumbprint } from 'jose'
 
 const format = (jwk: PublicKeyJwk | PrivateKeyJwk) => {
   const { kid, x5u, x5c, x5t, kty, crv, alg, key_ops, x, y, d, ...rest } = jwk;
@@ -31,8 +31,10 @@ const getExtractableKeyPair = async (alg: string) =>{
   const keypair  = await generateKeyPair(alg, {extractable: true})
   const publicKeyJwk = await exportJWK(keypair.publicKey)
   publicKeyJwk.alg = alg
+  publicKeyJwk.kid = await calculateJwkThumbprint(publicKeyJwk)
   const secretKeyJwk = await exportJWK(keypair.privateKey)
   secretKeyJwk.alg = alg
+  secretKeyJwk.kid = await calculateJwkThumbprint(secretKeyJwk)
   return { 
     publicKeyJwk: format(publicKeyJwk),
     secretKeyJwk: format(secretKeyJwk)

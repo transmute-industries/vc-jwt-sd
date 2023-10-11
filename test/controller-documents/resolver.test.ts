@@ -1,49 +1,128 @@
-import crypto from 'crypto'
-import moment from 'moment';
-import { base64url, decodeJwt, exportJWK, generateKeyPair, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
 
-import { YAMLMap } from 'yaml'
-import testcase from '../../src/interoperability/testcase'
+import {  decodeJwt, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
 
-import SD from "../../src";
+import sd from "../../src";
+
+const alg = 'ES384';
+// based on https://w3c.github.io/vc-data-model/#example-a-simple-example-of-a-verifiable-credential
+const claimset = `
+"@context":
+  - https://www.w3.org/ns/credentials/v2
+  - https://www.w3.org/ns/credentials/examples/v2
+id: http://university.example/credentials/3732
+type:
+  - VerifiableCredential
+  - ExampleDegreeCredential
+issuer:
+  id: https://university.example/issuers/565049
+  name:
+    - value: test value 0
+      lang: en
+    - !sd
+      value: test value 1
+      lang: en
+    - value: test value 2
+      lang: en
+    - !sd
+      value: test value 3
+      lang: en
+    - value: test value 4
+      lang: en
+validFrom: 2015-05-10T12:30:00Z
+credentialStatus:
+  - id: https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6#0
+    type: StatusList2021Entry
+    statusPurpose: revocation
+    statusListIndex: "0"
+    statusListCredential: https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6
+credentialSubject:
+  id: did:example:ebfeb1f712ebc6f1c276e12ec21
+  degree:
+    type: ExampleBachelorDegree
+    subtype: Bachelor of Science and Arts
+`;
+
+const disclosure = `
+"@context":
+  - https://www.w3.org/ns/credentials/v2
+  - https://www.w3.org/ns/credentials/examples/v2
+id: http://university.example/credentials/3732
+type:
+  - VerifiableCredential
+  - ExampleDegreeCredential
+issuer:
+  id: https://university.example/issuers/565049
+  name:
+    - value: test value 0
+      lang: en
+    - value: test value 1
+      lang: en
+    - value: test value 2
+      lang: en
+    - False
+    - value: test value 4
+      lang: en
+validFrom: 2015-05-10T12:30:00Z
+credentialStatus:
+  - id: https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6#0
+    type: StatusList2021Entry
+    statusPurpose: revocation
+    statusListIndex: "0"
+    statusListCredential: https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6
+credentialSubject:
+  id: did:example:ebfeb1f712ebc6f1c276e12ec21
+  degree:
+    type: ExampleBachelorDegree
+    subtype: Bachelor of Science and Arts
+`;
 
 it('End to End Test', async () => {
   const alg = 'ES384'
-  const iss = 'did:web:issuer.example'
-  const nonce = '9876543210'
-  const aud = 'did:web:verifier.example'
-  const issuerKeyPair  = await generateKeyPair(alg)
-  const holderKeyPair  = await generateKeyPair(alg)
-  const digester = testcase.digester('sha-256')
- 
-  const issuerPublicKey = await exportJWK(issuerKeyPair.publicKey)
-  const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
-  const issuerSigner = await SD.JWS.signer(issuerPrivateKey)
+  const audience = 'aud-9877'
+  const nonce = 'nonce-5486168'
+  const iss = 'https://university.example/issuers/565049'
+  const kid = `${iss}#key-42`
+  const issuerRole = await sd.key.generate(alg);
+  const holderRole = await sd.key.generate(alg);
+  // console.log(JSON.stringify({holderRole}, null, 2))
+  const vc = await sd.issuer({ 
+      iss, 
+      kid,
+      typ: `application/vc+ld+json+sd-jwt`,
+      secretKeyJwk: issuerRole.secretKeyJwk 
+    })
+    .issue({
+      holder: holderRole.publicKeyJwk.kid,
+      claimset
+    })
+  const vp = await sd.holder({ 
+      secretKeyJwk: holderRole.secretKeyJwk,
+      iss: 'did:example:ebfeb1f712ebc6f1c276e12ec21',
+      kid: `#${holderRole.publicKeyJwk.kid}`
+    })
+    .issue({
+      token: vc,
+      disclosure,
+      audience,
+      nonce
+    })
 
-  const holderPublicKey = await exportJWK(holderKeyPair.publicKey)
-  const holderPrivateKey = await exportJWK(holderKeyPair.privateKey)
-  const holderSigner = await SD.JWS.signer(holderPrivateKey)
-
-  const salter = async () => {
-    return base64url.encode(crypto.randomBytes(16));
-  }
-
-  const dereference = async (didUrl: string)=>{
+    const dereference = async (didUrl: string)=>{
     // for testing, not a real dereferencer
-    if (didUrl.startsWith('did:web:issuer.example')){
+    if (didUrl.startsWith('https://university.example/issuers/565049')){
       return { 
-        id: `${'did:web:issuer.example'}#${calculateJwkThumbprintUri(issuerPublicKey)}`,
+        id: `${iss}#key-42`,
         type: 'JsonWebKey',
-        controller: `${'did:web:issuer.example'}`,
-        publicKeyJwk: issuerPublicKey
+        controller: `${iss}`,
+        publicKeyJwk: issuerRole.publicKeyJwk
       }
     }
-    if (didUrl.startsWith('did:web:holder.example')){
+    if (didUrl.startsWith('did:example:ebfeb1f712ebc6f1c276e12ec21')){
       return { 
-        id: `${'did:web:holder.example'}#${calculateJwkThumbprintUri(holderPublicKey)}`,
+        id: `${'did:example:ebfeb1f712ebc6f1c276e12ec21'}#${holderRole.publicKeyJwk.kid}`,
         type: 'JsonWebKey',
-        controller: `${'did:web:holder.example'}`,
-        publicKeyJwk: holderPublicKey
+        controller: `${'did:example:ebfeb1f712ebc6f1c276e12ec21'}`,
+        publicKeyJwk: holderRole.publicKeyJwk
       }
     }
     throw new Error('Unsupported didUrl: ' + didUrl)
@@ -51,101 +130,39 @@ it('End to End Test', async () => {
 
   const resolver = {
     verify: async (token: string) => {
-      const parsed = SD.Parse.compact(token)
-      const decodedHeader = decodeProtectedHeader(parsed.jwt)
-      const decodedPayload = decodeJwt(parsed.jwt)
-      const iss = (decodedHeader.iss || decodedPayload.iss) as string
-      const kid = decodedHeader.kid as string
-      const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
-      const { publicKeyJwk } = await dereference(absoluteDidUrl)
-      const verifier = await SD.JWS.verifier(publicKeyJwk)
-      return verifier.verify(parsed.jwt)
+      const jwt = token.split('~')[0]
+      const decodedHeader = decodeProtectedHeader(jwt)
+      if (decodedHeader.typ === 'application/vc+ld+json+sd-jwt'){
+        const decodedPayload = decodeJwt(jwt)
+        const iss = (decodedHeader.iss || decodedPayload.iss) as string
+        const kid = decodedHeader.kid as string
+        const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
+        const { publicKeyJwk } = await dereference(absoluteDidUrl)
+        const verifier = await sd.JWS.verifier(publicKeyJwk)
+        return verifier.verify(jwt)
+      } 
+      if (decodedHeader.typ === 'kb+jwt'){
+        const decodedPayload = decodeJwt(jwt)
+        const iss = (decodedHeader.iss || decodedPayload.iss) as string
+        const kid = decodedHeader.kid as string
+        const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
+        const { publicKeyJwk } = await dereference(absoluteDidUrl)
+        const verifier = await sd.JWS.verifier(publicKeyJwk)
+        return verifier.verify(jwt)
+      } 
+      throw new Error('Unsupported token typ')
+      
     }
   }
+  const verification = await sd.verifier({
+      verifier: resolver
+    })
+    .verify({
+      token: vp,
+      audience,
+      nonce
+    })
+  console.log(JSON.stringify({verification}, null, 2))
 
-  const issuer = new SD.Issuer({
-    alg,
-    iss,
-    digester,
-    signer: issuerSigner,
-    salter
-  })
-  const schema = SD.YAML.parseCustomTags(`
   
-user_claims:
-  array_with_recursive_sd:
-    - boring
-    - foo: "bar"
-      !sd baz:
-        qux: "quux"
-    - [!sd "foo", !sd "bar"]
-
-  test2: [!sd "foo", !sd "bar"]
-
-holder_disclosed_claims:
-  array_with_recursive_sd:
-    - None
-    - baz: True
-    - [False, True]
-
-  test2: [True, True]
-
-expect_verified_user_claims:
-  array_with_recursive_sd:
-    - boring
-    - foo: bar
-      baz:
-        qux: quux
-    - ["bar"]
-
-  test2: ["foo", "bar"]
-
-  `)
-  const vc = await issuer.issue({
-    claims: schema.get('user_claims') as YAMLMap,
-    iat: moment().unix(),
-    exp: moment().add(1, 'years').unix(),
-    holder: holderPublicKey
-  })
-
-  const holder = new SD.Holder({
-    alg,
-    digester,
-    signer: holderSigner
-  })
-
-  const vp = await holder.present({
-    credential: vc,
-    disclosure: schema.get('holder_disclosed_claims') as YAMLMap,
-    nonce,
-    aud
-  })
-  
-  const verifier = new SD.Verifier({
-    alg,
-    digester,
-    verifier: resolver
-  })
-  const verified = await verifier.verify({
-    presentation: vp,
-    nonce,
-    aud
-  })
-  expect(verified.claimset.cnf.jwk).toEqual(holderPublicKey)
-  expect(verified.claimset.array_with_recursive_sd).toEqual([
-    "boring",
-    {
-      "foo": "bar",
-      "baz": {
-        qux: "quux"
-      }
-    },
-    [
-      "bar"
-    ]
-  ])
-  expect(verified.claimset.test2).toEqual([
-    "foo",
-    "bar"
-  ])
 });

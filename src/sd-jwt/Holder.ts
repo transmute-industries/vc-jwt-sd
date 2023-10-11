@@ -8,15 +8,20 @@ import _select_disclosures from './_select_disclosures'
 
 import Parse from "./Parse";
 
+import { sortProtectedHeader } from './sortProtectedHeader'
 
 // SDJWTHolder
 export default class Holder {
   public alg: string;
+  public iss?: string;
+  public kid?: string;
   public signer: Signer | undefined;
   public digester;
 
   constructor(ctx: HolderCtx) {
     this.alg = ctx.alg;
+    this.iss = ctx.iss;
+    this.kid = ctx.kid;
     this.digester = ctx.digester;
     this.signer = ctx.signer;
   }
@@ -44,8 +49,9 @@ export default class Holder {
     // state now contains stuff.
     const disclosures = [...state.hs_disclosures] 
 
+    // console.log(JSON.stringify(sd_jwt_payload, null, 2))
     if (sd_jwt_payload.cnf && (!aud || !nonce)){
-      throw new Error('Credential does not contain confirmation method, therefore audience and nonce are not supported.')
+      throw new Error('Credential requires confirmation but audience and nonce are missing.')
     }
     if (aud && nonce){
       if (!sd_jwt_payload.cnf){
@@ -55,10 +61,11 @@ export default class Holder {
         throw new Error('Signer is required.')
       }
       const kbt = await this.signer.sign({
-        protectedHeader: { alg: this.alg, typ: KB_JWT_TYP_HEADER },
+        protectedHeader: sortProtectedHeader({ alg: this.alg, kid: this.kid, typ: KB_JWT_TYP_HEADER }),
         claimset: {
           nonce,
           aud,
+          iss: this.iss,
           iat: Math.floor(Date.now() / 1000)
         }
       })
