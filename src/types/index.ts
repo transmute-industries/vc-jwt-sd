@@ -23,9 +23,13 @@ export type CompactSign = ({protectedHeader, claimset}: SignParams) => Promise<s
 export type CompactSigner = { sign: ({protectedHeader, claimset}: SignParams) => Promise<string> }
 export type CompactVerify = { verify: (jws: string) => Promise<SignParams> }
 
-export type Digest = { name: string,  digest: (json: string) => Promise<string> }
+export type Digester = { name: string,  digest: (json: string) => Promise<string> }
 
 export type Salter = () => Promise<string>
+
+export type SdJwtSalter = () => Promise<string>
+
+
 
 export type IssuerCtx = {
   iss?: string,
@@ -34,7 +38,7 @@ export type IssuerCtx = {
   kid?: string,
   typ?: string,
   cty?: string,
-  digester: Digest,
+  digester: Digester,
   signer: CompactSigner
   salter: Salter
 }
@@ -63,25 +67,9 @@ export type Spec = {
   key_binding: boolean
 }
 
-export type SdState = {
-  issuer: DisclosureIssuer
-  ii_disclosures: any[]
-}
-
-export type DisclosureIssuer = {
-  _generate_salt: () => string
-  _b64hash: (raw:string) => string
-}
-
-export type DisclosureCtx = {
-  issuer: DisclosureIssuer
-  key: any
-  value: any
-}
-
 export type HolderCtx = {
   alg: string
-  digester: Digest
+  digester: Digester
   signer?: CompactSigner
 }
 
@@ -101,7 +89,7 @@ export type SdHolderState = {
 
 export type VerifierCtx = {
   alg: string
-  digester: Digest
+  digester: Digester
   verifier: CompactVerify
 }
 
@@ -119,27 +107,19 @@ export type RequestPresentationVerify = {
 
 export type RequestV2Verifier = { 
   alg?: string
-  digester?: SdJwtDigester
+  digester?: Digester
   verifier?: any
   publicKeyJwk?: any 
 }
 
 export type V1VerifierConstructor = { 
   alg: string
-  digester: SdJwtDigester
+  digester: Digester
   verifier: {
     verify: (token: string)=> Promise<any>
   }
 }
 
-
-
-export type SdJwtSalter = () => Promise<string>
-
-export type SdJwtDigester = {
-  name: string
-  digest: (json: string) => Promise<string>
-}
 
 export type RequestV2Issuer = { 
   alg?: string 
@@ -147,7 +127,7 @@ export type RequestV2Issuer = {
   kid?: string 
   typ?: string 
   cty?: string 
-  digester?: SdJwtDigester  
+  digester?: Digester  
   salter?: SdJwtSalter 
   signer?: CompactSigner
   secretKeyJwk?: any 
@@ -156,7 +136,7 @@ export type RequestV2Issuer = {
 export type V1IssuerConstructor = { 
   alg: string 
   iss: string  
-  digester: SdJwtDigester  
+  digester: Digester  
   salter: SdJwtSalter 
   signer: CompactSigner
 }
@@ -164,7 +144,7 @@ export type V1IssuerConstructor = {
 export type RequestV2Holder = { 
   alg?: string 
   iss?: string  
-  digester?: SdJwtDigester  
+  digester?: Digester  
   salter?: SdJwtSalter 
   signer?: CompactSigner
   secretKeyJwk?: any 
@@ -173,7 +153,7 @@ export type RequestV2Holder = {
 export type V1HolderConstructor = { 
   alg: string 
   iss: string  
-  digester: SdJwtDigester  
+  digester: Digester  
   salter: SdJwtSalter 
   signer: CompactSigner
 }
