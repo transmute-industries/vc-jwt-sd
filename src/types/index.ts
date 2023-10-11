@@ -1,8 +1,9 @@
 
 import { CompactJWSHeaderParameters } from "jose"
 
-export type PublicKeyJwk = Record<any, unknown> & { alg?: string }
+export type PublicKeyJwk = Record<string, unknown> & { alg?: string }
 export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
+export type SecretKeyJwk = PrivateKeyJwk
 
 export type JwtClaimset = Record<string, unknown>
 export type YamlMapClaimset = Record<any, unknown>
@@ -108,16 +109,14 @@ export type RequestPresentationVerify = {
 export type RequestV2Verifier = { 
   alg?: string
   digester?: Digester
-  verifier?: any
-  publicKeyJwk?: any 
+  verifier?: Verifier
+  publicKeyJwk?: PublicKeyJwk 
 }
 
 export type V1VerifierConstructor = { 
   alg: string
   digester: Digester
-  verifier: {
-    verify: (token: string)=> Promise<any>
-  }
+  verifier: Verifier
 }
 
 export type RequestV2Issuer = { 
@@ -129,7 +128,7 @@ export type RequestV2Issuer = {
   digester?: Digester  
   salter?: Salter 
   signer?: Signer
-  secretKeyJwk?: any 
+  secretKeyJwk?: SecretKeyJwk 
 }
 
 export type V1IssuerConstructor = { 
@@ -146,7 +145,7 @@ export type RequestV2Holder = {
   digester?: Digester  
   salter?: Salter 
   signer?: Signer
-  secretKeyJwk?: any 
+  secretKeyJwk?: SecretKeyJwk 
 }
 
 export type V1HolderConstructor = { 

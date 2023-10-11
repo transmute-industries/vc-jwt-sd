@@ -6,7 +6,7 @@ import JWS from "../sd-jwt/JWS"
 
 import Parse from "../sd-jwt/Parse"
 
-import { RequestV2Verifier,  V1VerifierConstructor } from '../types'
+import { PublicKeyJwk, RequestV2Verifier,  V1VerifierConstructor } from '../types'
 
 const verifier = (options: RequestV2Verifier) => {
   if (options.publicKeyJwk){
@@ -22,7 +22,7 @@ const verifier = (options: RequestV2Verifier) => {
     options.verifier = {
       verify: async (token: string) => {
         const parsed = Parse.compact(token)
-        const verifier = await JWS.verifier(options.publicKeyJwk)
+        const verifier = await JWS.verifier(options.publicKeyJwk as PublicKeyJwk)
         return verifier.verify(parsed.jwt)
       }
     }
