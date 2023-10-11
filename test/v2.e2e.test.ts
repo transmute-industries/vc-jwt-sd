@@ -78,7 +78,7 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
   if (audience && nonce) {
     expect(token.split('.').length).toBe(5) // 2 tokens
     expect(token.split('~').length).toBe(3)
-    const verification = await sd.v2.verifier({
+    const verification = await sd.verifier({
       publicKeyJwk
     })
       .verify({
@@ -97,7 +97,7 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
     expect(token.split('.').length).toBe(3) // 1 token
     if (isVC) {
       expect(token.split('~').length).toBe(3)
-      const verification = await sd.v2.verifier({
+      const verification = await sd.verifier({
         publicKeyJwk
       })
         .verify({
@@ -113,13 +113,13 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
 it('simple setup', async () => {
   const audience = undefined;
   const nonce = undefined;
-  const { publicKeyJwk, secretKeyJwk } = await sd.v2.key.generate(alg);
-  const vc = await sd.v2.issuer({ secretKeyJwk })
+  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ secretKeyJwk })
     .issue({
       claimset
     })
   await helpCheck(true, vc, publicKeyJwk, audience, nonce)
-  const vp = await sd.v2.holder()
+  const vp = await sd.holder()
     .issue({
       token: vc,
       disclosure
@@ -134,11 +134,11 @@ it('verbose setup', async () => {
   const kid = `${iss}#key-123`
   const typ = `application/vc+ld+json+sd-jwt`
   const cty = `application/vc+ld+json`
-  const { publicKeyJwk, secretKeyJwk } = await sd.v2.key.generate(alg)
-  const signer = await sd.v2.signer(secretKeyJwk)
-  const salter = await sd.v2.salter()
-  const digester = await sd.v2.digester()
-  const vc = await sd.v2.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
+  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg)
+  const signer = await sd.signer(secretKeyJwk)
+  const salter = await sd.salter()
+  const digester = await sd.digester()
+  const vc = await sd.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
     .issue({
       holder: publicKeyJwk,
       claimset
@@ -150,7 +150,7 @@ it('verbose setup', async () => {
   }
   audience = `aud-123`;
   nonce = `nonce-456`;
-  const vp = await sd.v2.holder({ alg, salter, digester, signer })
+  const vp = await sd.holder({ alg, salter, digester, signer })
     .issue({
       token: vc,
       disclosure,

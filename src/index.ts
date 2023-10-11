@@ -13,6 +13,6 @@ import web from './web'
 
 import v2 from './v2'
 
-const SD = { v2, web, YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
+const sd = { ...v2, web, YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
 
-export default SD
+export default sd
