@@ -1,5 +1,5 @@
 import fs from 'fs'
-import testcase from '../src/interoperability/testcase'
+import testcase from '../../src/interoperability/testcase'
 
 const testcases = fs.readdirSync('testcases/', { withFileTypes: true });
 

@@ -1,7 +1,7 @@
 import fs from "fs";
-import SD from "../src";
+import SD from "../../src";
 
-import testcase from '../src/interoperability/testcase'
+import testcase from '../../src/interoperability/testcase'
 
 import { Scalar, YAMLSeq, Pair } from "yaml";
 

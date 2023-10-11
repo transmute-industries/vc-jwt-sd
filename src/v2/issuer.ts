@@ -19,6 +19,9 @@ export type SdJwtDigester = {
 export type RequestV2Issuer = { 
   alg?: string 
   iss?: string  
+  kid?: string 
+  typ?: string 
+  cty?: string 
   digester?: SdJwtDigester  
   salter?: SdJwtSalter 
   signer?: SdJwtSigner
@@ -51,7 +54,16 @@ const issuer = (options: RequestV2Issuer) => {
       if (options.secretKeyJwk){
         options.signer = await JWS.signer(options.secretKeyJwk)
       }
-      const role = new Issuer(options as V1IssuerConstructor)
+      const role = new Issuer({
+        alg: options.alg as string,
+        iss: options.iss,
+        kid: options.kid,
+        typ: options.typ,
+        cty: options.cty,
+        salter: options.salter as SdJwtSalter,
+        digester: options.digester as SdJwtDigester,
+        signer: options.signer as SdJwtSigner,
+      })
       return role.issue({
         holder,
         claims: YAML.load(claimset)

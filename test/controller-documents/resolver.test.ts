@@ -3,9 +3,9 @@ import moment from 'moment';
 import { base64url, decodeJwt, exportJWK, generateKeyPair, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
 
 
-import testcase from '../src/interoperability/testcase'
+import testcase from '../../src/interoperability/testcase'
 
-import SD from "../src";
+import SD from "../../src";
 
 it('End to End Test', async () => {
   const alg = 'ES384'

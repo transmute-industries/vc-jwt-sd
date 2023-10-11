@@ -1,5 +1,6 @@
 import sd from '../src'
 const alg = 'ES384';
+// based on https://w3c.github.io/vc-data-model/#example-a-simple-example-of-a-verifiable-credential
 const claimset = `
 "@context":
   - https://www.w3.org/ns/credentials/v2
@@ -72,33 +73,39 @@ credentialSubject:
 `;
 
 
-const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audience?:string, nonce?:string) => {
+const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audience?: string, nonce?: string) => {
   // these params indicate a VP
-  if (audience && nonce){
+  if (audience && nonce) {
     expect(token.split('.').length).toBe(5) // 2 tokens
     expect(token.split('~').length).toBe(3)
-    const verification = await sd.v2.verifier({ 
+    const verification = await sd.v2.verifier({
       publicKeyJwk
     })
-    .verify({
-      token,
-      audience,
-      nonce
-    })
+      .verify({
+        token,
+        audience,
+        nonce
+      })
     expect(verification.claimset.issuer.name.length).toBe(4) // partial disclosure
+    expect(JSON.stringify(verification.protectedHeader, null, 2)).toEqual(JSON.stringify({
+      "alg": "ES384",
+      "kid": "https://university.example/issuers/565049#key-123",
+      "typ": "application/vc+ld+json+sd-jwt",
+      "cty": "application/vc+ld+json",
+    }, null, 2))
   } else {
     expect(token.split('.').length).toBe(3) // 1 token
-    if (isVC){
+    if (isVC) {
       expect(token.split('~').length).toBe(3)
-       const verification = await sd.v2.verifier({ 
-          publicKeyJwk
-        })
+      const verification = await sd.v2.verifier({
+        publicKeyJwk
+      })
         .verify({
           token,
           audience,
           nonce
         })
-        expect(verification.claimset.issuer.name.length).toBe(5) // full disclosure
+      expect(verification.claimset.issuer.name.length).toBe(5) // full disclosure
     }
   }
 }
@@ -108,43 +115,47 @@ it('simple setup', async () => {
   const nonce = undefined;
   const { publicKeyJwk, secretKeyJwk } = await sd.v2.key.generate(alg);
   const vc = await sd.v2.issuer({ secretKeyJwk })
-  .issue({
-    claimset
-  })
+    .issue({
+      claimset
+    })
   await helpCheck(true, vc, publicKeyJwk, audience, nonce)
   const vp = await sd.v2.holder()
-  .issue({
-    token: vc,
-    disclosure
-  })
+    .issue({
+      token: vc,
+      disclosure
+    })
   await helpCheck(false, vp, publicKeyJwk, audience, nonce)
 });
 
 it('verbose setup', async () => {
   let audience = undefined as string | undefined;
   let nonce = undefined as string | undefined;
+  const iss = `https://university.example/issuers/565049`
+  const kid = `${iss}#key-123`
+  const typ = `application/vc+ld+json+sd-jwt`
+  const cty = `application/vc+ld+json`
   const { publicKeyJwk, secretKeyJwk } = await sd.v2.key.generate(alg)
-  const signer =  await sd.v2.signer(secretKeyJwk)
+  const signer = await sd.v2.signer(secretKeyJwk)
   const salter = await sd.v2.salter()
   const digester = await sd.v2.digester()
-  const vc = await sd.v2.issuer({ alg, salter, digester, signer })
-  .issue({
-    holder: publicKeyJwk,
-    claimset
-  })
-  try{
+  const vc = await sd.v2.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
+    .issue({
+      holder: publicKeyJwk,
+      claimset
+    })
+  try {
     await helpCheck(true, vc, publicKeyJwk, audience, nonce)
-  } catch(e){
+  } catch (e) {
     expect((e as any).message).toBe('Verification of this credential requires proof of posession from the holder. Key binding token is expected based on claims, but was not found.')
   }
   audience = `aud-123`;
   nonce = `nonce-456`;
   const vp = await sd.v2.holder({ alg, salter, digester, signer })
-  .issue({
-    token: vc,
-    disclosure,
-    audience,
-    nonce
-  })
+    .issue({
+      token: vc,
+      disclosure,
+      audience,
+      nonce
+    })
   await helpCheck(false, vp, publicKeyJwk, audience, nonce)
 });

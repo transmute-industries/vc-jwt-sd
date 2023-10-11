@@ -9,6 +9,13 @@ import JWK from "./JWK";
 
 import { issuancePayload } from "./YAML-SD/issuancePayload";
 
+const sortProtectedHeader = (protectedHeader: any)=>{
+  const {alg, iss, kid, typ, cty, ...rest} = protectedHeader;
+  return JSON.parse(JSON.stringify({
+    alg, iss, kid, typ, cty, ...rest
+  }))
+}
+
 // SDJWTIssuer
 export default class Issuer {
   public iss?: string;
@@ -67,7 +74,7 @@ export default class Issuer {
       protectedHeader.cty = this.cty;
     }
     const jws = await this.signer.sign({
-      protectedHeader,
+      protectedHeader: sortProtectedHeader(protectedHeader),
       claimset,
     });
     return jws + COMBINED_serialization_FORMAT_SEPARATOR + Object.keys(config.disclosures)

@@ -1,11 +1,11 @@
 
-import SD from "../src";
+import SD from "../../src";
 
 import crypto from 'crypto'
 
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
-import testcase from '../src/interoperability/testcase'
+import testcase from '../../src/interoperability/testcase'
 
 
 const salter = () => {
