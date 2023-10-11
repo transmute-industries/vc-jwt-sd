@@ -5,9 +5,9 @@ import digester from "./digester"
 import salter from "./salter"
 import JWS from "../sd-jwt/JWS"
 
-import { RequestV2Holder, V1HolderConstructor } from "../types"
+import { RequestHolder, HolderCtx } from "../types"
 
-const holder = (options: RequestV2Holder = {}) => {
+const holder = (options: RequestHolder = {}) => {
   if (options.secretKeyJwk){
     options.alg = options.secretKeyJwk.alg
   }
@@ -25,7 +25,7 @@ const holder = (options: RequestV2Holder = {}) => {
       if (options.secretKeyJwk){
         options.signer = await JWS.signer(options.secretKeyJwk)
       }
-      const role = new Holder(options as V1HolderConstructor)
+      const role = new Holder(options as HolderCtx)
       return role.present({
         credential: token,
         disclosure: YAML.load(disclosure),

@@ -5,10 +5,10 @@ import digester from "./digester"
 import salter from "./salter"
 import JWS from "../sd-jwt/JWS"
 
-import { RequestV2Issuer,  Salter,  Digester, Signer } from "../types"
+import { RequestIssuer,  Salter,  Digester, Signer } from "../types"
 
 
-const issuer = (options: RequestV2Issuer) => {
+const issuer = (options: RequestIssuer) => {
   if (options.secretKeyJwk){
     options.alg = options.secretKeyJwk.alg
   }

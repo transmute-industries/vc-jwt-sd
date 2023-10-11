@@ -37,7 +37,6 @@ export type Salter = () => Promise<string>
 
 export type IssuerCtx = {
   iss?: string,
-  _sd_alg ?: string
   alg: string,
   kid?: string,
   typ?: string,
@@ -94,7 +93,12 @@ export type SdHolderState = {
   hs_disclosures: string[]
   _hash_to_disclosure: ObjectMapHashToDisclosure
   _hash_to_decoded_disclosure: ObjectMapHashToDecodedDisclosure
-  
+}
+
+export type ParsedSdJwt = {
+  jwt: string
+  kbt?:string
+  disclosures?: string[]
 }
 
 export type VerifierCtx = {
@@ -103,32 +107,14 @@ export type VerifierCtx = {
   verifier: Verifier
 }
 
-export type ParsedSdJwt = {
-   jwt: string
-   kbt?:string
-   disclosures?: string[]
-}
-
 export type RequestPresentationVerify = {
   presentation: string
   aud ?: string
   nonce ?: string
 }
 
-export type RequestV2Verifier = { 
-  alg?: string
-  digester?: Digester
-  verifier?: Verifier
-  publicKeyJwk?: PublicKeyJwk 
-}
 
-export type V1VerifierConstructor = { 
-  alg: string
-  digester: Digester
-  verifier: Verifier
-}
-
-export type RequestV2Issuer = { 
+export type RequestIssuer = { 
   alg?: string 
   iss?: string  
   kid?: string 
@@ -140,15 +126,9 @@ export type RequestV2Issuer = {
   secretKeyJwk?: SecretKeyJwk 
 }
 
-export type V1IssuerConstructor = { 
-  alg: string 
-  iss: string  
-  digester: Digester  
-  salter: Salter 
-  signer: Signer
-}
 
-export type RequestV2Holder = { 
+
+export type RequestHolder = { 
   alg?: string 
   iss?: string  
   digester?: Digester  
@@ -157,10 +137,11 @@ export type RequestV2Holder = {
   secretKeyJwk?: SecretKeyJwk 
 }
 
-export type V1HolderConstructor = { 
-  alg: string 
-  iss: string  
-  digester: Digester  
-  salter: Salter 
-  signer: Signer
+export type RequestVerifier = { 
+  alg?: string
+  digester?: Digester
+  verifier?: Verifier
+  publicKeyJwk?: PublicKeyJwk 
 }
+
+

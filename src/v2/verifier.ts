@@ -6,9 +6,9 @@ import JWS from "../sd-jwt/JWS"
 
 import Parse from "../sd-jwt/Parse"
 
-import { PublicKeyJwk, RequestV2Verifier,  V1VerifierConstructor } from '../types'
+import { PublicKeyJwk, RequestVerifier,  VerifierCtx } from '../types'
 
-const verifier = (options: RequestV2Verifier) => {
+const verifier = (options: RequestVerifier) => {
   if (options.publicKeyJwk){
     options.alg = options.publicKeyJwk.alg
   }
@@ -30,7 +30,7 @@ const verifier = (options: RequestV2Verifier) => {
   return {
     verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }) => {
       
-      const role = new Verifier(options as V1VerifierConstructor)
+      const role = new Verifier(options as VerifierCtx)
       return role.verify({
         presentation: token,
         aud: audience,
