@@ -8,7 +8,8 @@ export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
 export type SecretKeyJwk = PrivateKeyJwk
 
 export type JwtClaimset = Record<string, unknown>
-export type YamlMapClaimset = YAMLMap | null
+export type YamlMapClaimset = YAMLMap
+export type YamlMapDisclosure = YAMLMap
 
 export type RequestIssuance = {
   iat?: number
@@ -65,8 +66,8 @@ export type Settings = {
 }
 
 export type Spec = {
-  user_claims: any
-  holder_disclosed_claims: any
+  user_claims: YAMLMap
+  holder_disclosed_claims: YAMLMap
   key_binding: boolean
 }
 
@@ -78,7 +79,7 @@ export type HolderCtx = {
 
 export type RequestPresentation = {
   credential: string
-  disclosure: any
+  disclosure: YamlMapDisclosure
   aud?: string | string[]
   nonce?: string | number
 }
