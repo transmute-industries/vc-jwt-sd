@@ -5,6 +5,7 @@ import { base64url, exportJWK, generateKeyPair } from 'jose';
 import testcase from '../../src/interoperability/testcase'
 
 import SD from "../../src";
+import { YAMLMap } from 'yaml';
 
 const digester = testcase.digester('sha-256')
 
@@ -55,7 +56,7 @@ describe('token to schema', () => {
   
     `)
     const vc = await issuer.issue({
-      claims: schema.get('user_claims'),
+      claims: schema.get('user_claims') as YAMLMap,
     })
     const result = await SD.YAML.tokenToSchema(vc, { digester })
     // console.log(result.yaml)

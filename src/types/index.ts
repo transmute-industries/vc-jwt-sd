@@ -1,17 +1,19 @@
 
 import { CompactJWSHeaderParameters } from "jose"
 
+import { YAMLMap } from "yaml"
+
 export type PublicKeyJwk = Record<string, unknown> & { alg?: string }
 export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
 export type SecretKeyJwk = PrivateKeyJwk
 
 export type JwtClaimset = Record<string, unknown>
-export type YamlMapClaimset = Record<any, unknown>
+export type YamlMapClaimset = YAMLMap | null
 
 export type RequestIssuance = {
   iat?: number
   exp?: number
-  claims: YamlMapClaimset | any
+  claims: YamlMapClaimset
   holder?: PublicKeyJwk
 }
 

@@ -1,4 +1,5 @@
 import {
+  YAMLMap,
   parse,
   stringify,
 } from "yaml";
@@ -19,7 +20,11 @@ const roughlyEqual = (a: string, b: string) => {
 };
 
 const load = (data: string) => {
-  return parseCustomTags(data).contents
+  const parsedData = parseCustomTags(data).contents 
+  if (parsedData === null){
+    throw new Error('parsed data cannot be null.')
+  }
+  return parsedData as YAMLMap
 }
 
 const YAML = {

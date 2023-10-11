@@ -5,6 +5,7 @@ import { base64url, exportJWK, generateKeyPair } from 'jose';
 import testcase from '../../src/interoperability/testcase'
 
 import SD from "../../src";
+import { YAMLMap } from 'yaml';
 
 it('JSON Pointer', async () => {
   const alg = 'ES384'
@@ -61,7 +62,7 @@ expect_verified_user_claims:
 
   `)
   const vc = await issuer.issue({
-    claims: schema.get('user_claims'),
+    claims: schema.get('user_claims') as YAMLMap,
     iat: moment().unix(),
     exp: moment().add(1, 'years').unix(),
     holder: holderPublicKey

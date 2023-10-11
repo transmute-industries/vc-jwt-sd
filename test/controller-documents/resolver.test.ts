@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import moment from 'moment';
 import { base64url, decodeJwt, exportJWK, generateKeyPair, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
 
-
+import { YAMLMap } from 'yaml'
 import testcase from '../../src/interoperability/testcase'
 
 import SD from "../../src";
@@ -102,7 +102,7 @@ expect_verified_user_claims:
 
   `)
   const vc = await issuer.issue({
-    claims: schema.get('user_claims'),
+    claims: schema.get('user_claims') as YAMLMap,
     iat: moment().unix(),
     exp: moment().add(1, 'years').unix(),
     holder: holderPublicKey

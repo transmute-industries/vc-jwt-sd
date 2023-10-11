@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
 import testcase from '../../src/interoperability/testcase'
+import { YAMLMap } from "yaml";
 
 
 const salter = async () => {
@@ -33,7 +34,7 @@ user_claims:
   `)
   try{
     await issuer.issue({
-      claims: schema.get('user_claims'),
+      claims: schema.get('user_claims') as YAMLMap,
     })
   } catch(e){
     expect((e as any).message).toBe('claims may not contain _sd')
