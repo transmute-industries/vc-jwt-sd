@@ -44,7 +44,7 @@ export default class Verifier {
     }
     if (verifiedIssuanceToken.claimset.cnf){
       if (!parsed.kbt){
-        throw new Error('KBT required when cnf is present')
+        throw new Error('Verification of this credential requires proof of posession from the holder. Key binding token is expected based on claims, but was not found.')
       }
       if (nonce || aud){
         try{

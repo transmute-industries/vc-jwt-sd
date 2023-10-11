@@ -6,10 +6,14 @@ module.exports = {
   testEnvironment: 'node',
   testPathIgnorePatterns: ['example', 'attic'],
   coverageReporters: ['json-summary'],
-  "extensionsToTreatAsEsm": [".ts"],
-  transform: {
-    '^.+\\.ts?$': ['ts-jest', { 
-      "useESM": true
-    }]
-  },
+  // only needed for benchmarking
+  // "extensionsToTreatAsEsm": [".ts"],
+  // transform: {
+  //   '^.+\\.js?$': ['ts-jest', { 
+  //     "useESM": true
+  //   }],
+  //   '^.+\\.ts?$': ['ts-jest', { 
+  //     "useESM": false
+  //   }]
+  // },
 };

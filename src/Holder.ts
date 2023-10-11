@@ -44,7 +44,13 @@ export default class Holder {
     // state now contains stuff.
     const disclosures = [...state.hs_disclosures] 
 
+    if (sd_jwt_payload.cnf && (!aud || !nonce)){
+      throw new Error('Credential does not contain confirmation method, therefore audience and nonce are not supported.')
+    }
     if (aud && nonce){
+      if (!sd_jwt_payload.cnf){
+        throw new Error('Credential does not contain confirmation method, therefore audience and nonce are not supported.')
+      }
       if (!this.signer){
         throw new Error('Signer is required.')
       }
