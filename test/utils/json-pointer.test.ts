@@ -19,7 +19,7 @@ it('JSON Pointer', async () => {
   const holderPublicKey = await exportJWK(holderKeyPair.publicKey)
   const holderPrivateKey = await exportJWK(holderKeyPair.privateKey)
   const holderSigner = await SD.JWS.signer(holderPrivateKey)
-  const salter = () => {
+  const salter = async () => {
     return base64url.encode(crypto.randomBytes(16));
   }
   const issuer = new SD.Issuer({

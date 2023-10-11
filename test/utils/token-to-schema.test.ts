@@ -13,10 +13,9 @@ describe('token to schema', () => {
   it('array_with_recursive_sd', async () => {
     const alg = 'ES384'
     const issuerKeyPair  = await generateKeyPair(alg)
-   
     const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
     const issuerSigner = await SD.JWS.signer(issuerPrivateKey)
-    const salter = () => {
+    const salter = async () => {
       return base64url.encode(crypto.randomBytes(16));
     }
     const issuer = new SD.Issuer({

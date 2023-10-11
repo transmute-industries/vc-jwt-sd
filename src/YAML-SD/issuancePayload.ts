@@ -51,7 +51,7 @@ const getDisclosureItem = async (salt: string, source: any, config: any)=>{
 }
 
 const addDisclosure = async (source: any, index: string, sourceItem:any, config: any) => {
-  const salt = config.salter(sourceItem)
+  const salt = await config.salter(sourceItem)
   if (!salt){
     console.warn(JSON.stringify(sourceItem, null, 2))
     throw new Error('Unhandled salt disclosure...')

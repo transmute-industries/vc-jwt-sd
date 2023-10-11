@@ -1,6 +1,6 @@
 import * as jose from "jose";
 
-import { HolderCtx, RequestPresentation, SdHolderState } from "../types";
+import { HolderCtx, RequestPresentation,CompactSigner, SdHolderState } from "../types";
 
 import { COMBINED_serialization_FORMAT_SEPARATOR, KB_JWT_TYP_HEADER } from "./constants";
 
@@ -12,7 +12,7 @@ import Parse from "./Parse";
 // SDJWTHolder
 export default class Holder {
   public alg: string;
-  public signer;
+  public signer: CompactSigner | undefined;
   public digester;
 
   constructor(ctx: HolderCtx) {

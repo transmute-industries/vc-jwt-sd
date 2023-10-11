@@ -18,7 +18,7 @@ const digester = (name: 'sha-256' = 'sha-256') => {
   };
 };
 
-const salter = () => {
+const salter = async () => {
   return base64url.encode(crypto.randomBytes(16));
 }
 

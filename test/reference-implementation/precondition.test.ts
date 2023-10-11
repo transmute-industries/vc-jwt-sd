@@ -8,7 +8,7 @@ import { base64url, exportJWK, generateKeyPair } from 'jose';
 import testcase from '../../src/interoperability/testcase'
 
 
-const salter = () => {
+const salter = async () => {
   return base64url.encode(crypto.randomBytes(16));
 }
 

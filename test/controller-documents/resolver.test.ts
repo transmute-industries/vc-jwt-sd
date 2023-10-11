@@ -24,7 +24,7 @@ it('End to End Test', async () => {
   const holderPrivateKey = await exportJWK(holderKeyPair.privateKey)
   const holderSigner = await SD.JWS.signer(holderPrivateKey)
 
-  const salter = () => {
+  const salter = async () => {
     return base64url.encode(crypto.randomBytes(16));
   }
 

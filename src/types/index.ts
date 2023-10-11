@@ -4,21 +4,23 @@ import { CompactJWSHeaderParameters } from "jose"
 export type PublicKeyJwk = Record<any, unknown> & { alg?: string }
 export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
 
-export type Claimset = Record<any, unknown>
+export type JwtClaimset = Record<string, unknown>
+export type YamlMapClaimset = Record<any, unknown>
 
 export type RequestIssuance = {
-  claims: Claimset | any
   iat?: number
   exp?: number
+  claims: YamlMapClaimset | any
   holder?: PublicKeyJwk
 }
 
 export type SignParams = {
   protectedHeader: CompactJWSHeaderParameters
-  claimset: Claimset
+  claimset: JwtClaimset
 }
 
-export type CompactSign = { sign: ({protectedHeader, claimset}: SignParams) => Promise<string> }
+export type CompactSign = ({protectedHeader, claimset}: SignParams) => Promise<string>
+export type CompactSigner = { sign: ({protectedHeader, claimset}: SignParams) => Promise<string> }
 export type CompactVerify = { verify: (jws: string) => Promise<SignParams> }
 
 export type Digest = { name: string,  digest: (json: string) => Promise<string> }
@@ -33,7 +35,7 @@ export type IssuerCtx = {
   typ?: string,
   cty?: string,
   digester: Digest,
-  signer: CompactSign
+  signer: CompactSigner
   salter: Salter
 }
 
@@ -80,7 +82,7 @@ export type DisclosureCtx = {
 export type HolderCtx = {
   alg: string
   digester: Digest
-  signer?: CompactSign
+  signer?: CompactSigner
 }
 
 export type RequestPresentation = {
@@ -132,9 +134,6 @@ export type V1VerifierConstructor = {
 
 
 
-export type SdJwtSigner = {
-  sign: ({protectedHeader, claimset}: SignParams)=> Promise<string>
-}
 export type SdJwtSalter = () => Promise<string>
 
 export type SdJwtDigester = {
@@ -150,7 +149,7 @@ export type RequestV2Issuer = {
   cty?: string 
   digester?: SdJwtDigester  
   salter?: SdJwtSalter 
-  signer?: SdJwtSigner
+  signer?: CompactSigner
   secretKeyJwk?: any 
 }
 
@@ -159,7 +158,7 @@ export type V1IssuerConstructor = {
   iss: string  
   digester: SdJwtDigester  
   salter: SdJwtSalter 
-  signer: SdJwtSigner
+  signer: CompactSigner
 }
 
 export type RequestV2Holder = { 
@@ -167,7 +166,7 @@ export type RequestV2Holder = {
   iss?: string  
   digester?: SdJwtDigester  
   salter?: SdJwtSalter 
-  signer?: SdJwtSigner
+  signer?: CompactSigner
   secretKeyJwk?: any 
 }
 
@@ -176,5 +175,5 @@ export type V1HolderConstructor = {
   iss: string  
   digester: SdJwtDigester  
   salter: SdJwtSalter 
-  signer: SdJwtSigner
+  signer: CompactSigner
 }
