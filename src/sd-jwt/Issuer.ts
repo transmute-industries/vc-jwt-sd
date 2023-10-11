@@ -1,4 +1,4 @@
-import { RequestIssuance, CompactSign, Digest, IssuerCtx, Salter } from "./types";
+import { RequestIssuance, CompactSign, Digest, IssuerCtx, Salter } from "../types";
 
 import {
   DIGEST_ALG_KEY,
@@ -7,7 +7,7 @@ import {
 
 import JWK from "./JWK";
 
-import { issuancePayload } from "./YAML-SD/issuancePayload";
+import { issuancePayload } from "../YAML-SD/issuancePayload";
 
 const sortProtectedHeader = (protectedHeader: any)=>{
   const {alg, iss, kid, typ, cty, ...rest} = protectedHeader;

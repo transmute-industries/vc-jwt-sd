@@ -11,7 +11,7 @@ import pointer from 'json-pointer'
 
 import { yamlOptions } from "./yamlOptions";
 
-import Parse from "../Parse"
+import Parse from "../sd-jwt/Parse"
 
 const discloseMap = `🔴`
 const disloseSeq = `🟡`

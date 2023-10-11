@@ -1,4 +1,4 @@
-import { PrivateKeyJwk, PublicKeyJwk } from "./types";
+import { PrivateKeyJwk, PublicKeyJwk } from "../types";
 
 import { generateKeyPair, exportJWK } from 'jose'
 

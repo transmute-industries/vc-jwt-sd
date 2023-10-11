@@ -1,5 +1,5 @@
 import { SD_DIGESTS_KEY, SD_LIST_PREFIX } from "./constants";
-import { SdHolderState } from "./types";
+import { SdHolderState } from "../types";
 
 const itemHasDisclosure = (item: any) => {
   return (

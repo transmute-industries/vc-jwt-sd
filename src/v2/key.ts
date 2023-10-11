@@ -1,5 +1,5 @@
 
-import JWK from '../JWK'
+import JWK from '../sd-jwt/JWK'
 
 const key = JWK
 

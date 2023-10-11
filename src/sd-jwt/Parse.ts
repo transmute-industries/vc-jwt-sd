@@ -2,7 +2,7 @@
 import { base64url, decodeJwt } from 'jose'
 import { COMBINED_serialization_FORMAT_SEPARATOR } from './constants'
 
-import { ParsedSdJwt } from './types'
+import { ParsedSdJwt } from '../types'
 
 const compact = (jws: string, options = { decodeDisclosure: false })=>{
   const components = jws.split(COMBINED_serialization_FORMAT_SEPARATOR)

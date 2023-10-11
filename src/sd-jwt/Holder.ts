@@ -1,6 +1,6 @@
 import * as jose from "jose";
 
-import { HolderCtx, RequestPresentation, SdHolderState } from "./types";
+import { HolderCtx, RequestPresentation, SdHolderState } from "../types";
 
 import { COMBINED_serialization_FORMAT_SEPARATOR, KB_JWT_TYP_HEADER } from "./constants";
 

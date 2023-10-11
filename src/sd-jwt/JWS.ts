@@ -1,5 +1,5 @@
 import * as jose from "jose";
-import { PrivateKeyJwk, PublicKeyJwk, SignParams } from "./types";
+import { PrivateKeyJwk, PublicKeyJwk, SignParams } from "../types";
 
 import JWK from "./JWK";
 

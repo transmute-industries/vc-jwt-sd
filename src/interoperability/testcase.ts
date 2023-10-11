@@ -4,7 +4,7 @@ import { Pair, Scalar, parse } from "yaml";
 import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 
 import YAML from "../YAML-SD";
-import Parse from "../Parse";
+import Parse from "../sd-jwt/Parse";
 
 const digester = (name: 'sha-256' = 'sha-256') => {
   if (name !== 'sha-256'){

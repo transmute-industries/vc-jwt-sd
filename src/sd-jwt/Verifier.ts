@@ -1,7 +1,7 @@
 
 import {  DIGEST_ALG_KEY } from "./constants";
 
-import { VerifierCtx, RequestPresentationVerify, PublicKeyJwk } from './types'
+import { VerifierCtx, RequestPresentationVerify, PublicKeyJwk } from '../types'
 
 import JWS from './JWS';
 import Parse from './Parse';

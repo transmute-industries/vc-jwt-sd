@@ -1,10 +1,10 @@
 
-import Verifier from "../Verifier"
+import Verifier from "../sd-jwt/Verifier"
 
 import digester from "./digester"
-import JWS from "../JWS"
+import JWS from "../sd-jwt/JWS"
 
-import Parse from "../Parse"
+import Parse from "../sd-jwt/Parse"
 
 import { RequestV2Verifier,  V1VerifierConstructor } from '../types'
 
