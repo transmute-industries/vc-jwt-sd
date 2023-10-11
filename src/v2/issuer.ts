@@ -5,7 +5,7 @@ import digester from "./digester"
 import salter from "./salter"
 import JWS from "../sd-jwt/JWS"
 
-import { RequestV2Issuer,  SdJwtSalter,  Digester, CompactSigner } from "../types"
+import { RequestV2Issuer,  Salter,  Digester, Signer } from "../types"
 
 
 const issuer = (options: RequestV2Issuer) => {
@@ -32,9 +32,9 @@ const issuer = (options: RequestV2Issuer) => {
         kid: options.kid,
         typ: options.typ,
         cty: options.cty,
-        salter: options.salter as SdJwtSalter,
+        salter: options.salter as Salter,
         digester: options.digester as Digester,
-        signer: options.signer as CompactSigner,
+        signer: options.signer as Signer,
       })
       return role.issue({
         holder,

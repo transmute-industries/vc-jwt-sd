@@ -1,9 +1,9 @@
 import * as jose from "jose";
-import { CompactSigner, PrivateKeyJwk, PublicKeyJwk, SignParams } from "../types";
+import { Signer, PrivateKeyJwk, PublicKeyJwk, SignParams } from "../types";
 
 import JWK from "./JWK";
 
-const signer = async (privateKeyJwk: PrivateKeyJwk): Promise<CompactSigner> => {
+const signer = async (privateKeyJwk: PrivateKeyJwk): Promise<Signer> => {
   const privateKey = await jose.importJWK(privateKeyJwk);
   return {
     sign: async ({ protectedHeader, claimset }: SignParams) => {

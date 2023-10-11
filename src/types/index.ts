@@ -20,16 +20,16 @@ export type SignParams = {
 }
 
 export type CompactSign = ({protectedHeader, claimset}: SignParams) => Promise<string>
-export type CompactSigner = { sign: ({protectedHeader, claimset}: SignParams) => Promise<string> }
-export type CompactVerify = { verify: (jws: string) => Promise<SignParams> }
+
+export type Signer = { sign: CompactSign }
+
+export type CompactVerify = (jws: string) => Promise<SignParams>
+
+export type Verifier = { verify: CompactVerify }
 
 export type Digester = { name: string,  digest: (json: string) => Promise<string> }
 
 export type Salter = () => Promise<string>
-
-export type SdJwtSalter = () => Promise<string>
-
-
 
 export type IssuerCtx = {
   iss?: string,
@@ -39,7 +39,7 @@ export type IssuerCtx = {
   typ?: string,
   cty?: string,
   digester: Digester,
-  signer: CompactSigner
+  signer: Signer
   salter: Salter
 }
 
@@ -70,7 +70,7 @@ export type Spec = {
 export type HolderCtx = {
   alg: string
   digester: Digester
-  signer?: CompactSigner
+  signer?: Signer
 }
 
 export type RequestPresentation = {
@@ -90,7 +90,7 @@ export type SdHolderState = {
 export type VerifierCtx = {
   alg: string
   digester: Digester
-  verifier: CompactVerify
+  verifier: Verifier
 }
 
 export type ParsedSdJwt = {
@@ -120,7 +120,6 @@ export type V1VerifierConstructor = {
   }
 }
 
-
 export type RequestV2Issuer = { 
   alg?: string 
   iss?: string  
@@ -128,8 +127,8 @@ export type RequestV2Issuer = {
   typ?: string 
   cty?: string 
   digester?: Digester  
-  salter?: SdJwtSalter 
-  signer?: CompactSigner
+  salter?: Salter 
+  signer?: Signer
   secretKeyJwk?: any 
 }
 
@@ -137,16 +136,16 @@ export type V1IssuerConstructor = {
   alg: string 
   iss: string  
   digester: Digester  
-  salter: SdJwtSalter 
-  signer: CompactSigner
+  salter: Salter 
+  signer: Signer
 }
 
 export type RequestV2Holder = { 
   alg?: string 
   iss?: string  
   digester?: Digester  
-  salter?: SdJwtSalter 
-  signer?: CompactSigner
+  salter?: Salter 
+  signer?: Signer
   secretKeyJwk?: any 
 }
 
@@ -154,6 +153,6 @@ export type V1HolderConstructor = {
   alg: string 
   iss: string  
   digester: Digester  
-  salter: SdJwtSalter 
-  signer: CompactSigner
+  salter: Salter 
+  signer: Signer
 }

@@ -1,4 +1,4 @@
-import { RequestIssuance, CompactSigner, Digester, IssuerCtx, Salter } from "../types";
+import { RequestIssuance, Signer, Digester, IssuerCtx, Salter } from "../types";
 
 import {
   DIGEST_ALG_KEY,
@@ -24,7 +24,7 @@ export default class Issuer {
   public typ?: string;
   public cty?: string;
   public digester: Digester;
-  public signer: CompactSigner;
+  public signer: Signer;
   public salter: Salter;
   constructor(ctx: IssuerCtx) {
     this.iss = ctx.iss;
