@@ -110,54 +110,7 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
-
-    const dereference = async (didUrl: string)=>{
-    // for testing, not a real dereferencer
-    if (didUrl.startsWith('https://university.example/issuers/565049')){
-      return { 
-        id: issuerKeyId,
-        type: 'JsonWebKey',
-        controller: issuerId,
-        publicKeyJwk: issuerRole.publicKeyJwk
-      }
-    }
-    if (didUrl.startsWith('did:example:ebfeb1f712ebc6f1c276e12ec21')){
-      return { 
-        id: holderKeyId,
-        type: 'JsonWebKey',
-        controller: holderId,
-        publicKeyJwk: holderRole.publicKeyJwk
-      }
-    }
-    throw new Error('Unsupported didUrl: ' + didUrl)
-  }
-
-  const tokenVerifier = {
-    verify: async (token: string) => {
-      const jwt = token.split('~')[0]
-      const decodedHeader = decodeProtectedHeader(jwt)
-      if (decodedHeader.typ === 'application/vc+ld+json+sd-jwt'){
-        const decodedPayload = decodeJwt(jwt)
-        const iss = (decodedHeader.iss || decodedPayload.iss) as string
-        const kid = decodedHeader.kid as string
-        const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
-        const { publicKeyJwk } = await dereference(absoluteDidUrl)
-        const verifier = await sd.JWS.verifier(publicKeyJwk)
-        return verifier.verify(jwt)
-      } 
-      if (decodedHeader.typ === 'kb+jwt'){
-        const decodedPayload = decodeJwt(jwt)
-        const iss = (decodedHeader.iss || decodedPayload.iss) as string
-        const kid = decodedHeader.kid as string
-        const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
-        const { publicKeyJwk } = await dereference(absoluteDidUrl)
-        const verifier = await sd.JWS.verifier(publicKeyJwk)
-        return verifier.verify(jwt)
-      } 
-      throw new Error('Unsupported token typ')
-    }
-  }
-
+    
   const keyIdResolver = {
     resolve: async (kid: string) => {
       if (kid === issuerKeyId){
@@ -178,5 +131,5 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
-    expect(verification.claimset.cnf.jkt).toBeDefined()  
+    expect(verification.claimset.cnf.jkt).toBeDefined()
 });
