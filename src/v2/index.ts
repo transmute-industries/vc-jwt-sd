@@ -6,7 +6,7 @@ import issuer from './issuer'
 import holder from './holder'
 import verifier from './verifier'
 
-import JWS from '../sd-jwt/JWS'
+import JWS from '../lib/JWS'
 
 const v2 = { ...JWS, key, salter, digester, issuer, holder, verifier }
 

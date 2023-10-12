@@ -1,24 +1,22 @@
 
-import Verifier from "../sd-jwt/Verifier"
+import Verifier from "../lib/Verifier"
 
 import digester from "./digester"
-import JWS from "../sd-jwt/JWS"
+import JWS from "../lib/JWS"
 
-import Parse from "../sd-jwt/Parse"
+import Parse from "../lib/Parse"
 
 import { PublicKeyJwk, RequestVerifier,  VerifierCtx } from '../types'
 
 const verifier = (options: RequestVerifier) => {
-  if (options.publicKeyJwk){
-    options.alg = options.publicKeyJwk.alg
-  }
-  if (!options.verifier && !options.alg){
-    throw new Error('alg must be passed as an option or restricted via publicKeyJwk')
-  }
   if (!options.digester){
     options.digester = digester()
   }
   if (options.publicKeyJwk){
+    options.alg = options.alg || options.publicKeyJwk.alg
+    if (!options.alg){
+      throw new Error('alg must be passed as an option or restricted via publicKeyJwk')
+    }
     options.verifier = {
       verify: async (token: string) => {
         const parsed = Parse.compact(token)

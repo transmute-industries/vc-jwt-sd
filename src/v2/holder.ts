@@ -1,9 +1,9 @@
 
-import Holder from "../sd-jwt/Holder"
+import Holder from "../lib/Holder"
 import YAML from "../YAML-SD"
 import digester from "./digester"
 import salter from "./salter"
-import JWS from "../sd-jwt/JWS"
+import JWS from "../lib/JWS"
 
 import { RequestHolder, HolderCtx } from "../types"
 

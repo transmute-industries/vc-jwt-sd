@@ -3,6 +3,6 @@ dist
 .DS_Store
 .env
 
-./sd-jwt
+sd-jwt
 
 example

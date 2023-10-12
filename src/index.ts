@@ -1,11 +1,11 @@
 
 
-import Issuer from './sd-jwt/Issuer'
-import Holder from './sd-jwt/Holder'
-import Verifier from './sd-jwt/Verifier'
-import JWK from './sd-jwt/JWK'
-import JWS from './sd-jwt/JWS'
-import Parse from './sd-jwt/Parse'
+import Issuer from './lib/Issuer'
+import Holder from './lib/Holder'
+import Verifier from './lib/Verifier'
+import JWK from './lib/JWK'
+import JWS from './lib/JWS'
+import Parse from './lib/Parse'
 
 import YAML from './YAML-SD'
 

@@ -107,6 +107,7 @@ export type VerifierCtx = {
   alg: string
   digester: Digester
   verifier: Verifier
+  resolver?: Resolver
 }
 
 export type RequestPresentationVerify = {
@@ -140,10 +141,15 @@ export type RequestHolder = {
   secretKeyJwk?: SecretKeyJwk 
 }
 
+export type Resolver = {
+  resolve: (token: string)=> Promise<PublicKeyJwk>
+}
+
 export type RequestVerifier = { 
   alg?: string
   digester?: Digester
   verifier?: Verifier
+  resolver?: Resolver,
   publicKeyJwk?: PublicKeyJwk 
 }
 

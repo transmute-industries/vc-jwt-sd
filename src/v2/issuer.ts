@@ -1,9 +1,9 @@
 
-import Issuer from "../sd-jwt/Issuer"
+import Issuer from "../lib/Issuer"
 import YAML from "../YAML-SD"
 import digester from "./digester"
 import salter from "./salter"
-import JWS from "../sd-jwt/JWS"
+import JWS from "../lib/JWS"
 
 import { RequestIssuer,  Salter,  Digester, Signer } from "../types"
 

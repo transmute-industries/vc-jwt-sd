@@ -3,7 +3,9 @@ import {  decodeJwt, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jo
 
 import sd from "../../src";
 
-const alg = 'ES384';
+const alg = 'ES384'
+const audience = 'aud-9877'
+const nonce = 'nonce-5486168'
 // based on https://w3c.github.io/vc-data-model/#example-a-simple-example-of-a-verifiable-credential
 const claimset = `
 "@context":
@@ -77,28 +79,29 @@ credentialSubject:
 `;
 
 it('End to End Test', async () => {
-  const alg = 'ES384'
-  const audience = 'aud-9877'
-  const nonce = 'nonce-5486168'
-  const iss = 'https://university.example/issuers/565049'
-  const kid = `${iss}#key-42`
+
   const issuerRole = await sd.key.generate(alg);
+  const issuerId = 'https://university.example/issuers/565049'
+  const issuerKeyId = `${issuerId}#key-42`
+
   const holderRole = await sd.key.generate(alg);
-  // console.log(JSON.stringify({holderRole}, null, 2))
+  const holderId = 'did:example:ebfeb1f712ebc6f1c276e12ec21'
+  const holderKeyId = `${holderId}#${holderRole.publicKeyJwk.kid}`
+
   const vc = await sd.issuer({ 
-      iss, 
-      kid,
+      iss: issuerId, 
+      kid: issuerKeyId,
       typ: `application/vc+ld+json+sd-jwt`,
       secretKeyJwk: issuerRole.secretKeyJwk 
     })
     .issue({
-      holder: holderRole.publicKeyJwk.kid,
+      holder: holderRole.publicKeyJwk,
       claimset
     })
   const vp = await sd.holder({ 
       secretKeyJwk: holderRole.secretKeyJwk,
-      iss: 'did:example:ebfeb1f712ebc6f1c276e12ec21',
-      kid: `#${holderRole.publicKeyJwk.kid}`
+      iss: holderId,
+      kid: holderKeyId
     })
     .issue({
       token: vc,
@@ -106,29 +109,27 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
-
     const dereference = async (didUrl: string)=>{
     // for testing, not a real dereferencer
     if (didUrl.startsWith('https://university.example/issuers/565049')){
       return { 
-        id: `${iss}#key-42`,
+        id: issuerKeyId,
         type: 'JsonWebKey',
-        controller: `${iss}`,
+        controller: issuerId,
         publicKeyJwk: issuerRole.publicKeyJwk
       }
     }
     if (didUrl.startsWith('did:example:ebfeb1f712ebc6f1c276e12ec21')){
       return { 
-        id: `${'did:example:ebfeb1f712ebc6f1c276e12ec21'}#${holderRole.publicKeyJwk.kid}`,
+        id: holderKeyId,
         type: 'JsonWebKey',
-        controller: `${'did:example:ebfeb1f712ebc6f1c276e12ec21'}`,
+        controller: holderId,
         publicKeyJwk: holderRole.publicKeyJwk
       }
     }
     throw new Error('Unsupported didUrl: ' + didUrl)
   }
-
-  const resolver = {
+  const tokenVerifier = {
     verify: async (token: string) => {
       const jwt = token.split('~')[0]
       const decodedHeader = decodeProtectedHeader(jwt)
@@ -151,18 +152,15 @@ it('End to End Test', async () => {
         return verifier.verify(jwt)
       } 
       throw new Error('Unsupported token typ')
-      
     }
   }
   const verification = await sd.verifier({
-      verifier: resolver
+      verifier: tokenVerifier
     })
     .verify({
       token: vp,
       audience,
       nonce
     })
-  console.log(JSON.stringify({verification}, null, 2))
-
-  
+    expect(verification.claimset.cnf.jwk).toBeDefined()  
 });
