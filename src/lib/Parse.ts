@@ -21,6 +21,9 @@ const compact = (jws: string, options = { decodeDisclosure: false })=>{
       return JSON.parse(new TextDecoder().decode(base64url.decode(d)))
     })
   }
+  if (!result.disclosures){
+    result.disclosures = []
+  }
   return result
 }
 
@@ -32,6 +35,7 @@ const expload = async (jws: string, config: any)=>{
   const hash = config.digester
   const hashToDisclosureMap = {} as any
   const hashToEncodedDisclosureMap = {} as any
+  
   for (const encoded of parsed.disclosures){
     const hashed = await hash.digest(encoded)
     hashToEncodedDisclosureMap[hashed] = encoded
