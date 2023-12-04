@@ -13,26 +13,28 @@ export default function verifier<T=VerifiedSdJwt>(options: RequestVerifier){
     options.digester = digester()
   }
   if (options.publicKeyJwk){
-    options.alg = options.alg || options.publicKeyJwk.alg
+    const { publicKeyJwk } = options
+    options.alg = options.alg || publicKeyJwk.alg
     if (!options.alg){
       throw new Error('alg must be passed as an option or restricted via publicKeyJwk')
     }
     options.verifier = {
       verify: async (token: string) => {
-        const parsed = Parse.compact(token)
-        const verifier = await JWS.verifier(options.publicKeyJwk as PublicKeyJwk)
-        return verifier.verify(parsed.jwt)
+        const { jwt } = Parse.compact(token)
+        const verifier = await JWS.verifier(publicKeyJwk as PublicKeyJwk)
+        return verifier.verify(jwt)
       }
     }
   }
   return {
     verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }): Promise<T> => {
       const role = new Verifier(options as VerifierCtx)
-      return role.verify({
+      const verified = await role.verify({
         presentation: token,
         aud: audience,
         nonce: nonce
       })
+      return verified as T
     }
   }
 }

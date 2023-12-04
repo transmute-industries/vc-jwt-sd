@@ -1,7 +1,7 @@
 
 import moment from 'moment';
 import * as jose from "jose";
-import { HolderCtx, RequestPresentation,Signer, SdHolderState } from "../types";
+import { HolderCtx, RequestPresentation,Signer, SdHolderState, PresentedCompactSdJwt } from "../types";
 import { COMBINED_serialization_FORMAT_SEPARATOR, KB_JWT_TYP_HEADER } from "./constants";
 import _select_disclosures from './_select_disclosures'
 import Parse from "./Parse";
@@ -69,6 +69,6 @@ export default class Holder {
       })
       presented_token += kbt
     }
-    return presented_token;
+    return presented_token as PresentedCompactSdJwt;
   };
 }

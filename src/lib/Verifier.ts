@@ -1,7 +1,7 @@
 
 import { DIGEST_ALG_KEY } from "./constants";
 
-import { VerifierCtx, RequestPresentationVerify, PublicKeyJwk } from '../types'
+import { VerifierCtx, RequestPresentationVerify, VerifiedSdJwt } from '../types'
 
 import JWS from './JWS';
 import Parse from './Parse';
@@ -107,6 +107,6 @@ export default class Verifier {
     const { disclosureMap, hashToEncodedDisclosureMap } = await Parse.expload(presentation, { digester: digester })
     const state = { _hash_to_disclosure: hashToEncodedDisclosureMap, _hash_to_decoded_disclosure: disclosureMap }
     const output = _unpack_disclosed_claims(verifiedIssuanceToken.claimset, state)
-    return JSON.parse(JSON.stringify({ protectedHeader: verifiedIssuanceToken.protectedHeader, claimset: output })) as any
+    return JSON.parse(JSON.stringify({ protectedHeader: verifiedIssuanceToken.protectedHeader, claimset: output })) as VerifiedSdJwt
   }
 }

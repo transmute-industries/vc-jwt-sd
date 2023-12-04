@@ -1,4 +1,4 @@
-import { RequestIssuance, Signer, Digester, IssuerCtx, Salter } from "../types";
+import { RequestIssuance, Signer, Digester, IssuerCtx, Salter, IssuedCompactSdJwt } from "../types";
 
 import {
   DIGEST_ALG_KEY,
@@ -67,6 +67,6 @@ export default class Issuer {
     });
     const issuedSdJwt = issuedJwt + COMBINED_serialization_FORMAT_SEPARATOR + Object.keys(config.disclosures)
     .join(COMBINED_serialization_FORMAT_SEPARATOR)
-    return issuedSdJwt as any;
+    return issuedSdJwt as IssuedCompactSdJwt;
   };
 }
