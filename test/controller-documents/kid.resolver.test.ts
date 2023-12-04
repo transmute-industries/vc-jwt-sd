@@ -1,7 +1,6 @@
 
-import {  decodeJwt, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
 
-import sd from "../../src";
+import sd, { VerifiedTokensWithKeyBinding } from "../../src";
 
 const alg = 'ES384'
 const audience = 'aud-9877'
@@ -123,7 +122,7 @@ it('End to End Test', async () => {
     }
   }
 
-  const verification = await sd.verifier({
+  const verification = await sd.verifier<VerifiedTokensWithKeyBinding>({
       resolver: keyIdResolver
     })
     .verify({
@@ -131,8 +130,5 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
-    if (!verification.claimset.cnf){
-      throw new Error('confirmation expected')
-    }
     expect(verification.claimset.cnf.jkt).toBeDefined()
 });

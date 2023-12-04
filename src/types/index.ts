@@ -195,3 +195,8 @@ export type VerifiedSdJwt = {
   protectedHeader: SdJwtProtectedHeader,
   claimset: SdJwtProtectedPayload
 }
+
+export type VerifiedTokensWithKeyBinding = {
+  protectedHeader: SdJwtProtectedHeader,
+  claimset: SdJwtProtectedPayload & { cnf :Confirmation}
+}

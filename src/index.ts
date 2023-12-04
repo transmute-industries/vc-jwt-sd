@@ -11,6 +11,8 @@ import YAML from './YAML-SD'
 
 import v2 from './v2'
 
+export * from './types'
+
 const sd = { ...v2, YAML, JWK, JWS, Issuer, Holder, Verifier, Parse }
 
 export default sd

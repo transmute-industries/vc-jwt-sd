@@ -8,7 +8,7 @@ import Parse from "../lib/Parse"
 
 import { PublicKeyJwk, RequestVerifier,  VerifierCtx, VerifiedSdJwt } from '../types'
 
-const verifier = (options: RequestVerifier) => {
+export default function verifier<T=VerifiedSdJwt>(options: RequestVerifier){
   if (!options.digester){
     options.digester = digester()
   }
@@ -26,7 +26,7 @@ const verifier = (options: RequestVerifier) => {
     }
   }
   return {
-    verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }): Promise<VerifiedSdJwt> => {
+    verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }): Promise<T> => {
       const role = new Verifier(options as VerifierCtx)
       return role.verify({
         presentation: token,
@@ -37,4 +37,3 @@ const verifier = (options: RequestVerifier) => {
   }
 }
 
-export default verifier

@@ -1,5 +1,5 @@
 
-import {  decodeJwt, decodeProtectedHeader, calculateJwkThumbprintUri } from 'jose';
+import {  decodeJwt, decodeProtectedHeader } from 'jose';
 
 import sd from "../../src";
 
