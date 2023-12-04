@@ -108,6 +108,7 @@ export type VerifierCtx = {
   digester: Digester
   verifier: Verifier
   resolver?: Resolver
+  debug ?: boolean
 }
 
 export type RequestPresentationVerify = {
@@ -151,6 +152,8 @@ export type RequestVerifier = {
   verifier?: Verifier
   resolver?: Resolver,
   publicKeyJwk?: PublicKeyJwk 
+
+  debug ?: boolean
 }
 
 

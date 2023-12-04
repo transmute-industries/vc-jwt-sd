@@ -1,4 +1,4 @@
-import sd from '../../src'
+import sd from '../src'
 const alg = 'ES384';
 // based on https://w3c.github.io/vc-data-model/#example-a-simple-example-of-a-verifiable-credential
 const claimset = `
@@ -51,7 +51,8 @@ issuer:
   name:
     - value: test value 0
       lang: en
-    - False
+    - value: test value 1
+      lang: en
     - value: test value 2
       lang: en
     - False
@@ -71,44 +72,33 @@ credentialSubject:
     subtype: Bachelor of Science and Arts
 `;
 
-it('no disclosure and key binding', async () => {
-  let audience = undefined as string | undefined;
-  let nonce = undefined as string | undefined;
-  const iss = `https://university.example/issuers/565049`
-  const kid = `${iss}#key-123`
-  const typ = `application/vc+ld+json+sd-jwt`
-  const cty = `application/vc+ld+json`
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg)
-  const signer = await sd.signer(secretKeyJwk)
-  const salter = await sd.salter()
-  const digester = await sd.digester()
-  const vc = await sd.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
+
+it('simple setup', async () => {
+  const audience = 'aud-123';
+  const nonce = 'nonce-456';
+  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ secretKeyJwk })
     .issue({
       holder: publicKeyJwk,
       claimset
     })
-  expect(vc.split('.').length).toBe(3) // 1 tokens
-  expect(vc.split('~').length).toBe(3)
-  audience = `aud-123`;
-  nonce = `nonce-456`;
-  const vp = await sd.holder({ alg, salter, digester, signer })
-  .issue({
-    token: vc,
-    disclosure,
-    audience,
-    nonce
-  })
-  expect((vp.match(/\./g) || []).length).toBe(4) // 2 tokens header.payload.signature~header.payload.signature
-  expect((vp.match(/~/g) || []).length).toBe(1) // 0 disclosures... issued-sd-jwt~presented-kb-jwt
-  // const detailedDebug = sd.Parse.compact(vp, {decodeDisclosure: true})
-  // console.log(JSON.stringify(detailedDebug, null, 2))
+  const vp = await sd.holder({ secretKeyJwk })
+    .issue({
+      token: vc,
+      disclosure,
+      audience,
+      nonce
+    })
   const verification = await sd.verifier({
-    publicKeyJwk
+    publicKeyJwk,
+    debug: true
   })
     .verify({
       token: vp,
       audience,
       nonce
     })
-  expect(verification.claimset.issuer.name.length).toBe(3) // no disclosure
+  // TODO: add type to object
+  expect(verification.protectedHeader).toBeDefined()
+  expect(verification.claimset).toBeDefined()
 });

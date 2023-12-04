@@ -31,55 +31,42 @@ export default class Issuer {
     this.salter = ctx.salter
   }
   issue = async ({ claims, iat, exp, holder }: RequestIssuance) => {
+    const { signer, digester, salter, iss, alg, kid, typ, cty } = this;
     const config = {
       disclosures: {},
-      salter: this.salter,
-      digester: this.digester,
+      salter: salter,
+      digester: digester,
     }
     const issuedPayload = await issuancePayload(claims, config);
-    const claimset = issuedPayload as Record<string, unknown>;
-    claimset[DIGEST_ALG_KEY] = this.digester.name;
-    if (this.iss) {
-      claimset.iss = this.iss;
-    }
-    if (iat){
-      claimset.iat = iat
-    }
-    if (exp){
-      claimset.exp = exp
-    }
+    let cnf = undefined;
     if (holder) {
       if (typeof holder === 'object'){
-        claimset.cnf = {
+        cnf = {
           jwk: JWK.getPublicKey(holder),
         };
       } else if (typeof holder === 'string'){
-        claimset.cnf = {
+        cnf = {
           jkt: holder,
         };
       } else {
         throw new Error('Unsupported holder type.')
       }
     }
-    const protectedHeader = {} as any;
-
-    if (this.alg) {
-      protectedHeader.alg = this.alg;
+    const protectedHeader = { alg, kid, typ, cty }
+    const claimset = {
+      iss,
+      iat,
+      exp,
+      cnf,
+      [DIGEST_ALG_KEY]: digester.name,
+      ...issuedPayload
     }
-    if (this.kid) {
-      protectedHeader.kid = this.kid;
-    }
-    if (this.typ) {
-      protectedHeader.typ = this.typ;
-    }
-    if (this.cty) {
-      protectedHeader.cty = this.cty;
-    }
-    const jws = await this.signer.sign({
+    const issuedJwt = await signer.sign({
       protectedHeader: sortProtectedHeader(protectedHeader),
       claimset,
     });
-    return jws + COMBINED_serialization_FORMAT_SEPARATOR + Object.keys(config.disclosures)
-    .join(COMBINED_serialization_FORMAT_SEPARATOR);
+    const issuedSdJwt = issuedJwt + COMBINED_serialization_FORMAT_SEPARATOR + Object.keys(config.disclosures)
+    .join(COMBINED_serialization_FORMAT_SEPARATOR)
+    return issuedSdJwt as any;
   };
 }
