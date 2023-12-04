@@ -5,7 +5,7 @@ import digester from "./digester"
 import salter from "./salter"
 import JWS from "../lib/JWS"
 
-import { RequestIssuer,  Salter,  Digester, Signer } from "../types"
+import { RequestIssuer,  Salter,  Digester, Signer, IssuedCompactSdJwt } from "../types"
 
 
 const issuer = (options: RequestIssuer) => {
@@ -22,7 +22,7 @@ const issuer = (options: RequestIssuer) => {
     throw new Error('alg must be passed as an option or restricted via secretKeyJwk')
   }
   return {
-    issue: async ({ claimset, holder }: { claimset: string, holder?:any }) => {
+    issue: async ({ claimset, holder }: { claimset: string, holder?:any }): Promise<IssuedCompactSdJwt> => {
       if (options.secretKeyJwk){
         options.signer = await JWS.signer(options.secretKeyJwk)
       }

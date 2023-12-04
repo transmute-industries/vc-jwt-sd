@@ -2,7 +2,7 @@ import { PrivateKeyJwk, PublicKeyJwk } from "../types";
 
 import { generateKeyPair, exportJWK, calculateJwkThumbprint } from 'jose'
 
-const format = (jwk: PublicKeyJwk | PrivateKeyJwk) => {
+const format = (jwk: PublicKeyJwk | PrivateKeyJwk): PublicKeyJwk | PrivateKeyJwk => {
   const { kid, x5u, x5c, x5t, kty, crv, alg, key_ops, x, y, d, ...rest } = jwk;
   return JSON.parse(
     JSON.stringify({
@@ -24,7 +24,7 @@ const format = (jwk: PublicKeyJwk | PrivateKeyJwk) => {
 
 export const getPublicKey = (jwk: any): PublicKeyJwk => {
   const { d, p, q, dp, dq, qi, oth, k, key_ops, ...publicKeyJwk } = jwk;
-  return format(publicKeyJwk);
+  return format(publicKeyJwk) ;
 };
 
 const getExtractableKeyPair = async (alg: string) =>{
@@ -36,8 +36,8 @@ const getExtractableKeyPair = async (alg: string) =>{
   secretKeyJwk.alg = alg
   secretKeyJwk.kid = await calculateJwkThumbprint(secretKeyJwk)
   return { 
-    publicKeyJwk: format(publicKeyJwk),
-    secretKeyJwk: format(secretKeyJwk)
+    publicKeyJwk: format(publicKeyJwk as PublicKeyJwk),
+    secretKeyJwk: format(secretKeyJwk as PrivateKeyJwk)
   }
 }
 

@@ -6,7 +6,7 @@ import JWS from "../lib/JWS"
 
 import Parse from "../lib/Parse"
 
-import { PublicKeyJwk, RequestVerifier,  VerifierCtx } from '../types'
+import { PublicKeyJwk, RequestVerifier,  VerifierCtx, VerifiedSdJwt } from '../types'
 
 const verifier = (options: RequestVerifier) => {
   if (!options.digester){
@@ -26,7 +26,7 @@ const verifier = (options: RequestVerifier) => {
     }
   }
   return {
-    verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }) => {
+    verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }): Promise<VerifiedSdJwt> => {
       const role = new Verifier(options as VerifierCtx)
       return role.verify({
         presentation: token,

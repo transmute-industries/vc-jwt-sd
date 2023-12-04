@@ -131,5 +131,8 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
+    if (!verification.claimset.cnf){
+      throw new Error('confirmation expected')
+    }
     expect(verification.claimset.cnf.jkt).toBeDefined()
 });

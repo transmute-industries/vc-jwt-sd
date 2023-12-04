@@ -3,7 +3,20 @@ import { CompactJWSHeaderParameters } from "jose"
 
 import { YAMLMap } from "yaml"
 
-export type PublicKeyJwk = Record<string, unknown> & { alg?: string }
+export type EncodedJwtHeader = string
+export type EncodedJwtPayload = string
+export type EncodedJwtSignature = string
+export type IssuedJwt = `${EncodedJwtHeader}.${EncodedJwtPayload}.${EncodedJwtSignature}`
+export type EncodedSdJwtDisclosures = string
+export type KeyBindingToken = `${EncodedJwtHeader}.${EncodedJwtPayload}.${EncodedJwtSignature}`
+
+export type IssuedSdJwt = `${IssuedJwt}~${EncodedSdJwtDisclosures}`
+export type IssuedCompactSdJwt = IssuedSdJwt | string
+export type PresentedSdJwtWithoutKeyBinding = `${IssuedCompactSdJwt}`
+export type PresentedSdJwtWithKeyBinding = `${PresentedSdJwtWithoutKeyBinding}~${KeyBindingToken}`
+export type PresentedCompactSdJwt = PresentedSdJwtWithoutKeyBinding | PresentedSdJwtWithKeyBinding | string
+
+export type PublicKeyJwk = Record<string, unknown> & { kid?: string, kty?: string, alg?: string }
 export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
 export type SecretKeyJwk = PrivateKeyJwk
 
@@ -156,4 +169,29 @@ export type RequestVerifier = {
   debug ?: boolean
 }
 
+export type SdJwtProtectedHeader = {
+  alg: string
+  kid?: string
+  typ?: string
+  cty?: string
+} & Record<string, any>
 
+export type Confirmation = {
+  jwk ?: PublicKeyJwk
+  kid ?: string
+  jkt ?: string
+}
+
+export type SdJwtProtectedPayload = {
+  iss?:string
+  sub?:string
+  iat?:number
+  nbf?:number
+  exp?:number
+  cnf?:Confirmation
+} & Record<string, any>
+
+export type VerifiedSdJwt = {
+  protectedHeader: SdJwtProtectedHeader,
+  claimset: SdJwtProtectedPayload
+}
