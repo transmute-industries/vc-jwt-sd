@@ -169,12 +169,15 @@ export type RequestVerifier = {
   debug ?: boolean
 }
 
-export type SdJwtProtectedHeader = {
+export type PublicHeaderClaimset = {
   alg: string
   kid?: string
   typ?: string
   cty?: string
+  jwk ?: PublicKeyJwk
 } & Record<string, any>
+
+export type SdJwtProtectedHeader = PublicHeaderClaimset 
 
 export type Confirmation = {
   jwk ?: PublicKeyJwk
@@ -182,14 +185,24 @@ export type Confirmation = {
   jkt ?: string
 }
 
-export type SdJwtProtectedPayload = {
+export type ValidatePublicClaimsOptions = {
+  debug ?: boolean
+  reference_audience ?: string
+  reference_nonce ?: string
+}
+
+export type PublicPayloadClaimset = {
   iss?:string
   sub?:string
   iat?:number
   nbf?:number
   exp?:number
   cnf?:Confirmation
+  aud?: string | string[]
+  nonce?: string
 } & Record<string, any>
+
+export type SdJwtProtectedPayload = PublicPayloadClaimset
 
 export type VerifiedSdJwt = {
   protectedHeader: SdJwtProtectedHeader,

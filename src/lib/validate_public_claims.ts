@@ -1,10 +1,13 @@
 import moment from "moment"
 
+
+import { PublicPayloadClaimset, ValidatePublicClaimsOptions } from "../types"
+
 const acceptableAud = (expectedAud: string, receivedAud: string | string[]): boolean => {
   return Array.isArray(receivedAud) ? receivedAud.includes(expectedAud) : receivedAud === expectedAud
 }
 
-export const validate_public_claims = (token_name: string, claimset: any, options: any)=>{
+export const validate_public_claims = (token_name: string, claimset: PublicPayloadClaimset, options: ValidatePublicClaimsOptions)=>{
   const { debug, reference_audience, reference_nonce} = options;
   const { iat, nbf, exp, aud, nonce } = claimset
 
