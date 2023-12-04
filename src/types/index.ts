@@ -191,7 +191,14 @@ export type ValidatePublicClaimsOptions = {
   reference_nonce ?: string
 }
 
+export type JsonSerializedSdJwt = {
+  protected: string
+  payload: string
+  signature: string
+}
+
 export type PublicPayloadClaimset = {
+  
   iss?:string
   sub?:string
   iat?:number
@@ -200,6 +207,15 @@ export type PublicPayloadClaimset = {
   cnf?:Confirmation
   aud?: string | string[]
   nonce?: string
+
+  sd_hash ?:string
+  _sd ?: string[]
+  _sd_alg ?: "sha-256" | string
+  _sd_jwt ?: string
+  _js_sd_jwt ?: JsonSerializedSdJwt
+  disclosures ?: string[]
+  type ?: string | string[]
+
 } & Record<string, any>
 
 export type SdJwtProtectedPayload = PublicPayloadClaimset
