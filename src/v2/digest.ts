@@ -9,7 +9,7 @@ export default async (json:string) => {
     return base64url.encode(new Uint8Array(digest));
   } catch (e) {
     const content = new TextEncoder().encode(json);
-    const digest = await (await nodeCrypto).createHash('sha-256').update(content).digest();
+    const digest = await (await nodeCrypto).createHash('sha256').update(content).digest();
     return base64url.encode(new Uint8Array(digest));
   }
 }
