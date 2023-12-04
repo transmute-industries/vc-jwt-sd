@@ -91,7 +91,7 @@ it('simple setup', async () => {
     })
   const verification = await sd.verifier({
     publicKeyJwk,
-    debug: true
+    debug: false // set to true for debug logs
   })
     .verify({
       token: vp,
