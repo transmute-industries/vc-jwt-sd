@@ -8,7 +8,7 @@ import Parse from './Parse';
 
 
 import _unpack_disclosed_claims from './_unpack_disclosed_claims'
-import { decodeProtectedHeader } from "jose";
+import { decodeJwt, decodeProtectedHeader } from "jose";
 
 import { validate_public_claims } from './validate_public_claims'
 import { validate_sd_hash } from './validate_sd_hash'
@@ -49,7 +49,14 @@ export default class Verifier {
     if (verifiedIssuanceToken.claimset[DIGEST_ALG_KEY] !== digester.name) {
       throw new Error('Invalid hash algorithm')
     }
-    validate_public_claims('Issuer-signed JWT', verifiedIssuanceToken.claimset, { debug })
+    // here we are verifying the "Issuer Signed JWT"
+    // aud and nonce, are expected to be checked in the KBT, not the "Issuer Signed JWT".
+    // See: https://github.com/oauth-wg/oauth-selective-disclosure-jwt/issues/395
+    validate_public_claims('Issuer-signed JWT', verifiedIssuanceToken.claimset, { 
+      debug, 
+      reference_audience: verifiedIssuanceToken.claimset.aud, 
+      reference_nonce: verifiedIssuanceToken.claimset.nonce 
+    })
     if (debug) {
       console.info('Verified Issuer-signed JWT: ', JSON.stringify(verifiedIssuanceToken, null, 2))
     }
