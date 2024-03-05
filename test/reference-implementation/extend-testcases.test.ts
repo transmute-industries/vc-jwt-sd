@@ -4,7 +4,8 @@ import testcase from '../../src/interoperability/testcase'
 const testcases = fs.readdirSync('testcases/', { withFileTypes: true });
 
 
-const skipTestNames= ['json_serialization', 'settings.yml']
+const skipTestNames= ['json_serialization', 'settings.yml', '.DS_Store']
+
 describe("extend testcases", () => {
   for (const test of testcases){
     if (skipTestNames.includes(test.name)){

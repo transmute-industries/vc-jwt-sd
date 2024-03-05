@@ -120,7 +120,7 @@ describe("recursions", () => {
 
 
 // these cases should be handled seperatly
-const skipNames = ['json_serialization', 'key_binding', 'recursions', 'array_recursive_sd', 'settings.yml']
+const skipNames = ['json_serialization', 'key_binding', 'recursions', 'array_recursive_sd', 'settings.yml', '.DS_Store']
 
 describe("yaml specification", () => {
   for (const test of testcases) {
