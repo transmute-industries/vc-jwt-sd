@@ -1,5 +1,5 @@
 
-import Issuer from "../lib/Issuer"
+
 import YAML from "../YAML-SD"
 import digester from "./digester"
 import salter from "./salter"
@@ -7,6 +7,7 @@ import JWS from "../lib/JWS"
 
 import { RequestIssuer,  Salter,  Digester, Signer, IssuedCompactSdJwt } from "../types"
 
+import { _issue } from "../lib/_issue"
 
 const issuer = (options: RequestIssuer) => {
   if (options.privateKeyJwk){
@@ -23,10 +24,13 @@ const issuer = (options: RequestIssuer) => {
   }
   return {
     issue: async ({ claimset, jwk, kid }: { claimset: string, jwk?:any, kid?: any }): Promise<IssuedCompactSdJwt> => {
-      if (options.privateKeyJwk){
+      if (!options.signer){
+        if (!options.privateKeyJwk){
+          throw new Error("signer or privateKeyJwk required for issuance")
+        }
         options.signer = await JWS.signer(options.privateKeyJwk)
       }
-      const role = new Issuer({
+      return _issue({
         alg: options.alg as string,
         iss: options.iss,
         kid: options.kid,
@@ -34,10 +38,11 @@ const issuer = (options: RequestIssuer) => {
         cty: options.cty,
         salter: options.salter as Salter,
         digester: options.digester as Digester,
-        signer: options.signer as Signer,
-      })
-      return role.issue({
-        holder: jwk || kid,
+        cnf: jwk || kid ? {
+          jwk,
+          kid,
+        }: undefined,
+        signer: options.signer,
         claims: YAML.load(claimset)
       })
     }

@@ -13,7 +13,7 @@ it('W3C VC JOSE COSE Test', async () => {
   const issuerKeyPair  = await SD.JWK.generate(alg)
   const holderKeyPair  = await SD.JWK.generate(alg)
   const digester = testcase.digester('sha-256')
-  const issuer = new SD.Issuer({
+  const issuer = SD.issuer({
     alg,
     digester,
     signer: await SD.JWS.signer(issuerKeyPair.privateKeyJwk),
@@ -36,10 +36,9 @@ it('W3C VC JOSE COSE Test', async () => {
     }
   })
   const claimsYaml = fs.readFileSync(`test/vc-jose-cose-test/payload.yaml`).toString()
-  const claims = SD.YAML.load(claimsYaml)
   const vc = await issuer.issue({
-    holder: holderKeyPair.publicKeyJwk,
-    claims
+    jwk: holderKeyPair.publicKeyJwk,
+    claimset:claimsYaml
   })
   
   const claimsDisclosureYaml = fs.readFileSync(`test/vc-jose-cose-test/payload-disclosure.yaml`).toString()

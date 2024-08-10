@@ -6,8 +6,6 @@ import crypto from 'crypto'
 import { base64url, exportJWK, generateKeyPair } from 'jose';
 
 import testcase from '../../src/interoperability/testcase'
-import { YAMLMap } from "yaml";
-
 
 const salter = async () => {
   return base64url.encode(crypto.randomBytes(16));
@@ -20,7 +18,7 @@ it('throws when _sd is present in user claims', async () => {
   const digester = testcase.digester('sha-256')
   const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
   const issuerSigner = await SD.JWS.signer(issuerPrivateKey)
-  const issuer = new SD.Issuer({
+  const issuer = SD.issuer({
     alg,
     digester,
     signer: issuerSigner,
@@ -34,7 +32,7 @@ user_claims:
   `)
   try{
     await issuer.issue({
-      claims: schema.get('user_claims') as YAMLMap,
+      claimset: SD.YAML.dumps(schema.get('user_claims')),
     })
   } catch(e){
     expect((e as any).message).toBe('claims may not contain _sd')

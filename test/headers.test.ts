@@ -15,7 +15,7 @@ it('W3C Example', async () => {
   const issuerKeyPair = await SD.JWK.generate(alg)
   const holderKeyPair = await SD.JWK.generate(alg)
   const digester = testcase.digester('sha-256')
-  const issuer = new SD.Issuer({
+  const issuer = SD.issuer({
     alg,
     kid: `${iss}#key-42`,
     typ: `application/vc+sd-jwt`,
@@ -26,10 +26,8 @@ it('W3C Example', async () => {
     salter
   })
   const vc = await issuer.issue({
-    iat: moment().unix(),
-    exp: moment().add(1, 'month').unix(),
-    holder: holderKeyPair.publicKeyJwk,
-    claims: SD.YAML.load(`
+    jwk: holderKeyPair.publicKeyJwk,
+    claimset: `
 "@context":
   - https://www.w3.org/ns/credentials/v2
   - https://w3id.org/traceability/v1
@@ -59,7 +57,7 @@ credentialSubject:
   type:
     - EntryNumber
   !sd entryNumber: "12345123456"
-`)
+`
   })
   const holder = new SD.Holder({
     alg,
