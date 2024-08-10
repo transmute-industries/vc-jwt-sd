@@ -23,7 +23,7 @@ const holder = (options: RequestHolder = {}) => {
     throw new Error('alg must be passed as an option or restricted via privateKeyJwk')
   }
   return {
-    issue: async ({ token, disclosure, audience, nonce }: { token: string, disclosure: string, audience ?: string, nonce ?: string }): Promise<PresentedCompactSdJwt> => {
+    issue: async ({ token, disclosure, audience, nonce }: { token: string, disclosure: string, audience ?: string | string[], nonce ?: string }): Promise<PresentedCompactSdJwt> => {
       if (options.privateKeyJwk){
         options.signer = await JWS.signer(options.privateKeyJwk)
       }

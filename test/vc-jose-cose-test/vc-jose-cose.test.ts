@@ -20,7 +20,6 @@ it('W3C VC JOSE COSE Test', async () => {
     salter
   })
  
- 
   const claimsYaml = fs.readFileSync(`test/vc-jose-cose-test/payload.yaml`).toString()
   const vc = await issuer.issue({
     jwk: holderKeyPair.publicKeyJwk,

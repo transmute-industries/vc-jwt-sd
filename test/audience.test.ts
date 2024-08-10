@@ -133,3 +133,35 @@ it('nonce can be undefined', async () => {
   expect(verification.protectedHeader).toBeDefined()
   expect(verification.claimset).toBeDefined()
 });
+
+
+
+it('audience can be an array', async () => {
+  const audience = ['verifier-1', 'verifier-2'];
+  const nonce = 'nonce-456';
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
+    .issue({
+      jwk: publicKeyJwk,
+      claimset
+    })
+  const vp = await sd.holder({ privateKeyJwk })
+    .issue({
+      token: vc,
+      disclosure,
+      audience,
+      nonce
+    })
+  const verification = await sd.verifier({
+    publicKeyJwk,
+    debug: false // set to true for debug logs
+  })
+    .verify({
+      token: vp,
+      audience: 'verifier-1',
+      nonce
+    })
+  // TODO: add type to object
+  expect(verification.protectedHeader).toBeDefined()
+  expect(verification.claimset).toBeDefined()
+});
