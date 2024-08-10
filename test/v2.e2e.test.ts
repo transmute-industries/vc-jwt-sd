@@ -91,7 +91,7 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
       "alg": "ES384",
       "kid": "https://university.example/issuers/565049#key-123",
       "typ": "application/vc+sd-jwt",
-      "cty": "application/vc+ld+json",
+      "cty": "application/vc",
     }, null, 2))
   } else {
     expect(token.split('.').length).toBe(3) // 1 token
@@ -133,7 +133,7 @@ it('verbose setup', async () => {
   const iss = `https://university.example/issuers/565049`
   const kid = `${iss}#key-123`
   const typ = `application/vc+sd-jwt`
-  const cty = `application/vc+ld+json`
+  const cty = `application/vc`
   const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg)
   const signer = await sd.jws.signer(privateKeyJwk)
   const salter = await sd.salter()

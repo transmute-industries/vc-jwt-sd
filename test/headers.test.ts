@@ -19,7 +19,7 @@ it('W3C Example', async () => {
     alg,
     kid: `${iss}#key-42`,
     typ: `application/vc+sd-jwt`,
-    cty: `application/vc+ld+json`,
+    cty: `application/vc`,
     iss,
     digester,
     signer: await SD.jws.signer(issuerKeyPair.privateKeyJwk),
@@ -95,7 +95,7 @@ credentialSubject:
     "alg": "ES384", 
     "kid": "did:web:issuer.example#key-42", 
     "typ": "application/vc+sd-jwt", 
-    "cty": "application/vc+ld+json" 
+    "cty": "application/vc" 
   }))
 
 });
