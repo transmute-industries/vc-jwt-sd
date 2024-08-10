@@ -95,7 +95,7 @@ it('End to End Test', async () => {
       privateKeyJwk: issuerRole.privateKeyJwk 
     })
     .issue({
-      holder: holderKeyId,
+      kid: holderKeyId,
       claimset
     })
   const vp = await sd.holder({ 
@@ -130,5 +130,5 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
-    expect(verification.claimset.cnf.jkt).toBeDefined()
+    expect(verification.claimset.cnf.kid).toBeDefined()
 });

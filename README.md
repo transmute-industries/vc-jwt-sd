@@ -89,7 +89,7 @@ const vc = await sd.issuer({
   privateKeyJwk: issuerRole.privateKeyJwk 
 })
 .issue({
-  holder: holderKeyId,
+  kid: holderKeyId,
   claimset
 })
 ```
@@ -250,65 +250,65 @@ This is the result of the verification operations above:
 
 ```json
 {
-  "protectedHeader": {
-    "alg": "ES384",
-    "kid": "https://university.example/issuers/565049#key-42",
-    "typ": "application/vc+sd-jwt"
-  },
-  "claimset": {
-    "iss": "https://university.example/issuers/565049",
-    "cnf": {
-      "jkt": "did:example:ebfeb1f712ebc6f1c276e12ec21#KmC0EKbs0kL2v6kxPP_c4g-HMMy-n8C5NwtN2tH_msc"
-    },
-    "@context": [
-      "https://www.w3.org/ns/credentials/v2",
-      "https://www.w3.org/ns/credentials/examples/v2"
-    ],
-    "id": "http://university.example/credentials/3732",
-    "type": [
-      "VerifiableCredential",
-      "ExampleDegreeCredential"
-    ],
-    "issuer": {
-      "id": "https://university.example/issuers/565049",
-      "name": [
-        {
-          "value": "test value 0",
-          "lang": "en"
+      "protectedHeader": {
+        "alg": "ES384",
+        "kid": "https://university.example/issuers/565049#key-42",
+        "typ": "application/vc+sd-jwt"
+      },
+      "claimset": {
+        "iss": "https://university.example/issuers/565049",
+        "cnf": {
+          "kid": "did:example:ebfeb1f712ebc6f1c276e12ec21#Sw_eFytRRCLX22cd-ReZxnndRL4ydwNcWWTcuFO5ljw"
         },
-        {
-          "value": "test value 1",
-          "lang": "en"
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2",
+          "https://www.w3.org/ns/credentials/examples/v2"
+        ],
+        "id": "http://university.example/credentials/3732",
+        "type": [
+          "VerifiableCredential",
+          "ExampleDegreeCredential"
+        ],
+        "issuer": {
+          "id": "https://university.example/issuers/565049",
+          "name": [
+            {
+              "value": "test value 0",
+              "lang": "en"
+            },
+            {
+              "value": "test value 1",
+              "lang": "en"
+            },
+            {
+              "value": "test value 2",
+              "lang": "en"
+            },
+            {
+              "value": "test value 4",
+              "lang": "en"
+            }
+          ]
         },
-        {
-          "value": "test value 2",
-          "lang": "en"
-        },
-        {
-          "value": "test value 4",
-          "lang": "en"
+        "validFrom": "2015-05-10T12:30:00Z",
+        "credentialStatus": [
+          {
+            "id": "https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6#0",
+            "type": "StatusList2021Entry",
+            "statusPurpose": "revocation",
+            "statusListIndex": "0",
+            "statusListCredential": "https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6"
+          }
+        ],
+        "credentialSubject": {
+          "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+          "degree": {
+            "type": "ExampleBachelorDegree",
+            "subtype": "Bachelor of Science and Arts"
+          }
         }
-      ]
-    },
-    "validFrom": "2015-05-10T12:30:00Z",
-    "credentialStatus": [
-      {
-        "id": "https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6#0",
-        "type": "StatusList2021Entry",
-        "statusPurpose": "revocation",
-        "statusListIndex": "0",
-        "statusListCredential": "https://vendor.example/status-list/urn:uuid:d31ada5d-1d3d-4f68-8587-8ff9bb3038d6"
       }
-    ],
-    "credentialSubject": {
-      "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-      "degree": {
-        "type": "ExampleBachelorDegree",
-        "subtype": "Bachelor of Science and Arts"
-      }
-    },
-  }
-}
+    }
 ```
 
 ## Develop

@@ -46,7 +46,7 @@ export default class Issuer {
         };
       } else if (typeof holder === 'string'){
         cnf = {
-          jkt: holder,
+          kid: holder,
         };
       } else {
         throw new Error('Unsupported holder type.')

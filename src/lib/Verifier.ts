@@ -66,7 +66,7 @@ export default class Verifier {
         throw new Error('Verification of this credential requires proof of posession from the holder. Key binding token is expected based on claims, but was not found.')
       }
       try {
-        let jkt;
+        let kid;
         let jwk;
         let confirmationPublicKey
         let verified;
@@ -78,15 +78,15 @@ export default class Verifier {
             console.info('Issued JWT has JWK confirmation method.')
           }
         }
-        if ((verifiedIssuanceToken.claimset.cnf).jkt) {
-          ({ cnf: { jkt } } = verifiedIssuanceToken.claimset)
+        if ((verifiedIssuanceToken.claimset.cnf).kid) {
+          ({ cnf: { kid } } = verifiedIssuanceToken.claimset)
           if (debug) {
-            console.info('Issued JWT has JKT confirmation method.')
+            console.info('Issued JWT has kid confirmation method.')
           }
           if (!resolver) {
-            throw new Error('Resolver is required for jkt confirmation method')
+            throw new Error('Resolver is required for kid confirmation method')
           }
-          confirmationPublicKey = await resolver?.resolve(jkt)
+          confirmationPublicKey = await resolver?.resolve(kid)
         }
         const compactJwsVerifier = await JWS.verifier(confirmationPublicKey)
         verified = await compactJwsVerifier.verify(kbt)

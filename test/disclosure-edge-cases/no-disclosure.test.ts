@@ -84,7 +84,7 @@ it('no disclosure and key binding', async () => {
   const digester = await sd.digester()
   const vc = await sd.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
     .issue({
-      holder: publicKeyJwk,
+      jwk: publicKeyJwk,
       claimset
     })
   expect(vc.split('.').length).toBe(3) // 1 tokens

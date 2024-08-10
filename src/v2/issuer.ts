@@ -22,7 +22,7 @@ const issuer = (options: RequestIssuer) => {
     throw new Error('alg must be passed as an option or restricted via privateKeyJwk')
   }
   return {
-    issue: async ({ claimset, holder }: { claimset: string, holder?:any }): Promise<IssuedCompactSdJwt> => {
+    issue: async ({ claimset, jwk, kid }: { claimset: string, jwk?:any, kid?: any }): Promise<IssuedCompactSdJwt> => {
       if (options.privateKeyJwk){
         options.signer = await JWS.signer(options.privateKeyJwk)
       }
@@ -37,7 +37,7 @@ const issuer = (options: RequestIssuer) => {
         signer: options.signer as Signer,
       })
       return role.issue({
-        holder,
+        holder: jwk || kid,
         claims: YAML.load(claimset)
       })
     }

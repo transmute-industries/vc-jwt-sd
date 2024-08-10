@@ -95,7 +95,7 @@ it('End to End Test', async () => {
       privateKeyJwk: issuerRole.privateKeyJwk 
     })
     .issue({
-      holder: holderRole.publicKeyJwk,
+      jwk: holderRole.publicKeyJwk,
       claimset
     })
   const vp = await sd.holder({ 

@@ -140,7 +140,7 @@ it('verbose setup', async () => {
   const digester = await sd.digester()
   const vc = await sd.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
     .issue({
-      holder: publicKeyJwk,
+      jwk: publicKeyJwk,
       claimset
     })
   try {
