@@ -3,9 +3,9 @@
 import YAML from "../YAML-SD"
 import digester from "./digester"
 import salter from "./salter"
-import JWS from "../lib/JWS"
+import JWS from "./JWS"
 
-import { _present } from "../lib/_present"
+import { _present } from "./_present"
 
 import { RequestHolder, PresentedCompactSdJwt } from "../types"
 

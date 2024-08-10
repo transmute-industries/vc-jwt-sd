@@ -10,13 +10,13 @@ it('W3C VC JOSE COSE Test', async () => {
   const alg = 'ES384'
   const nonce = '9876543210'
   const audience = 'did:web:verifier.example'
-  const issuerKeyPair  = await SD.JWK.generate(alg)
-  const holderKeyPair  = await SD.JWK.generate(alg)
+  const issuerKeyPair  = await SD.jwk.generate(alg)
+  const holderKeyPair  = await SD.jwk.generate(alg)
   const digester = testcase.digester('sha-256')
   const issuer = SD.issuer({
     alg,
     digester,
-    signer: await SD.JWS.signer(issuerKeyPair.privateKeyJwk),
+    signer: await SD.jws.signer(issuerKeyPair.privateKeyJwk),
     salter
   })
  
@@ -31,7 +31,7 @@ it('W3C VC JOSE COSE Test', async () => {
   const vp = await SD.holder({
     alg,
     digester,
-    signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
+    signer: await SD.jws.signer(holderKeyPair.privateKeyJwk)
   }).issue({
     token: vc,
     nonce,
@@ -44,8 +44,8 @@ it('W3C VC JOSE COSE Test', async () => {
     digester,
     verifier: {
       verify: async (token: string) => {
-        const parsed = SD.Parse.compact(token)
-        const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
+        const parsed = SD.parse.compact(token)
+        const verifier = await SD.jws.verifier(issuerKeyPair.publicKeyJwk)
         return verifier.verify(parsed.jwt)
       }
     }

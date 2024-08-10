@@ -3,11 +3,11 @@
 import YAML from "../YAML-SD"
 import digester from "./digester"
 import salter from "./salter"
-import JWS from "../lib/JWS"
+import JWS from "./JWS"
 
 import { RequestIssuer,  Salter,  Digester, Signer, IssuedCompactSdJwt } from "../types"
 
-import { _issue } from "../lib/_issue"
+import { _issue } from "./_issue"
 
 const issuer = (options: RequestIssuer) => {
   if (options.privateKeyJwk){

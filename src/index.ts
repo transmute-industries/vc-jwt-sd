@@ -1,16 +1,22 @@
 
 
-
-import JWK from './lib/JWK'
-import JWS from './lib/JWS'
-import Parse from './lib/Parse'
-
 import YAML from './YAML-SD'
 
-import v2 from './v2'
+import jwk from './lib/JWK'
+import jws from './lib/JWS'
+import parse from './lib/Parse'
+
+import key from './lib/key'
+import salter from './lib/salter'
+import digester from './lib/digester'
+
+import issuer from './lib/issuer'
+import holder from './lib/holder'
+import verifier from './lib/verifier'
+
+const sd = { YAML, jwk, jws, parse, key, salter, digester, issuer, holder, verifier }
+
 
 export * from './types'
-
-const sd = { ...v2, YAML, JWK, JWS, Parse }
 
 export default sd

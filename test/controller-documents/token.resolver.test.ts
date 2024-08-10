@@ -139,7 +139,7 @@ it('End to End Test', async () => {
         const kid = decodedHeader.kid as string
         const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
         const { publicKeyJwk } = await dereference(absoluteDidUrl)
-        const verifier = await sd.JWS.verifier(publicKeyJwk)
+        const verifier = await sd.jws.verifier(publicKeyJwk)
         return verifier.verify(jwt)
       } 
       if (decodedHeader.typ === 'kb+jwt'){
@@ -148,7 +148,7 @@ it('End to End Test', async () => {
         const kid = decodedHeader.kid as string
         const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
         const { publicKeyJwk } = await dereference(absoluteDidUrl)
-        const verifier = await sd.JWS.verifier(publicKeyJwk)
+        const verifier = await sd.jws.verifier(publicKeyJwk)
         return verifier.verify(jwt)
       } 
       throw new Error('Unsupported token typ')

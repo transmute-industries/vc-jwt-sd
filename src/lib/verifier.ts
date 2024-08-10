@@ -1,12 +1,12 @@
 
 import digester from "./digester"
-import JWS from "../lib/JWS"
+import JWS from "./JWS"
 
-import Parse from "../lib/Parse"
+import Parse from "./Parse"
 
 import { PublicKeyJwk, RequestVerifier, VerifiedSdJwt } from '../types'
 
-import { _verify } from "../lib/_verify"
+import { _verify } from "./_verify"
 
 export default function verifier<T=VerifiedSdJwt>(options: RequestVerifier){
   if (!options.digester){

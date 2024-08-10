@@ -1,4 +1,4 @@
-import digest from "./digest";
+import digest from "../lib/digest";
 
 const digester = (name = 'sha-256') => {
   if (name !== 'sha-256'){

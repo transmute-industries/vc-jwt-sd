@@ -12,8 +12,8 @@ it('W3C Example', async () => {
   const iss = 'did:web:issuer.example'
   const nonce = '9876543210'
   const audience = 'did:web:verifier.example'
-  const issuerKeyPair = await SD.JWK.generate(alg)
-  const holderKeyPair = await SD.JWK.generate(alg)
+  const issuerKeyPair = await SD.jwk.generate(alg)
+  const holderKeyPair = await SD.jwk.generate(alg)
   const digester = testcase.digester('sha-256')
   const issuer = SD.issuer({
     alg,
@@ -22,7 +22,7 @@ it('W3C Example', async () => {
     cty: `application/vc+ld+json`,
     iss,
     digester,
-    signer: await SD.JWS.signer(issuerKeyPair.privateKeyJwk),
+    signer: await SD.jws.signer(issuerKeyPair.privateKeyJwk),
     salter
   })
   const vc = await issuer.issue({
@@ -62,7 +62,7 @@ credentialSubject:
   const vp = await SD.holder({
     alg,
     digester,
-    signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
+    signer: await SD.jws.signer(holderKeyPair.privateKeyJwk)
   }).issue({
     token: vc,
     nonce,
@@ -79,8 +79,8 @@ credentialSubject:
     digester,
     verifier: {
       verify: async (token: string) => {
-        const parsed = SD.Parse.compact(token)
-        const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
+        const parsed = SD.parse.compact(token)
+        const verifier = await SD.jws.verifier(issuerKeyPair.publicKeyJwk)
         return verifier.verify(parsed.jwt)
       }
     }

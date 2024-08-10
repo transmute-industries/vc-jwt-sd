@@ -17,7 +17,7 @@ it('throws when _sd is present in user claims', async () => {
   const issuerKeyPair  = await generateKeyPair(alg)
   const digester = testcase.digester('sha-256')
   const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
-  const issuerSigner = await SD.JWS.signer(issuerPrivateKey)
+  const issuerSigner = await SD.jws.signer(issuerPrivateKey)
   const issuer = SD.issuer({
     alg,
     digester,
