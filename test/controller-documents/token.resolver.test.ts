@@ -91,15 +91,15 @@ it('End to End Test', async () => {
   const vc = await sd.issuer({ 
       iss: issuerId, 
       kid: issuerKeyId,
-      typ: `application/vc+ld+json+sd-jwt`,
-      secretKeyJwk: issuerRole.secretKeyJwk 
+      typ: `application/vc-ld+sd-jwt`,
+      privateKeyJwk: issuerRole.privateKeyJwk 
     })
     .issue({
-      holder: holderRole.publicKeyJwk,
+      jwk: holderRole.publicKeyJwk,
       claimset
     })
   const vp = await sd.holder({ 
-      secretKeyJwk: holderRole.secretKeyJwk,
+      privateKeyJwk: holderRole.privateKeyJwk,
       iss: holderId,
       kid: holderKeyId
     })
@@ -133,13 +133,13 @@ it('End to End Test', async () => {
     verify: async (token: string) => {
       const jwt = token.split('~')[0]
       const decodedHeader = decodeProtectedHeader(jwt)
-      if (decodedHeader.typ === 'application/vc+ld+json+sd-jwt'){
+      if (decodedHeader.typ === 'application/vc-ld+sd-jwt'){
         const decodedPayload = decodeJwt(jwt)
         const iss = (decodedHeader.iss || decodedPayload.iss) as string
         const kid = decodedHeader.kid as string
         const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
         const { publicKeyJwk } = await dereference(absoluteDidUrl)
-        const verifier = await sd.JWS.verifier(publicKeyJwk)
+        const verifier = await sd.jws.verifier(publicKeyJwk)
         return verifier.verify(jwt)
       } 
       if (decodedHeader.typ === 'kb+jwt'){
@@ -148,7 +148,7 @@ it('End to End Test', async () => {
         const kid = decodedHeader.kid as string
         const absoluteDidUrl = kid && kid.startsWith(iss)? kid : `${iss}#${kid}`
         const { publicKeyJwk } = await dereference(absoluteDidUrl)
-        const verifier = await sd.JWS.verifier(publicKeyJwk)
+        const verifier = await sd.jws.verifier(publicKeyJwk)
         return verifier.verify(jwt)
       } 
       throw new Error('Unsupported token typ')

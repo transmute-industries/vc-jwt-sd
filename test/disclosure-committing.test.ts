@@ -76,13 +76,13 @@ credentialSubject:
 it('simple setup', async () => {
   const audience = 'aud-123';
   const nonce = 'nonce-456';
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
-      holder: publicKeyJwk,
+      jwk: publicKeyJwk,
       claimset
     })
-  const vp = await sd.holder({ secretKeyJwk })
+  const vp = await sd.holder({ privateKeyJwk })
     .issue({
       token: vc,
       disclosure,

@@ -91,15 +91,15 @@ it('End to End Test', async () => {
   const vc = await sd.issuer({ 
       iss: issuerId, 
       kid: issuerKeyId,
-      typ: `application/vc+ld+json+sd-jwt`,
-      secretKeyJwk: issuerRole.secretKeyJwk 
+      typ: `application/vc-ld+sd-jwt`,
+      privateKeyJwk: issuerRole.privateKeyJwk 
     })
     .issue({
-      holder: holderKeyId,
+      kid: holderKeyId,
       claimset
     })
   const vp = await sd.holder({ 
-      secretKeyJwk: holderRole.secretKeyJwk,
+      privateKeyJwk: holderRole.privateKeyJwk,
       iss: holderId,
       kid: holderKeyId
     })
@@ -130,5 +130,5 @@ it('End to End Test', async () => {
       audience,
       nonce
     })
-    expect(verification.claimset.cnf.jkt).toBeDefined()
+    expect(verification.claimset.cnf.kid).toBeDefined()
 });

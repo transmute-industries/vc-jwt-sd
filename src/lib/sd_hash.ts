@@ -1,5 +1,5 @@
 
-import digest from "../v2/digest"
+import digest from "./digest"
 
 import {
   COMBINED_serialization_FORMAT_SEPARATOR,

@@ -38,10 +38,10 @@ credentialSubject:
 `;
 
 it('simple setup', async () => {
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
-      holder: publicKeyJwk,
+      jwk: publicKeyJwk,
       claimset
     })
   const decodedHeader = jose.decodeProtectedHeader(vc)

@@ -11,25 +11,23 @@ it('W3C Example', async () => {
   const alg = 'ES384'
   const iss = 'did:web:issuer.example'
   const nonce = '9876543210'
-  const aud = 'did:web:verifier.example'
-  const issuerKeyPair = await SD.JWK.generate(alg)
-  const holderKeyPair = await SD.JWK.generate(alg)
+  const audience = 'did:web:verifier.example'
+  const issuerKeyPair = await SD.jwk.generate(alg)
+  const holderKeyPair = await SD.jwk.generate(alg)
   const digester = testcase.digester('sha-256')
-  const issuer = new SD.Issuer({
+  const issuer = SD.issuer({
     alg,
     kid: `${iss}#key-42`,
-    typ: `application/vc+ld+json+sd-jwt`,
-    cty: `application/vc+ld+json`,
+    typ: `application/vc-ld+sd-jwt`,
+    cty: `application/vc`,
     iss,
     digester,
-    signer: await SD.JWS.signer(issuerKeyPair.secretKeyJwk),
+    signer: await SD.jws.signer(issuerKeyPair.privateKeyJwk),
     salter
   })
   const vc = await issuer.issue({
-    iat: moment().unix(),
-    exp: moment().add(1, 'month').unix(),
-    holder: holderKeyPair.publicKeyJwk,
-    claims: SD.YAML.load(`
+    jwk: holderKeyPair.publicKeyJwk,
+    claimset: `
 "@context":
   - https://www.w3.org/ns/credentials/v2
   - https://w3id.org/traceability/v1
@@ -59,47 +57,45 @@ credentialSubject:
   type:
     - EntryNumber
   !sd entryNumber: "12345123456"
-`)
+`
   })
-  const holder = new SD.Holder({
+  const vp = await SD.holder({
     alg,
     digester,
-    signer: await SD.JWS.signer(holderKeyPair.secretKeyJwk)
-  })
-  const vp = await holder.present({
-    credential: vc,
+    signer: await SD.jws.signer(holderKeyPair.privateKeyJwk)
+  }).issue({
+    token: vc,
     nonce,
-    aud,
-    disclosure: SD.YAML.load(`
+    audience,
+    disclosure: `
 issuer:
   location: False
 credentialSubject:
   entryNumber: True
-    `),
+    `,
   })
-  const verifier = new SD.Verifier({
+  const verified = await SD.verifier({
     alg,
     digester,
     verifier: {
       verify: async (token: string) => {
-        const parsed = SD.Parse.compact(token)
-        const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
+        const parsed = SD.parse.compact(token)
+        const verifier = await SD.jws.verifier(issuerKeyPair.publicKeyJwk)
         return verifier.verify(parsed.jwt)
       }
     }
-  })
-  const verified = await verifier.verify({
-    presentation: vp,
+  }).verify({
+    token: vp,
     nonce,
-    aud
+    audience: audience
   })
   expect(verified.claimset.issuer.location).toBeUndefined()
   expect(verified.claimset.credentialSubject.entryNumber).toBe('12345123456')
   expect(JSON.stringify(verified.protectedHeader)).toBe(JSON.stringify({ 
     "alg": "ES384", 
     "kid": "did:web:issuer.example#key-42", 
-    "typ": "application/vc+ld+json+sd-jwt", 
-    "cty": "application/vc+ld+json" 
+    "typ": "application/vc-ld+sd-jwt", 
+    "cty": "application/vc" 
   }))
 
 });

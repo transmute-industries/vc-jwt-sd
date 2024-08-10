@@ -76,15 +76,15 @@ it('no disclosure and key binding', async () => {
   let nonce = undefined as string | undefined;
   const iss = `https://university.example/issuers/565049`
   const kid = `${iss}#key-123`
-  const typ = `application/vc+ld+json+sd-jwt`
-  const cty = `application/vc+ld+json`
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg)
-  const signer = await sd.signer(secretKeyJwk)
+  const typ = `application/vc-ld+sd-jwt`
+  const cty = `application/vc`
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg)
+  const signer = await sd.jws.signer(privateKeyJwk)
   const salter = await sd.salter()
   const digester = await sd.digester()
   const vc = await sd.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
     .issue({
-      holder: publicKeyJwk,
+      jwk: publicKeyJwk,
       claimset
     })
   expect(vc.split('.').length).toBe(3) // 1 tokens

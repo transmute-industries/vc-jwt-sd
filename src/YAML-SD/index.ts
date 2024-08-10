@@ -9,7 +9,6 @@ import { yamlOptions } from './yamlOptions'
 
 import { issuancePayload } from './issuancePayload'
 import { disclose } from "./disclose";
-import { tokenToSchema } from "./tokenToSchema"
 
 const dumps = (data: any) => {
   return stringify(data, yamlOptions);
@@ -29,7 +28,6 @@ const load = (data: string) => {
 
 const YAML = {
   load,
-  tokenToSchema,
   issuancePayload,
   parseCustomTags,
   loads: parse,

@@ -77,13 +77,13 @@ credentialSubject:
 it('audience can be undefined', async () => {
   const audience = undefined;
   const nonce = 'nonce-456';
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
       // holder: publicKeyJwk,
       claimset
     })
-  const vp = await sd.holder({ secretKeyJwk })
+  const vp = await sd.holder({ privateKeyJwk })
     .issue({
       token: vc,
       disclosure,
@@ -107,13 +107,13 @@ it('audience can be undefined', async () => {
 it('nonce can be undefined', async () => {
   const audience = 'aud-123';
   const nonce = undefined 
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
       // holder: publicKeyJwk,
       claimset
     })
-  const vp = await sd.holder({ secretKeyJwk })
+  const vp = await sd.holder({ privateKeyJwk })
     .issue({
       token: vc,
       disclosure,
@@ -127,6 +127,38 @@ it('nonce can be undefined', async () => {
     .verify({
       token: vp,
       audience,
+      nonce
+    })
+  // TODO: add type to object
+  expect(verification.protectedHeader).toBeDefined()
+  expect(verification.claimset).toBeDefined()
+});
+
+
+
+it('audience can be an array', async () => {
+  const audience = ['verifier-1', 'verifier-2'];
+  const nonce = 'nonce-456';
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
+    .issue({
+      jwk: publicKeyJwk,
+      claimset
+    })
+  const vp = await sd.holder({ privateKeyJwk })
+    .issue({
+      token: vc,
+      disclosure,
+      audience,
+      nonce
+    })
+  const verification = await sd.verifier({
+    publicKeyJwk,
+    debug: false // set to true for debug logs
+  })
+    .verify({
+      token: vp,
+      audience: 'verifier-1',
       nonce
     })
   // TODO: add type to object

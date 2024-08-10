@@ -90,8 +90,8 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
     expect(JSON.stringify(verification.protectedHeader, null, 2)).toEqual(JSON.stringify({
       "alg": "ES384",
       "kid": "https://university.example/issuers/565049#key-123",
-      "typ": "application/vc+ld+json+sd-jwt",
-      "cty": "application/vc+ld+json",
+      "typ": "application/vc-ld+sd-jwt",
+      "cty": "application/vc",
     }, null, 2))
   } else {
     expect(token.split('.').length).toBe(3) // 1 token
@@ -113,8 +113,8 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
 it('simple setup', async () => {
   const audience = undefined;
   const nonce = undefined;
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
       claimset
     })
@@ -132,15 +132,15 @@ it('verbose setup', async () => {
   let nonce = undefined as string | undefined;
   const iss = `https://university.example/issuers/565049`
   const kid = `${iss}#key-123`
-  const typ = `application/vc+ld+json+sd-jwt`
-  const cty = `application/vc+ld+json`
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg)
-  const signer = await sd.signer(secretKeyJwk)
+  const typ = `application/vc-ld+sd-jwt`
+  const cty = `application/vc`
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg)
+  const signer = await sd.jws.signer(privateKeyJwk)
   const salter = await sd.salter()
   const digester = await sd.digester()
   const vc = await sd.issuer({ alg, iss, kid, typ, cty, salter, digester, signer })
     .issue({
-      holder: publicKeyJwk,
+      jwk: publicKeyJwk,
       claimset
     })
   try {
