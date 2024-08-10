@@ -74,7 +74,7 @@ credentialSubject:
   entryNumber: True
     `,
   })
-  const verifier = new SD.Verifier({
+  const verified = await SD.verifier({
     alg,
     digester,
     verifier: {
@@ -84,11 +84,10 @@ credentialSubject:
         return verifier.verify(parsed.jwt)
       }
     }
-  })
-  const verified = await verifier.verify({
-    presentation: vp,
+  }).verify({
+    token: vp,
     nonce,
-    aud: audience
+    audience: audience
   })
   expect(verified.claimset.issuer.location).toBeUndefined()
   expect(verified.claimset.credentialSubject.entryNumber).toBe('12345123456')

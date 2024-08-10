@@ -1,12 +1,12 @@
 
-import Verifier from "../lib/Verifier"
-
 import digester from "./digester"
 import JWS from "../lib/JWS"
 
 import Parse from "../lib/Parse"
 
-import { PublicKeyJwk, RequestVerifier,  VerifierCtx, VerifiedSdJwt } from '../types'
+import { PublicKeyJwk, RequestVerifier, VerifiedSdJwt } from '../types'
+
+import { _verify } from "../lib/_verify"
 
 export default function verifier<T=VerifiedSdJwt>(options: RequestVerifier){
   if (!options.digester){
@@ -28,8 +28,8 @@ export default function verifier<T=VerifiedSdJwt>(options: RequestVerifier){
   }
   return {
     verify: async ({ token, audience, nonce }: { token: string, audience ?: string, nonce?: string }): Promise<T> => {
-      const role = new Verifier(options as VerifierCtx)
-      const verified = await role.verify({
+      const verified = await _verify({
+        ...options,
         presentation: token,
         aud: audience,
         nonce: nonce

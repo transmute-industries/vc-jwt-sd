@@ -20,17 +20,7 @@ it('W3C VC JOSE COSE Test', async () => {
     salter
   })
  
-  const verifier = new SD.Verifier({
-    alg,
-    digester,
-    verifier: {
-      verify: async (token: string) => {
-        const parsed = SD.Parse.compact(token)
-        const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
-        return verifier.verify(parsed.jwt)
-      }
-    }
-  })
+ 
   const claimsYaml = fs.readFileSync(`test/vc-jose-cose-test/payload.yaml`).toString()
   const vc = await issuer.issue({
     jwk: holderKeyPair.publicKeyJwk,
@@ -50,10 +40,20 @@ it('W3C VC JOSE COSE Test', async () => {
     disclosure: claimsDisclosureYaml,
   })
 
-  const verified = await verifier.verify({
-    presentation: vp,
+  const verified = await SD.verifier({
+    alg,
+    digester,
+    verifier: {
+      verify: async (token: string) => {
+        const parsed = SD.Parse.compact(token)
+        const verifier = await SD.JWS.verifier(issuerKeyPair.publicKeyJwk)
+        return verifier.verify(parsed.jwt)
+      }
+    }
+  }).verify({
+    token: vp,
     nonce,
-    aud: audience
+    audience: audience
   })
   expect(verified.claimset.proof.created).toBe('2023-06-18T21:19:10Z')
 });

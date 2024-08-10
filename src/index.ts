@@ -1,7 +1,6 @@
 
 
 
-import Verifier from './lib/Verifier'
 import JWK from './lib/JWK'
 import JWS from './lib/JWS'
 import Parse from './lib/Parse'
@@ -12,6 +11,6 @@ import v2 from './v2'
 
 export * from './types'
 
-const sd = { ...v2, YAML, JWK, JWS, Verifier, Parse }
+const sd = { ...v2, YAML, JWK, JWS, Parse }
 
 export default sd
