@@ -9,8 +9,8 @@ import { RequestIssuer,  Salter,  Digester, Signer, IssuedCompactSdJwt } from ".
 
 
 const issuer = (options: RequestIssuer) => {
-  if (options.secretKeyJwk){
-    options.alg = options.secretKeyJwk.alg
+  if (options.privateKeyJwk){
+    options.alg = options.privateKeyJwk.alg
   }
   if (!options.digester){
     options.digester = digester()
@@ -19,12 +19,12 @@ const issuer = (options: RequestIssuer) => {
     options.salter = salter()
   }
   if (!options.alg && options.signer){
-    throw new Error('alg must be passed as an option or restricted via secretKeyJwk')
+    throw new Error('alg must be passed as an option or restricted via privateKeyJwk')
   }
   return {
     issue: async ({ claimset, holder }: { claimset: string, holder?:any }): Promise<IssuedCompactSdJwt> => {
-      if (options.secretKeyJwk){
-        options.signer = await JWS.signer(options.secretKeyJwk)
+      if (options.privateKeyJwk){
+        options.signer = await JWS.signer(options.privateKeyJwk)
       }
       const role = new Issuer({
         alg: options.alg as string,

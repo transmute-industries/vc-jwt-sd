@@ -91,15 +91,15 @@ it('End to End Test', async () => {
   const vc = await sd.issuer({ 
       iss: issuerId, 
       kid: issuerKeyId,
-      typ: `application/vc+ld+json+sd-jwt`,
-      secretKeyJwk: issuerRole.secretKeyJwk 
+      typ: `application/vc+sd-jwt`,
+      privateKeyJwk: issuerRole.privateKeyJwk 
     })
     .issue({
       holder: holderRole.publicKeyJwk,
       claimset
     })
   const vp = await sd.holder({ 
-      secretKeyJwk: holderRole.secretKeyJwk,
+      privateKeyJwk: holderRole.privateKeyJwk,
       iss: holderId,
       kid: holderKeyId
     })
@@ -133,7 +133,7 @@ it('End to End Test', async () => {
     verify: async (token: string) => {
       const jwt = token.split('~')[0]
       const decodedHeader = decodeProtectedHeader(jwt)
-      if (decodedHeader.typ === 'application/vc+ld+json+sd-jwt'){
+      if (decodedHeader.typ === 'application/vc+sd-jwt'){
         const decodedPayload = decodeJwt(jwt)
         const iss = (decodedHeader.iss || decodedPayload.iss) as string
         const kid = decodedHeader.kid as string

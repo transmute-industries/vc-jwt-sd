@@ -85,8 +85,8 @@ const holderKeyId = `${holderId}#${holderRole.publicKeyJwk.kid}`
 const vc = await sd.issuer({ 
   iss: issuerId, 
   kid: issuerKeyId,
-  typ: `application/vc+ld+json+sd-jwt`,
-  secretKeyJwk: issuerRole.secretKeyJwk 
+  typ: `application/vc+sd-jwt`,
+  privateKeyJwk: issuerRole.privateKeyJwk 
 })
 .issue({
   holder: holderKeyId,
@@ -139,7 +139,7 @@ const audience = 'aud-9877'
 const nonce = 'nonce-5486168'
 const disclosure = `... yaml example above ... `;
 const vp = await sd.holder({ 
-  secretKeyJwk: holderRole.secretKeyJwk,
+  privateKeyJwk: holderRole.privateKeyJwk,
   iss: holderId,
   kid: holderKeyId
 })
@@ -214,7 +214,7 @@ const verification = await sd.verifier({
     verify: async (token: string) => {
       const jwt = token.split('~')[0]
       const decodedHeader = decodeProtectedHeader(jwt)
-      if (decodedHeader.typ === 'application/vc+ld+json+sd-jwt'){
+      if (decodedHeader.typ === 'application/vc+sd-jwt'){
         const decodedPayload = decodeJwt(jwt)
         const iss = (decodedHeader.iss || decodedPayload.iss) as string
         const kid = decodedHeader.kid as string
@@ -253,7 +253,7 @@ This is the result of the verification operations above:
   "protectedHeader": {
     "alg": "ES384",
     "kid": "https://university.example/issuers/565049#key-42",
-    "typ": "application/vc+ld+json+sd-jwt"
+    "typ": "application/vc+sd-jwt"
   },
   "claimset": {
     "iss": "https://university.example/issuers/565049",

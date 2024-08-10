@@ -77,13 +77,13 @@ credentialSubject:
 it('audience can be undefined', async () => {
   const audience = undefined;
   const nonce = 'nonce-456';
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
       // holder: publicKeyJwk,
       claimset
     })
-  const vp = await sd.holder({ secretKeyJwk })
+  const vp = await sd.holder({ privateKeyJwk })
     .issue({
       token: vc,
       disclosure,
@@ -107,13 +107,13 @@ it('audience can be undefined', async () => {
 it('nonce can be undefined', async () => {
   const audience = 'aud-123';
   const nonce = undefined 
-  const { publicKeyJwk, secretKeyJwk } = await sd.key.generate(alg);
-  const vc = await sd.issuer({ secretKeyJwk })
+  const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg);
+  const vc = await sd.issuer({ privateKeyJwk })
     .issue({
       // holder: publicKeyJwk,
       claimset
     })
-  const vp = await sd.holder({ secretKeyJwk })
+  const vp = await sd.holder({ privateKeyJwk })
     .issue({
       token: vc,
       disclosure,

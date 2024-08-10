@@ -16,13 +16,13 @@ it('W3C VC JOSE COSE Test', async () => {
   const issuer = new SD.Issuer({
     alg,
     digester,
-    signer: await SD.JWS.signer(issuerKeyPair.secretKeyJwk),
+    signer: await SD.JWS.signer(issuerKeyPair.privateKeyJwk),
     salter
   })
   const holder = new SD.Holder({
     alg,
     digester,
-    signer: await SD.JWS.signer(holderKeyPair.secretKeyJwk)
+    signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
   })
   const verifier = new SD.Verifier({
     alg,

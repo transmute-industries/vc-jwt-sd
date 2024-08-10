@@ -18,7 +18,7 @@ export type PresentedCompactSdJwt = PresentedSdJwtWithoutKeyBinding | PresentedS
 
 export type PublicKeyJwk = Record<string, unknown> & { kid?: string, kty?: string, alg?: string }
 export type PrivateKeyJwk = PublicKeyJwk & { d?: string }
-export type SecretKeyJwk = PrivateKeyJwk
+export type privateKeyJwk = PrivateKeyJwk
 
 export type JwtClaimset = Record<string, unknown>
 export type YamlMapClaimset = YAMLMap
@@ -140,7 +140,7 @@ export type RequestIssuer = {
   digester?: Digester  
   salter?: Salter 
   signer?: Signer
-  secretKeyJwk?: SecretKeyJwk 
+  privateKeyJwk?: privateKeyJwk 
 }
 
 
@@ -152,7 +152,7 @@ export type RequestHolder = {
   digester?: Digester  
   salter?: Salter 
   signer?: Signer
-  secretKeyJwk?: SecretKeyJwk 
+  privateKeyJwk?: privateKeyJwk 
 }
 
 export type Resolver = {

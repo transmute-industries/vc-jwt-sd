@@ -18,11 +18,11 @@ it('W3C Example', async () => {
   const issuer = new SD.Issuer({
     alg,
     kid: `${iss}#key-42`,
-    typ: `application/vc+ld+json+sd-jwt`,
+    typ: `application/vc+sd-jwt`,
     cty: `application/vc+ld+json`,
     iss,
     digester,
-    signer: await SD.JWS.signer(issuerKeyPair.secretKeyJwk),
+    signer: await SD.JWS.signer(issuerKeyPair.privateKeyJwk),
     salter
   })
   const vc = await issuer.issue({
@@ -64,7 +64,7 @@ credentialSubject:
   const holder = new SD.Holder({
     alg,
     digester,
-    signer: await SD.JWS.signer(holderKeyPair.secretKeyJwk)
+    signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
   })
   const vp = await holder.present({
     credential: vc,
@@ -98,7 +98,7 @@ credentialSubject:
   expect(JSON.stringify(verified.protectedHeader)).toBe(JSON.stringify({ 
     "alg": "ES384", 
     "kid": "did:web:issuer.example#key-42", 
-    "typ": "application/vc+ld+json+sd-jwt", 
+    "typ": "application/vc+sd-jwt", 
     "cty": "application/vc+ld+json" 
   }))
 

@@ -32,12 +32,12 @@ const getExtractableKeyPair = async (alg: string) =>{
   const publicKeyJwk = await exportJWK(keypair.publicKey)
   publicKeyJwk.alg = alg
   publicKeyJwk.kid = await calculateJwkThumbprint(publicKeyJwk)
-  const secretKeyJwk = await exportJWK(keypair.privateKey)
-  secretKeyJwk.alg = alg
-  secretKeyJwk.kid = await calculateJwkThumbprint(secretKeyJwk)
+  const privateKeyJwk = await exportJWK(keypair.privateKey)
+  privateKeyJwk.alg = alg
+  privateKeyJwk.kid = await calculateJwkThumbprint(privateKeyJwk)
   return { 
     publicKeyJwk: format(publicKeyJwk as PublicKeyJwk),
-    secretKeyJwk: format(secretKeyJwk as PrivateKeyJwk)
+    privateKeyJwk: format(privateKeyJwk as PrivateKeyJwk)
   }
 }
 
