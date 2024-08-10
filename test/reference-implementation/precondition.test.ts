@@ -1,5 +1,5 @@
 
-import SD from "../../src";
+import sd from "../../src";
 
 import crypto from 'crypto'
 
@@ -17,22 +17,22 @@ it('throws when _sd is present in user claims', async () => {
   const issuerKeyPair  = await generateKeyPair(alg)
   const digester = testcase.digester('sha-256')
   const issuerPrivateKey = await exportJWK(issuerKeyPair.privateKey)
-  const issuerSigner = await SD.jws.signer(issuerPrivateKey)
-  const issuer = SD.issuer({
+  const issuerSigner = await sd.jws.signer(issuerPrivateKey)
+  const issuer = sd.issuer({
     alg,
     digester,
     signer: issuerSigner,
     salter
   })
 
-  const schema = SD.YAML.parseCustomTags(`
+  const schema = sd.YAML.parseCustomTags(`
 user_claims:
   _sd:
     - "causes error"
   `)
   try{
     await issuer.issue({
-      claimset: SD.YAML.dumps(schema.get('user_claims')),
+      claimset: sd.YAML.dumps(schema.get('user_claims')),
     })
   } catch(e){
     expect((e as any).message).toBe('claims may not contain _sd')
