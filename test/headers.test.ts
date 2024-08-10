@@ -18,7 +18,7 @@ it('W3C Example', async () => {
   const issuer = SD.issuer({
     alg,
     kid: `${iss}#key-42`,
-    typ: `application/vc+sd-jwt`,
+    typ: `application/vc-ld+sd-jwt`,
     cty: `application/vc`,
     iss,
     digester,
@@ -94,7 +94,7 @@ credentialSubject:
   expect(JSON.stringify(verified.protectedHeader)).toBe(JSON.stringify({ 
     "alg": "ES384", 
     "kid": "did:web:issuer.example#key-42", 
-    "typ": "application/vc+sd-jwt", 
+    "typ": "application/vc-ld+sd-jwt", 
     "cty": "application/vc" 
   }))
 

@@ -91,7 +91,7 @@ it('End to End Test', async () => {
   const vc = await sd.issuer({ 
       iss: issuerId, 
       kid: issuerKeyId,
-      typ: `application/vc+sd-jwt`,
+      typ: `application/vc-ld+sd-jwt`,
       privateKeyJwk: issuerRole.privateKeyJwk 
     })
     .issue({

@@ -90,7 +90,7 @@ const helpCheck = async (isVC: boolean, token: string, publicKeyJwk: any, audien
     expect(JSON.stringify(verification.protectedHeader, null, 2)).toEqual(JSON.stringify({
       "alg": "ES384",
       "kid": "https://university.example/issuers/565049#key-123",
-      "typ": "application/vc+sd-jwt",
+      "typ": "application/vc-ld+sd-jwt",
       "cty": "application/vc",
     }, null, 2))
   } else {
@@ -132,7 +132,7 @@ it('verbose setup', async () => {
   let nonce = undefined as string | undefined;
   const iss = `https://university.example/issuers/565049`
   const kid = `${iss}#key-123`
-  const typ = `application/vc+sd-jwt`
+  const typ = `application/vc-ld+sd-jwt`
   const cty = `application/vc`
   const { publicKeyJwk, privateKeyJwk } = await sd.key.generate(alg)
   const signer = await sd.jws.signer(privateKeyJwk)

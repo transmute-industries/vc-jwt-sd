@@ -85,7 +85,7 @@ const vc = await sd
   .issuer({
     iss: issuerId,
     kid: issuerKeyId,
-    typ: `application/vc+sd-jwt`,
+    typ: `application/vc-ld+sd-jwt`,
     signer: await sd.jws.signer(issuerRole.privateKeyJwk),
   })
   .issue({
@@ -216,7 +216,7 @@ const verification = await sd
       verify: async (token: string) => {
         const jwt = token.split("~")[0];
         const decodedHeader = decodeProtectedHeader(jwt);
-        if (decodedHeader.typ === "application/vc+sd-jwt") {
+        if (decodedHeader.typ === "application/vc-ld+sd-jwt") {
           const decodedPayload = decodeJwt(jwt);
           const iss = (decodedHeader.iss || decodedPayload.iss) as string;
           const kid = decodedHeader.kid as string;
@@ -257,7 +257,7 @@ This is the result of the verification operations above:
   "protectedHeader": {
     "alg": "ES384",
     "kid": "https://university.example/issuers/565049#key-42",
-    "typ": "application/vc+sd-jwt"
+    "typ": "application/vc-ld+sd-jwt"
   },
   "claimset": {
     "iss": "https://university.example/issuers/565049",
