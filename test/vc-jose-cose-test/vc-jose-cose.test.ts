@@ -9,7 +9,7 @@ const salter = testcase.salter
 it('W3C VC JOSE COSE Test', async () => {
   const alg = 'ES384'
   const nonce = '9876543210'
-  const aud = 'did:web:verifier.example'
+  const audience = 'did:web:verifier.example'
   const issuerKeyPair  = await SD.JWK.generate(alg)
   const holderKeyPair  = await SD.JWK.generate(alg)
   const digester = testcase.digester('sha-256')
@@ -19,11 +19,7 @@ it('W3C VC JOSE COSE Test', async () => {
     signer: await SD.JWS.signer(issuerKeyPair.privateKeyJwk),
     salter
   })
-  const holder = new SD.Holder({
-    alg,
-    digester,
-    signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
-  })
+ 
   const verifier = new SD.Verifier({
     alg,
     digester,
@@ -42,18 +38,22 @@ it('W3C VC JOSE COSE Test', async () => {
   })
   
   const claimsDisclosureYaml = fs.readFileSync(`test/vc-jose-cose-test/payload-disclosure.yaml`).toString()
-  const disclosure = SD.YAML.load(claimsDisclosureYaml)
-  const vp = await holder.present({
-    credential: vc,
+
+  const vp = await SD.holder({
+    alg,
+    digester,
+    signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
+  }).issue({
+    token: vc,
     nonce,
-    aud,
-    disclosure,
+    audience: audience,
+    disclosure: claimsDisclosureYaml,
   })
 
   const verified = await verifier.verify({
     presentation: vp,
     nonce,
-    aud
+    aud: audience
   })
   expect(verified.claimset.proof.created).toBe('2023-06-18T21:19:10Z')
 });

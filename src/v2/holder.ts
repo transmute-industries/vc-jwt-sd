@@ -1,11 +1,13 @@
 
-import Holder from "../lib/Holder"
+
 import YAML from "../YAML-SD"
 import digester from "./digester"
 import salter from "./salter"
 import JWS from "../lib/JWS"
 
-import { RequestHolder, HolderCtx, PresentedCompactSdJwt } from "../types"
+import { _present } from "../lib/_present"
+
+import { RequestHolder, PresentedCompactSdJwt } from "../types"
 
 const holder = (options: RequestHolder = {}) => {
   if (options.privateKeyJwk){
@@ -25,8 +27,8 @@ const holder = (options: RequestHolder = {}) => {
       if (options.privateKeyJwk){
         options.signer = await JWS.signer(options.privateKeyJwk)
       }
-      const role = new Holder(options as HolderCtx)
-      return role.present({
+      return _present({
+        ...options,
         credential: token,
         disclosure: YAML.load(disclosure),
         aud: audience,

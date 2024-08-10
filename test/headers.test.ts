@@ -11,7 +11,7 @@ it('W3C Example', async () => {
   const alg = 'ES384'
   const iss = 'did:web:issuer.example'
   const nonce = '9876543210'
-  const aud = 'did:web:verifier.example'
+  const audience = 'did:web:verifier.example'
   const issuerKeyPair = await SD.JWK.generate(alg)
   const holderKeyPair = await SD.JWK.generate(alg)
   const digester = testcase.digester('sha-256')
@@ -59,21 +59,20 @@ credentialSubject:
   !sd entryNumber: "12345123456"
 `
   })
-  const holder = new SD.Holder({
+  const vp = await SD.holder({
     alg,
     digester,
     signer: await SD.JWS.signer(holderKeyPair.privateKeyJwk)
-  })
-  const vp = await holder.present({
-    credential: vc,
+  }).issue({
+    token: vc,
     nonce,
-    aud,
-    disclosure: SD.YAML.load(`
+    audience,
+    disclosure: `
 issuer:
   location: False
 credentialSubject:
   entryNumber: True
-    `),
+    `,
   })
   const verifier = new SD.Verifier({
     alg,
@@ -89,7 +88,7 @@ credentialSubject:
   const verified = await verifier.verify({
     presentation: vp,
     nonce,
-    aud
+    aud: audience
   })
   expect(verified.claimset.issuer.location).toBeUndefined()
   expect(verified.claimset.credentialSubject.entryNumber).toBe('12345123456')
